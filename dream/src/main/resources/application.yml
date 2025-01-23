@@ -1,6 +1,6 @@
 spring:
   application:
-    name: hm
+    name: dream
   #文件格式为 UTF-8
   messages:
     encoding: utf-8
