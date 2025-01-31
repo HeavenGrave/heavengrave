@@ -4,26 +4,52 @@ spring:
   #文件格式为 UTF-8
   messages:
     encoding: utf-8
+  # thymeleaf模板引擎
   thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
     cache: false
-  #文件格式
-  #端口号
-  #server.port=8086
   # 数据库连接信息
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
      #spring.datasource.url=jdbc:mysql://127.0.0.1:3306/db2023?useUnicode=true&characterEncoding=utf-8
-    url: jdbc:mysql://8.141.4.23:3306/db2023
+    url: jdbc:mysql://8.141.4.23:3306/db2023?useUnicode=true&characterEncoding=utf-8
     username: heavengrave
     password: czmr125?
-  # 设置连接的最大生存时间为10分钟
-    hikari:
-      max-lifetime: 36000000
-      connection-test-query: SELECT 1
-      connection-timeout: 30000
-      minimum-idle: 5
-      maximum-pool-size: 20
+    # 初始化连接数
+    initialSize: 5
+    # 最小空闲连接数
+    minIdle: 5
+    # 最大连接数
+    maxActive: 20
+    # 获取连接时最大等待时间，单位毫秒
+    maxWait: 60000
+    # 打开PSCache，并且指定每个连接上PSCache的大小
+    poolPreparedStatements: true
+    maxPoolPreparedStatementPerConnectionSize: 20
+    # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    # 配置一个连接在池中最小生存的时间，单位是毫秒
+    minEvictableIdleTimeMillis: 300000
+    testWhileIdle: true
+    validationQuery: SELECT 1
+    testOnBorrow: false
+    testOnReturn: false
+    # 配置监控统计拦截的filters，去掉后监控界面sql无法统计
+    filters: stat,wall,log4j
+    # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+    # 配置Druid监控页的登录用户名和密码
+    statViewServlet:
+      enabled: true
+      url - pattern: /druid/*
+      login - username: admin
+      login - password: admin
+    webStatFilter:
+      enabled: true
+      url - pattern: /*
+      exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
   #websocket配置信息
   graphql:
     websocket:
@@ -34,11 +60,11 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 mybatis:
-  #mybatisxml文件路径
-  mapper-locations: classpath:/mapper/*.xml
+  mapper-locations: classpath*:mapper/*.xml
   configuration:
+    #在控制台输出控制信息
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
-
-
-
-  
+#端口号
+server:
+  port: 8099

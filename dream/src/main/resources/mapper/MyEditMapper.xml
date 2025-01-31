@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.MyEditMapper">
+    <update id="updateMyEdit" parameterType="web.sn.dream.pojo.MyEdit">
+        UPDATE myedit
+        SET
+            info = #{info},
+            title = #{title},
+            ctime = #{ctime}
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteMyEditById">
+        DELETE FROM myedit WHERE id = #{id}
+    </delete>
+    <select id="findMyEditById" resultType="web.sn.dream.pojo.MyEdit">
+        select  * from myedit where id=#{id}
+    </select>
+    <select id="findAllEdit" resultType="web.sn.dream.pojo.MyEdit">
+        select  * from myedit
+    </select>
+    <select id="findMyEditByUserId" resultType="web.sn.dream.pojo.MyEdit">
+        select  * from myedit where userid=#{userId} or userid=0  order by userid,ctime desc
+    </select>
+    <insert id="insertMyEdit" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO myedit (title,info,userid,ctime) VALUES (#{title},#{info},#{userId},#{ctime})
+    </insert>
+</mapper>

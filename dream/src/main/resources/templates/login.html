@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>梦想从这里开始</title>
+    <link href="static/css/login/login.css" rel="stylesheet">
+</head>
+<body>
+    <div class="cont">
+        <div class="form sign-in">
+            <h2>欢迎回来</h2>
+            <label>
+                <span>用户名</span>
+                <input type="text" id="name" />
+            </label>
+            <label>
+          <span>
+            密码</span>
+                <input type="password" id="password" />
+            </label>
+            <p class="forgot-pass">
+                忘记密码？</p>
+            <button type="button" class="submit" id="doLogin">登录</button>
+        </div>
+        <div class="sub-cont">
+            <div class="img">
+                <div class="img__text m--up">
+                    <h2>新来的？</h2>
+                    <p>注册并发现跟多朋友吧</p>
+                </div>
+                <div class="img__text m--in">
+                    <h2>登录?</h2>
+                    <p>如果您已经有帐户，只需登录即可。我们想念您！</p>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">注册</span>
+                    <span class="m--in">登录</span>
+                </div>
+            </div>
+            <div class="form sign-up">
+                <h2>欢迎注册</h2>
+                <label>
+                    <span>用户名</span>
+                    <input type="text" id="new_name" />
+                </label>
+                <label>
+                    <span>个人签名</span>
+                    <input type="text" id="new_signature"/>
+                </label>
+                <label>
+                    <span>密码</span>
+                    <input type="password" id="new_password" />
+                </label>
+                <button type="button" class="submit" id="registered">注册</button>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="static/js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
+    <script type="text/javascript" src="static/js/login/login.js"></script>
+</body>
+</html>
