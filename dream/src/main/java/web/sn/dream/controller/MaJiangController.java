@@ -125,12 +125,12 @@ public class MaJiangController{
         String formattedTime = currentTime.format(formatter);
         String[] nums=formattedTime.split(":");
         //将当前时间作为房间号,可以避免房间ID重复,也可以让房间号变的没有那么复杂   因为只使用了6位数字   需要一个月清除一次数据库   后续可以研究一个定时任务
-        String roomId="";
+        StringBuilder roomId= new StringBuilder();
         for(String num:nums){
-            roomId=roomId+num;
+            roomId.append(num);
         }
         //初始化游戏房间信息
-        maJiang.setId(roomId);
+        maJiang.setId(roomId.toString());
         maJiang.setCreateUserId(session.getAttribute("id").toString()); //创建人id
         maJiang.setCreateUserName(session.getAttribute("name").toString()); //创建人名称
         maJiang.setPlayer1(session.getAttribute("id").toString()); //创建人即为1号玩家
@@ -142,7 +142,7 @@ public class MaJiangController{
         System.out.println("用户："+session.getAttribute("name").toString()+"创建了房间："+roomId+"等待其他玩家进入。。。");
         //拼接post请求返回值
         Map<String, Object> data = new HashMap<>();
-        data.put("roomId",roomId);//房间ID
+        data.put("roomId", roomId.toString());//房间ID
         data.put("maJiang",maJiang);//游戏信息
         return Result.success(data);
 
