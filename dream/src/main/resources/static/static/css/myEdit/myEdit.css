@@ -1,0 +1,79 @@
+@charset "UTF-8";
+.save_btn{
+    width: 90px;
+    background-color: #0089ff;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    top: 52px;
+    right: 80px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 101;
+}
+.save_title{
+    display: none;
+    width: 340px;
+    height: 100px;
+    background-color: #8ecff5;
+    position: absolute;
+    top: calc(50% - 50px);
+    left: calc(50% - 120px);
+    border-radius: 10px;
+    border: 1px solid #078eed;
+    z-index: 101;
+}
+
+
+#editor—wrapper {
+    border: 1px solid #ccc;
+    z-index: 100; /* 按需定义 */
+}
+#toolbar-container { border-bottom: 1px solid #ccc; }
+#editor-container { height: 500px; }
+
+
+.btn_blue {
+    width: 110px;
+    background-color: #0089ff;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 101;
+}
+
+.save_btn_sm{
+    width: 60px;
+    background-color: #ffbc00;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    top: 52px;
+    right: 15px;
+    cursor: pointer;
+    user-select: none;
+    z-index: 101;
+}
+
+
+input {
+    border: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    outline: none;
+}
+
+input:focus {
+    border: none;
+    box-shadow: none;
+}

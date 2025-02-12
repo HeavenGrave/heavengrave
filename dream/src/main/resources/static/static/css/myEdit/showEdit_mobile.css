@@ -1,0 +1,10 @@
+@charset "UTF-8";
+.menuDiv{
+    margin-top: 24px;
+    height: 84px;
+    flex-wrap: wrap;
+}
+#card_page{
+    height: calc(100% - 104px) !important;
+    overflow: auto;
+}
