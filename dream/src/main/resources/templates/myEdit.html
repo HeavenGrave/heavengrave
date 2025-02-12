@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>新增文档</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link href="static/css/myEdit/style.css" rel="stylesheet">
+    <link href="static/css/myEdit/myEdit.css" rel="stylesheet" >
+</head>
+<body>
+    <div id="editor—wrapper">
+        <div id="toolbar-container"><!-- 工具栏 --></div>
+        <div id="editor-container"><!-- 编辑器 --></div>
+    </div>
+    <div id="svae_edit" class="save_btn">保存信息</div>
+    <div id="btn_back" class="save_btn_sm">返回</div>
+    <div id="svae_title" class="save_title" style="flex-direction: column;">
+        <div style=" display: flex; align-items: center;justify-content: flex-start; height: 50%;">
+            <div style="margin-left: 10px;width: 60px;text-align: center;height: 40px;font-size: 16px;line-height: 40px;">标题：</div>
+            <input id="title" style="height: 28px;width: calc(100% - 100px);border-radius: 8px;border: 0px;padding-left: 10px;"/>
+        </div>
+        <div style="display: flex;align-items: center;height: 50%;justify-content: space-around;">
+            <div id="btn_clear" class="btn_blue">取消</div>
+            <div id="btn_save" class="btn_blue">保存</div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="static/js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
+    <script src="static/js/myEdit/index.js"></script>
+    <script src="static/js/myEdit/myEdit.js"></script>
+</body>
+</html>

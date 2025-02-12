@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import web.sn.dream.mapper.UserMapper;
 import web.sn.dream.pojo.LoginInfo;
@@ -26,6 +27,9 @@ public class UserController{
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 用户注册
      * @param user
@@ -33,13 +37,18 @@ public class UserController{
      */
     @RequestMapping("/reg")
     public Result reg(User user){
+        //在redis中查找用户名是否存在
+        boolean exists = redisTemplate.hasKey(user.getName());
+        if(exists){
+            return Result.error("用户名已存在!");
+        }
         String check=userService.registerUser(user);
         if(check.equals("注册成功")){
+            redisTemplate.opsForValue().set(user.getName(),user.getPassword());
             return Result.success(check);
         }else{
             return Result.error(check);
         }
-
     }
 
     /**
@@ -50,6 +59,11 @@ public class UserController{
      */
     @PostMapping("/login")
     public Result login(String name, String password, HttpServletRequest request, HttpServletResponse  response) {
+        //在redis中查找用户名是否存在
+//        boolean exists = redisTemplate.hasKey(name);
+//        if (!exists){
+//            return Result.error("用户名不存在");
+//        }
         // 调用业务对象的方法执行登录，并获取登录信息对象
         LoginInfo data = userService.login(name,password);
         if(data==null){
@@ -93,21 +107,15 @@ public class UserController{
         return UUID.randomUUID().toString();
     }
 
-//
-//    @RequestMapping("/getUserInfo")
-//    @ResponseBody
-//    public Result getUserInfo(HttpSession session){
-//        String name = getUsernameFromSession(session);
-//        User user = userMapper.findUserByName(name);
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("userName",getUsernameFromSession(session));
-//        data.put("userInfo",user);
-//        return  Result.success(user);
-//    }
+    @GetMapping("/getUserInfo")
+    public Result getUserInfo(HttpSession session){
+        User user = userMapper.findUserByName(session.getAttribute("name").toString());
+        return  Result.success(user);
+    }
 
 
 //    /**
-//     * 用户登录
+//     * 用户更新
 //     * @param userId
 //     * @return
 //     */

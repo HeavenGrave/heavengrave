@@ -3,6 +3,7 @@ package web.sn.dream.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 import web.sn.dream.mapper.UserMapper;
@@ -12,6 +13,7 @@ import web.sn.dream.service.UserService;
 import web.sn.dream.utils.JwtUtils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -53,15 +55,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> getAllUser() {
+        return userMapper.getAllUser();
+    }
+
+    /**
+     * 用户登录方法
+     * @param name
+     * @param password
+     * @return
+     */
+    @Override
     public LoginInfo login(String name, String password) {
         // 调用userMapper的findByUsername()方法，根据参数username查询用户数据
         User user = userMapper.findUserByName(name);
         // 判断查询结果是否为null
         if (user == null) {
-            // 是：抛出UserNotFoundException异常
-            log.error("用户数据不存在的错误");
+            log.error("用户数据不存在!");
             return null;
         }
+
         // 从查询结果中获取盐值
         String salt = user.getSalt();
         // 调用getMd5Password()方法，将参数password和salt结合起来进行加密
@@ -69,7 +82,7 @@ public class UserServiceImpl implements UserService {
         // 判断查询结果中的密码，与以上加密得到的密码是否不一致
         if (!user.getPassword().equals(md5Password)) {
             // 是：抛出PasswordNotMatchException异常
-            log.error("密码验证失败的错误");
+            log.error("密码验证失败!");
             return null;
         }
         //生成JWT令牌

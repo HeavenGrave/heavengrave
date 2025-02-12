@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.MaJiangMapper">
+    <insert id="insertMaJiang">
+        INSERT INTO majiang (id,create_user_id,create_user_name,player1,player2,player3,player4,player_num,now_num)
+        VALUES
+            (#{id},#{createUserId},#{createUserName},#{player1},#{player2},#{player3},#{player4},#{playerNum},#{nowNum})
+    </insert>
+    <delete id="deleteAllData">
+        DELETE FROM majiang
+    </delete>
+    <update id="updateMaJiang">
+        UPDATE majiang set player2=#{player2},player3=#{player3},player4=#{player4},player_num=#{playerNum} where id=#{id}
+    </update>
+    <select id="findMaJiangById" resultType="web.sn.dream.pojo.MaJiang">
+        select  * from majiang where id=#{id}
+    </select>
+</mapper>

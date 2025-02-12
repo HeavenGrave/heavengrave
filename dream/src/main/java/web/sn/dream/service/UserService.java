@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import web.sn.dream.pojo.LoginInfo;
 import web.sn.dream.pojo.User;
 
+import java.util.List;
+
 @Service//代表将该类对象交给Spring容器管理
 public interface UserService {
     /**
@@ -19,4 +21,6 @@ public interface UserService {
      * @param user
      */
     String registerUser(User user);
+
+    List<User> getAllUser();
 }

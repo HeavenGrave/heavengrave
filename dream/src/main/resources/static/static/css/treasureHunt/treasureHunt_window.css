@@ -1,0 +1,196 @@
+@charset "UTF-8";
+.cellDiv {
+    border-top: 1px solid #000;
+    border-left: 1px solid #000;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.cellDiv:hover {
+    border-color: #007bff;
+    box-shadow: inset 0 0 10px rgb(0 0 0/ 50%);
+}
+.cellDiv.selected {
+    border-color: #007bff;
+    background-color: #e7f3ff;
+    box-shadow: inset 0 0 10px rgb(0 0 0/ 50%);
+}
+
+
+.selectContent {
+    display: flex;
+    width: 240px;
+    height: 110px;
+    flex-direction: column;
+    background-color: #4aaeff;
+    border-radius: 8px;
+    color: #fff;
+    justify-content: space-evenly;
+}
+
+
+.readyDiv {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    background: #fff;
+    flex-direction: column;
+    z-index: 3;
+}
+
+
+.btnDisDiv {
+    pointer-events: none;
+}
+
+
+.createDiv {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    background: #fff;
+    flex-direction: column;
+    z-index:5
+}
+
+
+.content {
+    /* border-top: 1px solid #000;
+    border-left: 1px solid #000; */
+    display: flex;
+    flex-wrap: wrap;
+    width: 420px;
+    margin:50px 30px;
+}
+
+
+.selectDiv {
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+}
+
+
+.rowInfo {
+    display: flex;
+    height: 30px;
+    align-items: center;
+    font-size: 18px;
+}
+
+
+.gameInfo {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 220px;
+}
+
+
+.alertDiv {
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+}
+
+
+.startGameBtn {
+    background-color: #ccc;
+}
+
+
+.startGameBtn.active {
+    background-color: #0095ff;
+}
+
+
+.loadingDiv {
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    background: #ffffffc7;
+    flex-direction: column;
+    z-index: 5;
+}
+
+
+.banInfo {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 60px;
+    right: 10px;
+    width: 350px;
+    background-color: #ccc;
+    border-radius: 8px;
+    padding: 5px 10px;
+}
+.banRowInfo{
+    display: flex;
+    flex-direction: column;
+}
+.tipInfoDiv{
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    background: #ffffffc7;
+    flex-direction: column;
+    z-index: 5;
+}
+.ruleDiv{
+    width: 600px;
+}
+
+
+
+.roomDiv{
+    font-size: 30px;
+}
+.gameBtn{
+    width: 10%;
+}
+.roomInfoRow{
+    width: 20%;
+    margin: 0px 3%;
+}
+.roomInfo{
+    width: 112px;
+    color: #000000;
+    font-size: 28px;
+    font-weight: 600;
+}
+.roomIdInputDiv{
+    height: 40px;
+    width: calc(100% - 118px);
+    border-radius: 8px;
+    border: 1px solid #000;
+}

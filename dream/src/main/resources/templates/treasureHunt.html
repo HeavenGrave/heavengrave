@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>寻宝藏</title>
+  <meta http-equiv="pragma" content="no-cache">
+  <meta http-equiv="cache-control" content="no-cache">
+  <meta http-equiv="expires" content="0">
+  <link href="static/css/treasureHunt/treasureHunt.css" rel="stylesheet">
+  <script type="text/javascript" src="static/js/jquery/jquery.min.js"></script>
+  <script src="static/js/stomp/sockjs.min.js"></script>
+  <script src="static/js/stomp/stomp.umd.min.js"></script>
+  <script type="text/javascript" src="static/js/axios/axios.js"></script>
+</head>
+<body style="margin:0px;">
+<div class="bodyLoading" style="position: absolute;z-index: 999;">
+   <div class="loader"></div>
+</div>
+<div class="content"></div>
+<div id="roomDiv"  class="roomDiv" >
+  <div>房间号：</div>
+  <div id="thisRoomId"></div>
+</div>
+<div class="selectDiv" id="selectDiv">
+  <div class="selectContent">
+    <div style="text-align:center;height:40px;line-height:40px;">请选择封禁或移动至当前格。</div>
+    <div style="display:flex;justify-content: space-around;height:30px;">
+      <div id="Ban" class="btnDiv" style="background-color:#f71d1d;">封禁</div>
+      <div id="Move" class="btnDiv" style="background-color:#1df72e;">移动</div>
+      <div id="cancel" class="btnDiv" style="background-color:#ccc;">取消</div>
+    </div>
+  </div>
+</div>
+<div class="alertDiv">
+  <div style="display:flex;width: 480px;height: 70px;flex-direction: column;background: #fff;">
+    <div id="alertInfo"
+         style=" text-align: center;height: 40px;line-height: 40px;">提示信息！</div>
+    <div style="display:flex;justify-content: space-around;height:30px;">
+      <div id="ok" class="btnDiv">确认</div>
+    </div>
+  </div>
+</div>
+<div class="readyDiv">
+  <div>
+    <img src="static/image/treasureHunt/treasureHunt.png">
+  </div>
+  <div
+          style="display:flex;width: 480px;height: 300px;flex-direction: column;align-items: center;">
+    <div
+            style="text-align: center;height: 68px;line-height: 30px;font-size: 20px;">以上为游戏规则，请为你的下家选择他的起始位置，以及宝藏位置！</div>
+    <div
+            style="display:flex;justify-content: space-between;height:30px;width: 100%;font-size: 20px;">
+      <div style="width:50%;display:flex;">
+        <div style="width:84px;">起始点：</div>
+        <select
+                style="height: 26px;width:calc(100% - 90px);font-size: 20px;"
+                id="select_start">
+          <option value disabled selected hidden>请选择起始点</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="G">G</option>
+          <option value="H">H</option>
+        </select>
+      </div>
+      <div style="width:50%;display:flex;">
+        <div style="width:84px;">宝藏点：</div>
+        <select
+                style="height: 26px;width:calc(100% - 90px);font-size: 20px;"
+                id="select_end">
+          <option value disabled selected hidden>请选择宝藏点</option>
+          <option value="A">A</option>
+          <option value="B">B</option>
+          <option value="C">C</option>
+          <option value="D">D</option>
+          <option value="E">E</option>
+          <option value="F">F</option>
+          <option value="G">G</option>
+          <option value="H">H</option>
+        </select>
+      </div>
+    </div>
+    <div
+            style="color:red;font-size: 16px;height: 30px;line-height: 30px;">注意：起始点和宝藏点不可为同一位置！</div>
+    <div style="display:flex;justify-content: space-around;height:30px;">
+      <div id="go" class="btnDiv">确认</div>
+    </div>
+  </div>
+</div>
+<div class="createDiv">
+  <!--创建游戏或加入游戏模块-->
+  <div id="createDiv" class="createRow">
+    <div id="createHunt" class="btnDiv gameBtn" >创建游戏</div>
+    <div class="roomInfoRow" >
+      <div class="roomInfo" >房间号：</div>
+      <label for="roomId"></label>
+      <input id="roomId" class="roomIdInputDiv" />
+    </div>
+    <div id="addGame" class="btnDiv gameBtn" >加入游戏</div>
+  </div>
+  <!-- 游戏准备人数，以及开始按钮展示-->
+  <div id="gameShowDiv"
+       style="position: absolute;width: 440px;height: 50px;display:none;top: calc(50% - 25px);left: calc(50% - 220px);justify-content: space-around;align-items: center;">
+    <div style="display: flex;font-size: 28px;color: #0070ff;">
+      <div id="nowPlayerNum">1</div>
+      <div>/</div>
+      <div id="totalNum">3</div>
+    </div>
+    <div id="startGame" disabled="disabled" class="btnDiv startGameBtn "
+         style="top: 48%;right: 32%;width: 95px;">开始游戏</div>
+  </div>
+</div>
+
+
+<!-- 退出房间-->
+<div id="exitGame" class="btnDiv gameBtn"
+     style="display:none;bottom: 1%;right: 10px;position: absolute;width:96px;z-index:10;">退出房间</div>
+<div id="exitPage" class="btnDiv gameBtn exitPage" >返回主页</div>
+</div>
+<!-- 用户信息展示 -->
+<div class="gameInfo">
+  <div class="rowInfo">用户列表：</div>
+  <div class="rowInfo">
+    <div style="color:#ff0000;">▲</div>
+    <div>1.</div>
+    <div id="name1"></div>
+  </div>
+  <div class="rowInfo">
+    <div style="color:#0099ff;">▲</div>
+    <div>2.</div>
+    <div id="name2"></div>
+  </div>
+  <div class="rowInfo">
+    <div style="color:#ff9900;">▲</div>
+    <div>3.</div>
+    <div id="name3"></div>
+  </div>
+  <div class="rowInfo">
+    <div>当前行动玩家：</div>
+    <div id="nowOperation" style="color:#ff0000;">▲</div>
+  </div>
+</div>
+<!-- 封禁失败信息展示 -->
+<div class="banInfo">
+  <div class="rowInfo">封禁失败信息：</div>
+  <div class="banRowInfo"></div>
+</div>
+<div class="loadingDiv">等待其他玩家做出选择。。。</div>
+<div class="tipInfoDiv">
+  <div id="tipInfo" style="font-size:18px;">轮到你了or你的回合已结束，请等待其他玩家操作。。</div>
+  <div class="btnDiv" id="back" >确认</div>
+</div>
+<div class="ruleDiv">
+  <div>
+    <img style="width: 100%;" src="static/image/treasureHunt/guize.png">
+  </div>
+</div>
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/treasureHunt/init.js"></script>
+<script type="text/javascript" src="static/js/treasureHunt/treasureHunt.js"></script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+@charset "UTF-8";
+html {
+    height: 100%;
+    width: 100%;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+}
+.numDiv{
+    font-size: 26px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.numDiv.active{
+    border-color: #007bff;
+    box-shadow: inset 0 0 20px rgb(0 90 225 / 50%);
+}
+
+.shuDuCanvas{
+    display: grid;
+    width: 100%;
+    font-size: 10px;
+    height: 100%;
+    grid-template-columns: repeat(9,11.11%);
+    border:1px solid #ccc;
+    grid-template-rows: repeat(9,11.11%);
+}
+.addSD{
+    width: 50%;
+    user-select: none;
+    aspect-ratio: 1 / 1;
+    /*background-color: #0c0c0c;*/
+}

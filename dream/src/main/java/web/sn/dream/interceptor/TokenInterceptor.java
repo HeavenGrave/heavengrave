@@ -97,8 +97,8 @@ public class TokenInterceptor implements HandlerInterceptor {
      */
     private boolean excludePath(HttpServletRequest request) {
         String path = request.getRequestURI();
-        // 配置无需拦截的路径，如登录、静态资源
-        return path.startsWith("/user/login") || path.startsWith("/static/");
+        // 配置无需拦截的路径，如登录、注册、静态资源
+        return path.startsWith("/user/login") ||path.startsWith("/user/reg")|| path.startsWith("/static/");
     }
 
     @Override

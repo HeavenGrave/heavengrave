@@ -2,20 +2,15 @@ package web.sn.dream.mapper;
 
 
 import org.apache.ibatis.annotations.Mapper;
-import web.sn.dream.pojo.User;
-
-import java.util.List;
+import web.sn.dream.pojo.MaJiang;
 
 @Mapper //应用程序在运行时会自动的为该接口生成一个实现类（代理对象），并且会自动将该实现对象放入ioc容器中，成为IOC容器管理的bean
-public interface UserMapper {
+public interface MaJiangMapper {
+    Integer insertMaJiang (MaJiang maJiang);
 
-    Integer insertUser (User user);
+    void deleteAllData();
 
-    User findUserByName(String username);
+    Integer updateMaJiang (MaJiang maJiang);
 
-    User findUserById(int userId);
-
-    void  updateUser(User user);
-
-    List<User> getAllUser();
+    MaJiang findMaJiangById(String id);
 }

@@ -19,9 +19,9 @@
         select  * from myedit
     </select>
     <select id="findMyEditByUserId" resultType="web.sn.dream.pojo.MyEdit">
-        select  * from myedit where userid=#{userId} or userid=0  order by userid,ctime desc
+        select  * from myedit where user_id=#{userId} or user_id=0  order by user_id,ctime desc
     </select>
     <insert id="insertMyEdit" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO myedit (title,info,userid,ctime) VALUES (#{title},#{info},#{userId},#{ctime})
+        INSERT INTO myedit (title,info,user_id,ctime) VALUES (#{title},#{info},#{userId},#{ctime})
     </insert>
 </mapper>

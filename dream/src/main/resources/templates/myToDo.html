@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>我的代办</title>
+    <link href="static/css/myToDo/style.css" rel="stylesheet">
+</head>
+<body>
+    <div class="loading">
+        <div class="loader"></div>
+    </div>
+    <div class="pageBody">
+        <div class="dayType">
+<!--            <div class="typeCell ">年</div>-->
+            <div class="typeCell typeActive" id="calendar">
+                <?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 19H43V41C43 42.1046 42.1046 43 41 43H7C5.89543 43 5 42.1046 5 41V19Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="miter"/><path d="M5 10C5 8.89543 5.89543 8 7 8H41C42.1046 8 43 8.89543 43 10V19H5V10Z" stroke="#ffffff" stroke-width="4" stroke-linejoin="miter"/><path d="M16 31L22 37L34 25" stroke="#ffffff" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M16 5V13" stroke="#ffffff" stroke-width="4" stroke-linecap="square"/><path d="M32 5V13" stroke="#ffffff" stroke-width="4" stroke-linecap="square"/></svg>
+            </div>
+<!--            <div class="typeCell">周</div>-->
+<!--            <div class="typeCell">日</div>-->
+            <div class="typeCell" id="trash" >
+                <?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 18L24 4.5L32 18" stroke="#ffffff" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M38 28.5L46 42H30" stroke="#ffffff" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M17.6914 41.6782L2.00006 41.8564L10.0001 28" stroke="#ffffff" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M17 29H30.8217" stroke="#ffffff" stroke-width="4" stroke-linecap="square"/></svg>
+            </div>
+            <div class="typeCell">
+                <?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 4H6C4.89543 4 4 4.89543 4 6V18C4 19.1046 4.89543 20 6 20H18C19.1046 20 20 19.1046 20 18V6C20 4.89543 19.1046 4 18 4Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="miter"/><path d="M18 28H6C4.89543 28 4 28.8954 4 30V42C4 43.1046 4.89543 44 6 44H18C19.1046 44 20 43.1046 20 42V30C20 28.8954 19.1046 28 18 28Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="miter"/><path d="M42 4H30C28.8954 4 28 4.89543 28 6V18C28 19.1046 28.8954 20 30 20H42C43.1046 20 44 19.1046 44 18V6C44 4.89543 43.1046 4 42 4Z" fill="none" stroke="#ffffff" stroke-width="4" stroke-linejoin="miter"/><path d="M28 28H44" stroke="#ffffff" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M36 36H44" stroke="#ffffff" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/><path d="M28 44H44" stroke="#ffffff" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+            </div>
+        </div>
+        <div class="dayShow" >
+            <div class="dayChange beforeYear" id="beforeYear">
+                <?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#333" stroke="#333" stroke-width="4" stroke-linejoin="round"/><path d="M22 31L15 24L22 17" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M31 31L24 24L31 17" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="dayChange beforeMonth" id="beforeMonth">
+                <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#333" stroke="#333" stroke-width="4" stroke-linejoin="round"/><path d="M32.4917 24.5H14.4917" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M23.4917 15.5L14.4917 24.5L23.4917 33.5" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="weekCell" id="timeText" style="width:calc(100% - 120px);">2024年12月</div>
+            <div class="dayChange nextMonth" id="nextMonth">
+                <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#333" stroke="#333" stroke-width="4" stroke-linejoin="round"/><path d="M14.4917 24.5H32.4917" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M23.4917 15.5L32.4917 24.5L23.4917 33.5" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="dayChange nextYear" id="nextYear">
+                <?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24 44C35.0457 44 44 35.0457 44 24C44 12.9543 35.0457 4 24 4C12.9543 4 4 12.9543 4 24C4 35.0457 12.9543 44 24 44Z" fill="#333" stroke="#333" stroke-width="4" stroke-linejoin="round"/><path d="M17 31L24 24L17 17" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M26 31L33 24L26 17" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+        </div>
+        <div class="weekDiv" >
+            <div class="weekCell">一</div>
+            <div class="weekCell">二</div>
+            <div class="weekCell">三</div>
+            <div class="weekCell">四</div>
+            <div class="weekCell">五</div>
+            <div class="weekCell">六</div>
+            <div class="weekCell">日</div>
+        </div>
+        <div class="dayDiv" >
+        </div>
+        <div class="toDoShow">
+        </div>
+        <div class="deleteToDoShow">
+        </div>
+    </div>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
+    <script type="text/javascript" src="static/js/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/myToDo/myToDo.js"></script>
+</body>
+</html>

@@ -21,4 +21,7 @@
         VALUES
             (#{name},#{password},#{salt},#{signature},#{type},#{score})
     </insert>
+    <select id="getAllUser" resultType="web.sn.dream.pojo.User">
+        select * from user
+    </select>
 </mapper>

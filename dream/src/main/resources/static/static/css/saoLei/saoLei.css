@@ -1,0 +1,146 @@
+@charset "UTF-8";
+html {
+    height: 100%;
+    width: 100%;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+}
+.numDiv{
+    font-size: 26px;
+    font-weight: 600;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.numDiv.active{
+    border-color: #007bff;
+    box-shadow: inset 0 0 20px rgb(0 90 225 / 50%);
+}
+
+.shuDuCanvas{
+    display: grid;
+    width: 100%;
+    font-size: 10px;
+    height: 100%;
+    grid-template-columns: repeat(9,11.11%);
+    border:1px solid #ccc;
+    grid-template-rows: repeat(9,11.11%);
+}
+.addSL {
+    /*width: auto;*/
+    /*height: auto;*/
+    /*max-width: 60%;*/
+    /*max-height: 80%;*/
+    /*background:#5567e163;*/
+    /*display: grid;*/
+    /*grid-template-columns: repeat(30, 1fr);*/
+    /*border: 1px solid #ccc;*/
+    /*grid-template-rows: repeat(30, 1fr);*/
+    /*overflow: auto;*/
+    width: auto;
+    height: auto;
+    max-width: 60%;
+    max-height: 80%;
+    overflow: auto;
+    padding: 0px;
+}
+.sl_div{
+    width: 30px;
+    height: 30px;
+    border: 4px outset #f0f0f0;
+    background-color: #cccccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ccc0;
+    cursor: pointer;
+}
+.sl_div.active{
+    width: 34px;
+    height: 34px;
+    border: 2px dashed #9c9c9c;
+    background-color: #cccccc00;
+    color: #000;
+    user-select: none;
+}
+.sl_div.flag{
+    color: #ccc0;
+}
+
+/* Webkit浏览器（Chrome、Safari） */
+.addSL::-webkit-scrollbar {
+    width: 6px; /* 滚动条宽度 */
+    height: 6px; /* 滚动条高度 */
+}
+
+.addSL::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 滚动条轨道背景 */
+}
+
+.addSL::-webkit-scrollbar-thumb {
+    background: #888; /* 滚动条滑块背景 */
+    border-radius: 6px; /* 滑块圆角 */
+}
+
+.addSL::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 滑块悬停背景 */
+}
+
+.SaoLeiCanvas{
+    background: #5567e163;
+    display: flex;
+    overflow: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 1px;
+}
+
+.result-Div{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 320px;
+    height: 140px;
+    margin: 0px;
+    position: absolute;
+    flex-direction: column;
+    background-color: #fb7272;
+    border-radius: 10px;
+    user-select: none;
+}
+.resultInfoDiv{
+    margin: 10px;
+    height: 80px;
+    width: 100%;
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.okBtn{
+    height: 24px;
+    width: 60px;
+    background-color: #1ba3e3;
+    line-height: 24px;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.tipDiv{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    display:none;
+    justify-content: center;
+    align-items: center;
+}
