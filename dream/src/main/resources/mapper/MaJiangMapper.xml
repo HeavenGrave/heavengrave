@@ -2,17 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="web.sn.dream.mapper.MaJiangMapper">
     <insert id="insertMaJiang">
-        INSERT INTO majiang (id,create_user_id,create_user_name,player1,player2,player3,player4,player_num,now_num)
+        INSERT INTO majiang (id,create_user_id,create_user_name,player1,player2,player3,player4,player_num,now_num,status,game_play,quan,deal_type,dealer,price,create_time)
         VALUES
-            (#{id},#{createUserId},#{createUserName},#{player1},#{player2},#{player3},#{player4},#{playerNum},#{nowNum})
+            (#{id},#{createUserId},#{createUserName},#{player1},#{player2},#{player3},#{player4},#{playerNum},#{nowNum},#{status},#{gamePlay},#{quan},#{dealType},#{dealer},#{price},#{createTime})
     </insert>
     <delete id="deleteAllData">
         DELETE FROM majiang
     </delete>
+    <delete id="deleteOutTimeMaJiang">
+        DELETE FROM majiang WHERE create_time BETWEEN '2023-01-01 00:00:00' AND DATE_SUB(NOW(), INTERVAL 5 HOUR)
+    </delete>
     <update id="updateMaJiang">
-        UPDATE majiang set player2=#{player2},player3=#{player3},player4=#{player4},player_num=#{playerNum} where id=#{id}
+        UPDATE majiang set player2=#{player2},player3=#{player3},player4=#{player4},player_num=#{playerNum},dealer=#{dealer} where id=#{id}
     </update>
     <select id="findMaJiangById" resultType="web.sn.dream.pojo.MaJiang">
         select  * from majiang where id=#{id}
     </select>
+    <select id="findRoomInfoByStatus" resultType="web.sn.dream.pojo.MaJiang">
+        select * from majiang where status=#{status}
+    </select>
+    <update id="updateMaJiangByCreateId">
+        UPDATE majiang set status=#{status} where create_user_id=#{createUserId}
+    </update>
 </mapper>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.DeZhouPokerMapper">
+    <insert id="insertDeZhouPoker">
+        INSERT INTO dezhoupoker (id,create_user_id,create_user_name,player1,player2,player3,player4,player5,player6,player7,player8,player9,player10,player_num,status,dealer,price,create_time)
+        VALUES
+            (#{id},#{createUserId},#{createUserName},#{player1},#{player2},#{player3},#{player4},#{player5},#{player6},#{player7},#{player8},#{player9},#{player10},#{playerNum},#{status} ,#{dealer},#{price},#{createTime})
+    </insert>
+    <delete id="deleteAllData">
+        DELETE FROM dezhoupoker
+    </delete>
+    <delete id="deleteOutTimeDeZhouPoker">
+        DELETE FROM dezhoupoker WHERE create_time BETWEEN '2023-01-01 00:00:00' AND DATE_SUB(NOW(), INTERVAL 5 HOUR)
+    </delete>
+    <update id="updateDeZhouPoker">
+        UPDATE dezhoupoker set player2=#{player2},player3=#{player3},player4=#{player4},player2=#{player5},player3=#{player6},player4=#{player7},player2=#{player8},player3=#{player9},player4=#{player10},player_num=#{playerNum},dealer=#{dealer} where id=#{id}
+    </update>
+    <select id="findDeZhouPokerById" resultType="web.sn.dream.pojo.DeZhouPoker">
+        select  * from dezhoupoker where id=#{id}
+    </select>
+    <select id="findRoomInfoByStatus" resultType="web.sn.dream.pojo.DeZhouPoker">
+        select * from dezhoupoker where status=#{status}
+    </select>
+    <update id="updateDeZhouPokerByCreateId">
+        UPDATE dezhoupoker set status=#{status} where create_user_id=#{createUserId}
+    </update>
+</mapper>

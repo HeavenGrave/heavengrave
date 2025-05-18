@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xs.novel.mapper.UserMapper">
+    <update id="updateUser" parameterType="com.xs.novel.pojo.User">
+        UPDATE user
+        SET
+            score = #{score},
+            image = #{image},
+            name= #{name},
+            signature= #{signature}
+        WHERE id = #{id}
+    </update>
+    <select id="findUserByName" resultType="com.xs.novel.pojo.User">
+        select * from user where name=#{name}
+    </select>
+    <select id="findUserById" resultType="com.xs.novel.pojo.User">
+        select  * from user where id=#{id}
+    </select>
+    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user (name,password,salt,signature,type,score)
+        VALUES
+            (#{name},#{password},#{salt},#{signature},#{type},#{score})
+    </insert>
+    <select id="getAllUser" resultType="com.xs.novel.pojo.User">
+        select * from user
+    </select>
+</mapper>

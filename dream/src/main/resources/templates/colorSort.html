@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>颜色排序</title>
+	<!-- Common CSS -->
+	<!-- FontAwesome CSS-->
+	<link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+	<!-- My CSS-->
+	<link href="static/css/common.css" rel="stylesheet">
+<!--	<link href="static/css/colorSort/colorSort.css" rel="stylesheet">-->
+	<!-- Common JS-->
+	<script type="text/javascript" src="static/js/jquery/jquery.min.js"></script>
+<!--	<script type="text/javascript" src="static/js/axios/axios.js"></script>-->
+<style>
+html {
+	height: 100%;
+	width: 100%;
+}
+
+body {
+	height: 100%;
+	width: 100%;
+	margin: 0px;
+}
+
+.pageBody {
+	height: 100%;
+	width: 100%;
+	display: flex;
+}
+
+.gameArea {
+	margin: auto;
+	width: 100%;
+	max-width: 800px;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #ddd;
+	padding:40px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.controlArea {
+	margin: auto;
+	max-width: 360px;
+	height: auto;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	font-size: 18px;
+}
+
+.controlRow {
+	display: flex;
+	align-items: center;
+}
+
+.cellArea {
+	display: none;
+	flex-direction: column;
+	background-color: #000000;
+	width: 90%;
+	max-width: 600px;
+	margin: auto;
+	overflow: auto;
+}
+
+.cellRow {
+	display: grid;
+	flex-direction: row;
+}
+
+.levelValue {
+	width: 22px;
+	text-align: left;
+}
+
+.colorShow {
+	display: none;
+	width: 90%;
+	max-width: 600px;
+	margin: 0px auto;
+	gap: 8px;
+}
+
+.colorCell {
+	width: 100%;
+	aspect-ratio: 1;
+	margin: auto;
+	max-width: 50px;
+}
+
+.btnArea {
+	display: none;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+	margin: 10px;
+}
+
+.cellDiv {
+	background-color: #cccccc;
+	width: 70%;
+	aspect-ratio: 1;
+	margin: 15%;
+}
+
+.titleDiv {
+	background-color: #000000;
+	width: 90%;
+	aspect-ratio: 1;
+	margin: auto;
+	display: grid;
+	grid-template-rows: repeat(2, 1fr);
+	grid-template-columns: repeat(2, 1fr);
+}
+
+.titleCell {
+	background-color: #cccccc;
+	width: 70%;
+	margin: auto;
+	aspect-ratio: 1;
+	border-radius: 50%;
+}
+
+.btn_my {
+	margin: 10px auto;
+	padding: 5px 20px;
+	color: #ffffff;
+	border-radius: 4px;
+	border: 0px;
+	cursor: pointer;
+	font-size: 18px;
+}
+
+/* 自定义滑动条样式 */
+input[type="range"] {
+	width: 200px;
+	height: 10px;
+	border-radius: 5px;
+	background-color: #ccc;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #4CAF50;
+	cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	background-color: #4CAF50;
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<div class="pageBody">
+		<div class="gameArea">
+			<div class="controlArea">
+				<div class="controlRow">
+					<label for="level">颜色数量：</label> <input type="range" id="level"
+						min="4" max="15" value="7" step="1"> <span
+						class="levelValue" id="level-value">7</span>
+				</div>
+				<div class="controlRow">
+					<label for="cellNum">空格数量：</label> <input type="range" id="cellNum"
+						min="4" max="12" value="5" step="1"> <span
+						class="levelValue" id="cellNum-value">5</span>
+				</div>
+				<div class="controlRow">
+					<label for="tipRowNum">提示行数：</label> <input type="range"
+						id="tipRowNum" min="2" max="5" value="2" step="1"> <span
+						class="levelValue" id="tipRowNum-value">2</span>
+				</div>
+				<div class="controlRow">
+					<label for="answerNum">作答次数：</label> <input type="range"
+						id="answerNum" min="3" max="10" value="3" step="1"> <span
+						class="levelValue" id="answerNum-value">3</span>
+				</div>
+				<div class="controlRow">
+					<button id="gameStart" class="btn_my"
+						style="background-color: #ff9900;">开始</button>
+				</div>
+			</div>
+			<div class="cellArea">
+				<!-- <div class="cellRow">
+					<div>空格</div>
+					<div>提示</div>
+				</div> -->
+			</div>
+			<div class="btnArea">
+				<div class="btnRow">
+					<button id="back" class="btn_my"
+						style="margin: auto;background-color: #1993e4;">返回</button>
+				</div>
+				<!-- <div class="btnRow">
+					<button id="reset"
+						style="margin: auto;background-color: #ff9900;">重置</button>
+				</div> -->
+				<div class="btnRow">
+					<button id="check" class="btn_my"
+						style="margin: auto;background-color: #31ff67;">提交</button>
+				</div>
+			</div>
+			<div class="colorShow"></div>
+		</div>
+	</div>
+	<!-- My JS-->
+	<script type="text/javascript" src="static/js/common.js"></script>
+<!--	<script type="text/javascript" src="static/js/colorSort/colorSort.js"></script>-->
+	<script>
+		let Answer = [];
+		let allData = {};
+		const warmColors = [
+			"#ff0000", // 红
+			"#00ff00", // 绿
+			"#0000ff", // 蓝
+			"#ffff00", // 黄
+			"#ff00ff", // 品红
+			"#00ffff", // 青
+			"#ffa500", // 橙
+			"#800080", // 紫
+			"#008000", // 深绿
+			"#000080", // 深蓝
+			"#800000", // 栗色
+			"#008080", // 蓝绿
+			"#ff6347", // 番茄色
+			"#4682b4", // 钢蓝色
+			"#d2691e"  // 巧克力色
+		];
+		var nowActiveRow = 0;
+		let allColors = [];
+		window.onload = function () {
+			addControlSlide();
+		}
+		function addControlSlide() {
+			$("#level").on("input", function () {
+				$('#level-value').html($("#level").val());
+			})
+			$("#cellNum").on("input", function () {
+				$('#cellNum-value').html($("#cellNum").val());
+			})
+			$("#tipRowNum").on("input", function () {
+				$('#tipRowNum-value').html($("#tipRowNum").val());
+			})
+			$("#answerNum").on("input", function () {
+				$('#answerNum-value').html($("#answerNum").val());
+			})
+			$("#gameStart").on("click", function () {
+				let level = parseInt($("#level").val()); //颜色数量
+				let cellNum = parseInt($("#cellNum").val()); //空格数量
+				let tipRowNum = parseInt($("#tipRowNum").val());
+				let answerNum = parseInt($("#answerNum").val());
+				allColors = getRandomElements(warmColors, level); //生成随机的颜色
+				Answer = getRandomElements(allColors, cellNum); //生成谜底
+				$(".controlArea").css("display", "none");
+				$(".cellArea").css("display", "grid");
+				$(".colorShow").css("display", "grid");
+				$(".btnArea").css("display", "flex");//显示按钮
+				$(".colorShow").empty();//清空颜色显示区域
+				for (let i = 0; i < level; i++) {
+					let html = '<div class="colorCell" style="background-color:' + allColors[i] + ';" ></div>';
+					$(".colorShow").append(html);
+				}
+				$(".colorShow").css("grid-template-columns", "repeat(" + level + ", 1fr)");
+
+				let rowTotal = tipRowNum + answerNum;
+				$(".cellArea").css("grid-template-rows", "repeat(" + rowTotal + ", 1fr)");
+				$(".cellArea").empty();//清空颜色显示区域
+				for (let i = 0; i < rowTotal; i++) {
+					let html = '<div class="cellRow">';
+					if (i === tipRowNum) {
+						html = '<div class="cellRow active">';
+					}
+					let cellHtml = "";
+					let titelHtml = "";
+					let nowAnswer = [];
+					let result;
+					if (i < tipRowNum) {
+						nowAnswer = getRandomElements(allColors, cellNum); //随机生成一个答案
+						let flag = true;
+						while (flag) {
+							result = checkAnswer(nowAnswer);
+							if (result.colors === cellNum && result.nums === cellNum) {
+								nowAnswer = getRandomElements(allColors, cellNum);
+							} else if (result.colors === 0 || result.nums === 0) {
+								nowAnswer = getRandomElements(allColors, cellNum);
+							} else {
+								flag = false;
+							}
+						}
+					}
+					for (let j = 0; j < cellNum; j++) {
+						if ((j + 1) % 4 === 1) {
+							titelHtml += '<div class="titleDiv" style="" >';
+						}
+						if (i < tipRowNum) {
+							cellHtml += '<div id="' + i + '_' + j + '"  class="cellDiv" style="background-color:' + nowAnswer[j] + ';"></div>';
+							if (j < result.nums) {
+								titelHtml += '<div class="titleCell" style="background-color:#31ff67;"></div>';
+							} else if (j < result.colors) {
+								titelHtml += '<div class="titleCell" style="background-color:#8f7f0a;"></div>';
+							} else {
+								titelHtml += '<div class="titleCell" style=""></div>';
+							}
+						} else {
+							cellHtml += '<div id="' + i + '_' + j + '" class="cellDiv" style=""></div>';
+							titelHtml += '<div class="titleCell" style=""></div>';
+						}
+						if ((j + 1) % 4 == 0) {
+							titelHtml += "</div>";
+						}
+					}
+					if (cellNum % 4 != 0) {
+						titelHtml += "</div>";
+					}
+					html += cellHtml;
+					html += titelHtml;
+					html += '</div>';
+					$(".cellArea").append(html);
+				}
+				let num = cellNum + parseInt(cellNum / 4) + (cellNum % 4 > 0 ? 1 : 0);
+				$(".cellRow").css("grid-template-columns", "repeat(" + num + ", 1fr)");
+
+				//添加单元格点击事件
+				addActiveClick();
+				
+			})
+			// $("#reset").on("click", function () {
+
+			// })
+			$("#check").on("click", function () {
+				let cellNum = parseInt($("#cellNum").val()); //空格数量
+				let nowInputColos = [];
+				for (let i = 0; i < cellNum; i++) {
+					let id = nowActiveRow + "_" + i;
+					if (allData[id] === undefined) {
+						alert("请填写一个有效的答案！");
+						return;
+					}
+					// 使用示例
+					const bgColor = $("#" + id).css("background-color");
+					const hexColor = rgbToHex(bgColor);
+					nowInputColos.push(hexColor);
+				}
+				if(hasDuplicates(nowInputColos)){
+					alert("请不要输入重复的颜色！");
+				}
+				let result = checkAnswer(nowInputColos);
+				//获取当前的行的提示div
+				for (let i = 0; i < cellNum; i++) {
+					if (i < result.nums) {
+						$(".active .titleCell").eq(i).css("background-color", "#31ff67");
+					} else if (i < result.colors) {
+						$(".active .titleCell").eq(i).css("background-color", "#8f7f0a");
+					}
+				}
+				if (result.nums === cellNum) {
+					alert("恭喜你，答对了！");
+				} else {
+					if($("#"+(nowActiveRow+1)+"_0")[0] != undefined){
+						$(".active").removeClass("active");
+						$("#"+(nowActiveRow+1)+"_0").parent().addClass("active");
+						addActiveClick();
+					}else{
+						alert("游戏结束了！");
+						//重定向
+						window.location.href = "/colorSort";
+					}
+				}
+			})
+			$("#back").on("click", function () {
+				//重定向
+				window.location.href = "/colorSort";
+			})
+		}
+		//添加点击事件
+		function addActiveClick(){
+			$(".active").on("click", ".cellDiv", function () {
+				let id = $(this).attr("id");
+				nowActiveRow = parseInt(id.split("_")[0]);
+				let color = $(this).css("background-color");
+				if (allData[id] !== undefined) {
+					allData[id] = allData[id] + 1;
+					if (allData[id] >= allColors.length) {
+						allData[id] = 0;
+					}
+					$(this).css("background-color", allColors[allData[id]]);
+				} else {
+					allData[id] = 0;
+					$(this).css("background-color", allColors[allData[id]]);
+				}
+			})
+		}
+		//从当前数组中，随机取n个要素
+		function getRandomElements(arr, n) {
+			const shuffled = arr.slice().sort(() => 0.5 - Math.random());
+			return shuffled.slice(0, n);
+		}
+		//检查答案
+		function checkAnswer(nowAnswer) {
+			let result = {
+				"colors": 0,
+				"nums": 0
+			};
+			for (let i = 0; i < nowAnswer.length; i++) {
+				if (Answer.indexOf(nowAnswer[i]) >= 0) {
+					result.colors = result.colors + 1;
+				}
+				if (Answer[i] === nowAnswer[i]) {
+					result.nums = result.nums + 1;
+				}
+			}
+			return result;
+		}
+
+		/**
+		 * rgb 转 hex
+		 * @param rgb
+		 * @returns {*|string}
+		 */
+		function rgbToHex(rgb) {
+			// 如果是 # 开头（已经是16进制），直接返回
+			if (rgb.startsWith("#")) return rgb;
+			// 提取 rgb/rgba 中的数值
+			const match = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*\d+\.?\d*)?\)$/);
+			if (!match) return rgb; // 如果格式不符，原样返回
+			// 将 r, g, b 转为 16进制
+			const hex = (x) => {
+				const hex = parseInt(x).toString(16);
+				return hex.length === 1 ? "0" + hex : hex;
+			};
+			return "#" + hex(match[1]) + hex(match[2]) + hex(match[3]);
+		}
+
+	</script>
+</body>
+</html>

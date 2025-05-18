@@ -97,15 +97,15 @@ public class UserController{
         }
     }
 
-    /**
-     *  生成会话标识
-     * @return
-     */
-    private String generateSessionId() {
-        // 可以使用系统标识或随机字符串生成会话标识
-        // 这里仅作示例，使用随机UUID生成会话标识
-        return UUID.randomUUID().toString();
-    }
+//    /**
+//     *  生成会话标识
+//     * @return
+//     */
+//    private String generateSessionId() {
+//        // 可以使用系统标识或随机字符串生成会话标识
+//        // 这里仅作示例，使用随机UUID生成会话标识
+//        return UUID.randomUUID().toString();
+//    }
 
     @GetMapping("/getUserInfo")
     public Result getUserInfo(HttpSession session){
@@ -115,7 +115,7 @@ public class UserController{
 
 
 //    /**
-//     * 用户更新
+//     * 用户信息更新
 //     * @param userId
 //     * @return
 //     */

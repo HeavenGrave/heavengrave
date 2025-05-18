@@ -18,11 +18,7 @@ public class MyEditController {
     @Autowired
     private MyEditMapper myEditMapper;
     @PostMapping("/addEdit")
-    public Result addEdit(String info, int userId, String title){
-        MyEdit myEdit = new MyEdit();
-        myEdit.setTitle(title);
-        myEdit.setInfo(info);
-        myEdit.setUserId(userId);
+    public Result addEdit(MyEdit myEdit){
         myEdit.setCtime(new java.util.Date());
         myEditMapper.insertMyEdit(myEdit);
         log.info("添加成功");

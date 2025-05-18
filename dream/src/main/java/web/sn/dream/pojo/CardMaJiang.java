@@ -15,5 +15,4 @@ public class CardMaJiang {
     private String decor;   //花色  万 条 筒 风
     private String name;  //名称
     private Integer size;   //数字
-    private Integer lenght; //优先级
 }

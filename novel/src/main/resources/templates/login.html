@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>梦想从这里开始</title>
+    <!-- Common CSS -->
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <!-- BootStrap CSS -->
+    <link href="static/common/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- My CSS-->
+    <link href="static/css/login/login.css" rel="stylesheet">
+    <!-- Common JS-->
+    <script type="text/javascript" src="static/common/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/common/axios/axios.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="form-container" id="formContainer">
+        <form class="login-form" id="loginForm">
+            <h2>登录</h2>
+            <div style="position: relative;">
+                <input type="text" placeholder="用户名" id="name" required>
+                <i class="fa-solid fa-user input-icon"></i>
+            </div>
+            <div style="position: relative;">
+                <input type="password" placeholder="密码" id="password" required>
+                <i class="fa-solid fa-lock input-icon"></i>
+            </div>
+            <button type="submit">登录</button>
+        </form>
+        <form class="register-form" id="registerForm">
+            <h2>注册</h2>
+            <div style="position: relative;">
+                <input type="text" placeholder="用户名" id="new_name" required>
+                <i class="fa-solid fa-user input-icon"></i>
+            </div>
+            <div style="position: relative;">
+                <input type="password" placeholder="密码" id="registerPassword" required>
+                <i class="fa-solid fa-lock input-icon"></i>
+            </div>
+            <div style="position: relative;">
+                <input type="password" placeholder="确认密码" id="confirmPassword" required>
+                <i class="fa-solid fa-lock input-icon"></i>
+            </div>
+            <div class="error-message" id="passwordError"></div>
+            <button type="submit">注册</button>
+        </form>
+    </div>
+    <div class="toggle-link">
+        <a href="#" id="toggleLink">没有账号？注册</a>
+    </div>
+</div>
+<!-- My JS-->
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/login/login.js"></script>
+</body>
+</html>

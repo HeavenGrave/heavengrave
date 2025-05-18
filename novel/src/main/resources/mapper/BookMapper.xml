@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xs.novel.mapper.BookMapper">
+    <insert id="insertBook" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO book (name,author,cover_url,chapters,des)
+        VALUES
+            (#{name},#{author},#{coverUrl},#{chapters},#{des})
+    </insert>
+    <update id="updateBook">
+        UPDATE book
+        SET
+            name = #{name},
+            author = #{author},
+            cover_url = #{coverUrl},
+            chapters = #{chapters},
+            des = #{des}
+        WHERE id = #{id}
+    </update>
+
+    <select id="findAll" resultType="com.xs.novel.pojo.Book">
+        SELECT * FROM book
+    </select>
+</mapper>

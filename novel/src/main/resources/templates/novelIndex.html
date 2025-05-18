@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>爱阅读</title>
+    <!-- Common CSS -->
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <!-- BootStrap CSS -->
+    <link href="static/common/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- My CSS-->
+    <link href="static/css/common.css" rel="stylesheet">
+    <link href="static/css/novel/index.css" rel="stylesheet">
+    <!-- Common JS-->
+    <script type="text/javascript" src="static/common/jquery/jquery.min.js"></script>
+    <script src="static/common/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/common/axios/axios.js"></script>
+</head>
+<body>
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/novel">爱阅读</a>
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+        <!-- 目录按钮 (仅在阅读页面显示) -->
+        <button class="btn btn-outline-light hidden" id="toggleTocBtn"><i class="fas fa-list"></i> 目录</button>
+<!--        <div class="collapse navbar-collapse" id="navbarNav">-->
+<!--            <ul class="navbar-nav me-auto">-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link active" href="#" id="shelfLink"><i class="fas fa-book"></i> 书架</a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--            -->
+<!--           -->
+<!--        </div>-->
+    </div>
+</nav>
+
+<!-- 主容器 -->
+<div class="app-container">
+    <!-- 书架页面 -->
+    <div id="shelfPage" class="container py-4" style="height: 100%;">
+        <div  class="d-flex justify-content-between align-items-center mb-4">
+            <h2>我的书架</h2>
+            <button class="btn btn-primary" id="addBookBtn"><i class="fas fa-plus me-2"></i>添加书籍</button>
+        </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4" id="bookShelf" style="max-height: calc(100% - 50px);overflow: auto;">
+            <!-- 书架书籍将通过JavaScript动态生成 -->
+        </div>
+    </div>
+    <!-- 上传页面 -->
+    <div id="uploadPage" class="container py-4 hidden">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">上传书籍</h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- 添加上传成功提示框 -->
+                        <div class="alert alert-success hidden" id="uploadSuccessAlert" role="alert">
+                            书籍上传成功！
+                        </div>
+
+                        <!-- 新增图书信息展示区域 -->
+                        <div class="book-info hidden" id="bookInfo">
+                            <div class="d-flex align-items-center">
+                                <img src="" alt="Book Cover" id="bookCoverPreview" class="me-3" style="width: 50px; height: 70px;">
+                                <div>
+                                    <h5 id="bookTitleDisplay"></h5>
+                                    <p id="bookSizeDisplay"></p>
+                                </div>
+                            </div>
+                            <button class="btn btn-danger mt-3" id="clearBookInfoBtn">清除</button>
+                        </div>
+
+                        <!-- 修改上传区域 -->
+                        <div class="upload-area" id="dropArea">
+                            <i class="fas fa-cloud-upload-alt fa-3x mb-3 text-primary"></i>
+                            <h5>拖放文件到此处或点击上传</h5>
+                            <p class="text-muted">支持.txt格式书籍文件</p>
+                            <input type="file" id="fileInput" class="d-none" accept=".txt">
+                            <button class="btn btn-primary mt-3" id="selectFileBtn">选择文件</button>
+                        </div>
+
+                        <from class="mt-4" id="uploadForm">
+                            <div class="mb-3">
+                                <label for="bookTitle" class="form-label">书名</label>
+                                <input type="text" class="form-control" id="bookTitle" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookAuthor" class="form-label">作者</label>
+                                <input type="text" class="form-control" id="bookAuthor">
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookDesc" class="form-label">简介</label>
+                                <textarea class="form-control" id="bookDesc" rows="3"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="bookCover" class="form-label">封面</label>
+                                <input type="file" class="form-control" id="bookCover" accept="image/*">
+                            </div>
+
+                            <div class="progress hidden" id="uploadProgress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"></div>
+                            </div>
+
+                            <div class="d-flex justify-content-end">
+                                <button type="button" class="btn btn-secondary me-2" id="cancelUploadBtn">取消</button>
+                                <button type="button" class="btn btn-primary" id="uploadBtn" disabled>上传</button>
+                            </div>
+                        </from>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 阅读器页面 -->
+    <div id="readerPage" class="hidden" style="height: 100%;">
+        <div class="reader-container">
+            <h2 class="chapter-title" id="chapterTitle"><i class="fas fa-book-open me-2"></i>第一章</h2>
+            <div class="chapter-content custom-scrollbar"  id="chapterContent">
+                这里是章节内容...
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button class="btn btn-outline-primary" id="prevChapterBtn" disabled><i class="fas fa-chevron-left me-1"></i>上一章</button>
+                <button class="btn btn-outline-primary" id="nextChapterBtn">下一章<i class="fas fa-chevron-right ms-1"></i></button>
+            </div>
+        </div>
+
+        <!-- 目录侧边栏 -->
+        <div class="toc-sidebar custom-scrollbar" id="tocSidebar">
+            <div class="toc-header">目录</div>
+            <ul class="toc-list" id="tocList">
+                <!-- 目录内容将通过JavaScript动态生成 -->
+            </ul>
+        </div>
+
+        <!-- 阅读器控制按钮 -->
+        <div class="reader-controls">
+            <div class="btn-group-vertical shadow">
+                <button class="btn btn-light" id="fontIncreaseBtn" title="增大字体"><i class="fas fa-plus"></i></button>
+                <button class="btn btn-light" id="fontDecreaseBtn" title="减小字体"><i class="fas fa-minus"></i></button>
+                <button class="btn btn-light" id="themeToggleBtn" title="切换主题"><i class="fas fa-adjust"></i></button>
+                <button class="btn btn-light" id="toggleAiSidebarBtn" title="AI助手"><i class="fas fa-robot"></i></button>
+            </div>
+        </div>
+
+        <!-- AI助手侧边栏 -->
+        <div class="ai-sidebar" id="aiSidebar">
+            <div class="ai-header">
+                <h5>AI阅读助手</h5>
+                <button class="btn btn-sm btn-outline-secondary" id="closeAiSidebar"><i class="fas fa-times"></i></button>
+            </div>
+
+            <div class="ai-tabs">
+                <div class="ai-tab active" data-tab="summary">摘要</div>
+                <div class="ai-tab" data-tab="qa">问答</div>
+                <div class="ai-tab" data-tab="analysis">分析</div>
+            </div>
+
+            <div class="ai-content">
+                <!-- 摘要面板 -->
+                <div class="ai-panel active" id="summaryPanel">
+                    <h6>本章摘要</h6>
+                    <div class="ai-response" id="summaryResponse">
+                        <div class="ai-loading">
+                            <div class="ai-spinner"></div>
+                        </div>
+                    </div>
+                    <button class="btn btn-sm btn-primary mt-2" id="generateSummaryBtn">重新生成摘要</button>
+                </div>
+
+                <!-- 问答面板 -->
+                <div class="ai-panel" id="qaPanel">
+                    <h6>向AI提问</h6>
+                    <input type="text" class="ai-question-input" id="aiQuestionInput" placeholder="输入关于本章内容的问题...">
+                    <button class="btn btn-sm btn-primary w-100" id="askQuestionBtn">提问</button>
+                    <div class="ai-response" id="qaResponse">
+                        <p class="text-muted">在这里输入问题，AI将根据本章内容回答。</p>
+                    </div>
+                </div>
+
+                <!-- 分析面板 -->
+                <div class="ai-panel" id="analysisPanel">
+                    <h6>本章分析</h6>
+                    <div class="ai-response" id="analysisResponse">
+                        <div class="ai-loading">
+                            <div class="ai-spinner"></div>
+                        </div>
+                    </div>
+                    <div class="btn-group w-100 mt-2">
+                        <button class="btn btn-sm btn-outline-primary" id="analyzeCharactersBtn">人物分析</button>
+                        <button class="btn btn-sm btn-outline-primary" id="analyzePlotBtn">情节分析</button>
+                        <button class="btn btn-sm btn-outline-primary" id="analyzeThemeBtn">主题分析</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 文本选择弹出菜单 -->
+        <div class="text-selection-popup" id="textSelectionPopup">
+            <button class="btn btn-sm btn-primary" id="explainSelectionBtn"><i class="fas fa-lightbulb"></i> 解释</button>
+            <button class="btn btn-sm btn-primary" id="translateSelectionBtn"><i class="fas fa-language"></i> 翻译</button>
+            <button class="btn btn-sm btn-secondary" id="closePopupBtn"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+</div>
+<!-- My JS -->
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/novel/index.js"></script>
+</body>
+</html>

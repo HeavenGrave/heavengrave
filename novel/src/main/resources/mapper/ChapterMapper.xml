@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xs.novel.mapper.ChapterMapper">
+    <insert id="insertChapter" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chapter (name,content,chapter_num,words,book_id)
+        VALUES
+            (#{name},#{content},#{chapterNum},#{words},#{bookId})
+    </insert>
+    <insert id="batchInsertChapter" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO chapter (name,content,chapter_num,words,book_id)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name},#{item.content},#{item.chapterNum},#{item.words},#{item.bookId})
+        </foreach>
+    </insert>
+    <select id="findByBookId" resultType="com.xs.novel.pojo.Chapter">
+        SELECT id,name,chapter_num,words  FROM chapter WHERE book_id=#{bookId}
+    </select>
+    <select id="findById" resultType="com.xs.novel.pojo.Chapter">
+        SELECT *  FROM chapter WHERE id=#{id}
+    </select>
+    <select id="findByBookIdAndChapterNum" resultType="com.xs.novel.pojo.Chapter">
+        SELECT *  FROM chapter WHERE book_id=#{bookId} AND chapter_num=#{chapterNum}
+    </select>
+</mapper>

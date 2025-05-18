@@ -21,6 +21,4 @@ public class MyEditServiceImpl implements MyEditService {
             log.error("在用户注册过程中产生了未知的错误！");
         }
     }
-
-
 }

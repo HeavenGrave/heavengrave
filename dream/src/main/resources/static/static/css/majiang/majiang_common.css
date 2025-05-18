@@ -1,433 +1,185 @@
 @charset "UTF-8";
-html{
+html {
     height: 100%;
+    width: 100%;
 }
-body{
+
+body {
     height: 100%;
     width: 100%;
     padding: 0px;
     margin: 0px;
 }
-.div_body{
-    position: relative;background-color: #000000;width: 100%;height: 100%;
+
+.div_body {
+    position: relative;
+    background-color: #000000;
 }
-.backgroundDiv_image{
+
+.backgroundDiv_image {
     background-image: url(../../image/majiang/majiangTable.jpg);
     width: 100%;
     height: 100%;
     background-size: cover;
     position: absolute;
 }
-.img_size{
-    width:100%;height:100%;
-}
-.card1{
-}
-.card2{
-    height: 7rem;
-    margin-top:-3rem;
-    /*transform: rotate(90deg);*/
-    /*-ms-transform: rotate(90deg);*/
-    /*-moz-transform: rotate(90deg);*/
-    /*-webkit-transform: rotate(90deg);*/
-    /*-o-transform: rotate(90deg);*/
-}
-.card3{
-}
-.card4{
-    height: 7rem;
-    margin-top:-3rem;
-    /*transform: rotate(90deg);*/
-    /*-ms-transform: rotate(90deg);*/
-    /*-moz-transform: rotate(90deg);*/
-    /*-webkit-transform: rotate(90deg);*/
-    /*-o-transform: rotate(90deg);*/
+
+.img_size {
+    /*width: 100%;*/
+    height: 100%;
+    aspect-ratio: 7 / 10;
 }
 
-.playerCards_mid_top{
-    margin-top: 2%;
-    position: absolute;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.playerCards_mid_left{
-    left: 8%;
-    height: 100%;
-    display: flex;
-    position: absolute;
-    flex-direction: column;
-    justify-content: center;
-    top: 0px;
-}
-.playerCards_mid_right{
-    right: 8%;
-    height: 100%;
-    display: flex;
-    position: absolute;
-    flex-direction: column;
-    justify-content: center;
-}
-.playerCards_mid_bottom{
-    position: absolute;
-    bottom: 10%;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btnDiv{
-    height: 40px;
-    border-radius: 4px;
+.startGameBtn.active {
     background-color: #0095ff;
-    color: white;
-    line-height: 40px;
-    width: 100px;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
 }
 
-.createGame{
-    width: 100px;
-    color: white;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
-    cursor :  pointer;
-}
-/*.lightCard{*/
-/*    width: 30px;*/
-/*    text-align: center;*/
-/*    font-size: 42px;*/
-/*    height: 30px;*/
-/*    line-height: 30px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/*.playerLight1{*/
-/*    display: flex;*/
-/*    background-color: #e3e4e538;*/
-/*    color: #ccc;*/
-/*    width: 140px;*/
-/*    justify-content: center;*/
-/*    border-radius: 4px;*/
-/*    position: absolute;*/
-/*    left: 19%;*/
-/*    top: 15%;*/
-/*    height: 40px;*/
-/*    align-items: center;*/
-/*}*/
-/*.playerLight2{*/
-/*    display: flex;*/
-/*    background-color: #e3e4e538;*/
-/*    color: #ccc;*/
-/*    width: 140px;*/
-/*    justify-content: center;*/
-/*    border-radius: 4px;*/
-/*    position: absolute;*/
-/*    right: 20%;*/
-/*    top: 15%;*/
-/*    height: 40px;*/
-/*    align-items: center;*/
-/*}*/
-/*.playerLight3{*/
-/*    display: flex;*/
-/*    background-color: #e3e4e538;*/
-/*    color: #ccc;*/
-/*    width: 40px;*/
-/*    justify-content: center;*/
-/*    border-radius: 4px;*/
-/*    position: absolute;*/
-/*    right: 13%;*/
-/*    top: 33%;*/
-/*    height: 140px;*/
-/*    align-items: center;*/
-/*    flex-direction: column;*/
-/*}*/
-/*.playerLight4{*/
-/*    display: flex;*/
-/*    background-color: #e3e4e538;*/
-/*    color: #ccc;*/
-/*    width: 140px;*/
-/*    justify-content: center;*/
-/*    border-radius: 4px;*/
-/*    position: absolute;*/
-/*    left: 30%;*/
-/*    bottom: 21%;*/
-/*    height: 40px;*/
-/*    align-items: center;*/
-/*}*/
-/*.playerLight5{*/
-/*    display: flex;*/
-/*    background-color: #e3e4e538;*/
-/*    color: #ccc;*/
-/*    width: 40px;*/
-/*    justify-content: center;*/
-/*    border-radius: 4px;*/
-/*    position: absolute;*/
-/*    left: 13%;*/
-/*    top: 33%;*/
-/*    height: 140px;*/
-/*    align-items: center;*/
-/*    flex-direction: column;*/
-/*}*/
-
-.startGameBtn{
-    background-color:#ccc;
-}
-.startGameBtn.active{
-    background-color:#0095ff;
-}
-.time1{
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    top: 19%;
-    left: 26%;
-    display: none;
-}
-.time2{
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    top: 19%;
-    right: 26%;
-    display: none;
-}
-.time3{
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    top: 47%;
-    right: 15%;
-    display: none;
-}
-.time4{
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    bottom: 30%;
-    left: 49%;
-    display: none;
-}
-.time5{
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    top: 47%;
-    left: 15%;
-    display: none;
-}
-.thisCard.active{
-    margin-top: -20px;
+.Characters1 {
+    background-image: url(../../image/majiang/wan1.png);
 }
 
-.result-Div{
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color:#ffffff3d;
-    top: 0px;
+.Characters2 {
+    background-image: url(../../image/majiang/wan2.png);
 }
-/*.result-msg{*/
-/*    font-size: 28px;*/
-/*    width: 100%;*/
-/*    text-align: center;*/
-/*    color: #FFFFFF;*/
-/*    height: 55px;*/
-/*    line-height: 55px;*/
-/*}*/
-/*.result-money{*/
-/*    font-size: 28px;*/
-/*    width: 100%;*/
-/*    text-align: center;*/
-/*    color: #FFFFFF;*/
-/*    height: 55px;*/
-/*    line-height: 55px;*/
-/*}*/
-/*.outUserName{*/
-/*    display: flex;*/
-/*    height: 40px;*/
-/*    width: 100%;*/
-/*    position: absolute;*/
-/*    top: 38%;*/
-/*    font-size: 26px;*/
-/*    align-items: center;*/
-/*    color: #ffd600;*/
-/*    justify-content: center;*/
-/*}*/
 
-/*.winer1{*/
-/*    left: 20%;*/
-/*    margin-top: 3%;*/
-/*    position: absolute;*/
-/*    font-size: 22px;*/
-/*    font-weight: 500;*/
-/*    text-align: center;*/
-/*    color: white;*/
-/*    height: 68px;*/
-/*    width: 200px;*/
-/*}*/
-/*.winer2{*/
-/*    font-size: 22px;*/
-/*    font-weight: 500;*/
-/*    text-align: center;*/
-/*    color: white;*/
-/*    height: 68px;*/
-/*    width: 200px;*/
-/*    right: 20%;*/
-/*    margin-top: 3%;*/
-/*    position: absolute;*/
-/*}*/
-/*.winer3{*/
-/*    color: white;*/
-/*    height: 68px;*/
-/*    width: 200px;*/
-/*    font-size: 22px;*/
-/*    font-weight: 500;*/
-/*    text-align: center;*/
-/*    right: 3%;*/
-/*    margin-top: 16%;*/
-/*    position: absolute;*/
-/*}*/
-/*.winer4{*/
-/*    color: white;*/
-/*    height: 68px;*/
-/*    width: 200px;*/
-/*    font-size: 22px;*/
-/*    font-weight: 500;*/
-/*    text-align: center;*/
-/*    left: 40%;*/
-/*    bottom: 11%;*/
-/*    position: absolute;*/
-/*    display: flex;*/
-/*    pointer-events: none;*/
-/*}*/
-/*.winer5{*/
-/*    color: white;*/
-/*    height: 68px;*/
-/*    width: 200px;*/
-/*    font-size: 22px;*/
-/*    font-weight: 500;*/
-/*    text-align: center;*/
-/*    left: 3%;*/
-/*    margin-top: 16%;*/
-/*    position: absolute;*/
-/*}*/
-
-/**
- * 万字牌样式
- */
-.thisCard{
-    width: 69px; /* 容器的宽度 */
-    height: 93px; /* 容器的高度 */
-    background-image: url(../../image/majiang/mj.png); /* 大图的路径 */
-    border-radius:8px;
+.Characters3 {
+    background-image: url(../../image/majiang/wan3.png);
 }
-.Characters_top{
+
+.Characters4 {
+    background-image: url(../../image/majiang/wan4.png);
+}
+
+.Characters5 {
+    background-image: url(../../image/majiang/wan5.png);
+}
+
+.Characters6 {
+    background-image: url(../../image/majiang/wan6.png);
+}
+
+.Characters7 {
+    background-image: url(../../image/majiang/wan7.png);
+}
+
+.Characters8 {
+    background-image: url(../../image/majiang/wan8.png);
+}
+
+.Characters9 {
+    background-image: url(../../image/majiang/wan9.png);
+}
+
+.Bamboos1 {
+    background-image: url(../../image/majiang/tiao1.png);
+}
+
+.Bamboos2 {
+    background-image: url(../../image/majiang/tiao2.png);
+}
+
+.Bamboos3 {
+    background-image: url(../../image/majiang/tiao3.png);
+}
+
+.Bamboos4 {
+    background-image: url(../../image/majiang/tiao4.png);
+}
+
+.Bamboos5 {
+    background-image: url(../../image/majiang/tiao5.png);
+}
+
+.Bamboos6 {
+    background-image: url(../../image/majiang/tiao6.png);
+}
+
+.Bamboos7 {
+    background-image: url(../../image/majiang/tiao7.png);
+}
+
+.Bamboos8 {
+    background-image: url(../../image/majiang/tiao8.png);
+}
+
+.Bamboos9 {
+    background-image: url(../../image/majiang/tiao9.png);
+}
+
+.Dots1 {
+    background-image: url(../../image/majiang/tong1.png);
+}
+
+.Dots2 {
+    background-image: url(../../image/majiang/tong2.png);
+}
+
+.Dots3 {
+    background-image: url(../../image/majiang/tong3.png);
+}
+
+.Dots4 {
+    background-image: url(../../image/majiang/tong4.png);
+}
+
+.Dots5 {
+    background-image: url(../../image/majiang/tong5.png);
+}
+
+.Dots6 {
+    background-image: url(../../image/majiang/tong6.png);
+}
+
+.Dots7 {
+    background-image: url(../../image/majiang/tong7.png);
+}
+
+.Dots8 {
+    background-image: url(../../image/majiang/tong8.png);
+}
+
+.Dots9 {
+    background-image: url(../../image/majiang/tong9.png);
+}
+
+.Dragon_zhong {
+    background-image: url(../../image/majiang/zhong.png);
+}
+
+.Dragon_fa {
+    background-image: url(../../image/majiang/fa.png);
+}
+
+.Dragon_bai {
+    background-image: url(../../image/majiang/baiban.png);
+}
+
+.Characters_top {
     line-height: 20px;
 }
-.Characters_bottom{
+
+.Characters_bottom {
     line-height: 20px;
     color: red;
 }
 
-
-
-.Characters1 {
-    background-position: -20px -14px; /* 调整背景图的位置 */
-}
-.Characters2 {
-    background-position: -105px -14px; /* 调整背景图的位置 */
-}
-.Characters3 {
-    background-position: -193px -14px; /* 调整背景图的位置 */
-}
-.Characters4 {
-    background-position: -280px -14px; /* 调整背景图的位置 */
-}
-.Characters5 {
-    background-position: -366px -14px; /* 调整背景图的位置 */
-}
-.Characters6 {
-    background-position: -452px -14px; /* 调整背景图的位置 */
-}
-.Characters7 {
-    background-position: -539px -14px; /* 调整背景图的位置 */
-}
-.Characters8 {
-    background-position: -626px -14px; /* 调整背景图的位置 */
-}
-.Characters9 {
-    background-position: -712px -14px; /* 调整背景图的位置 */
+.pengGangHu {
+    font-size: 2rem;
+    color: #cccccc;
+    font-family: cursive;
+    cursor: pointer;
+    display: none;
 }
 
-.Bamboos1{
-    background-position: -20px  -214px; /* 调整背景图的位置 */
-}
-.Bamboos2{
-    background-position: -105px -214px; /* 调整背景图的位置 */
-}
-.Bamboos3{
-    background-position: -193px -214px; /* 调整背景图的位置 */
-}
-.Bamboos4{
-    background-position: -280px -214px; /* 调整背景图的位置 */
-}
-.Bamboos5{
-    background-position: -366px -214px; /* 调整背景图的位置 */
-}
-.Bamboos6{
-    background-position: -452px -214px; /* 调整背景图的位置 */
-}
-.Bamboos7{
-    background-position: -539px -214px; /* 调整背景图的位置 */
-}
-.Bamboos8{
-    background-position: -626px -214px; /* 调整背景图的位置 */
-}
-.Bamboos9{
-    background-position: -712px -214px; /* 调整背景图的位置 */
+.pengGangHu.activeColor {
+    color: #ff0000;
+    display:flex;
 }
 
-.Dots1{
-    background-position: -20px  -114px; /* 调整背景图的位置 */
-}
-.Dots2{
-    background-position: -105px -114px; /* 调整背景图的位置 */
-}
-.Dots3{
-    background-position: -193px -114px; /* 调整背景图的位置 */
-}
-.Dots4{
-    background-position: -280px -114px; /* 调整背景图的位置 */
-}
-.Dots5{
-    background-position: -366px -114px; /* 调整背景图的位置 */
-}
-.Dots6{
-    background-position: -452px -114px; /* 调整背景图的位置 */
-}
-.Dots7{
-    background-position: -539px -114px; /* 调整背景图的位置 */
-}
-.Dots8{
-    background-position: -626px -114px; /* 调整背景图的位置 */
-}
-.Dots9{
-    background-position: -712px -114px; /* 调整背景图的位置 */
-}
-
-.Dragon_zhong{
-    background-position: -366px -314px; /* 调整背景图的位置 */
-}
-.Dragon_fa{
-    background-position: -452px -314px; /* 调整背景图的位置 */
-}
-.Dragon_bai{
-    background-position: -539px -314px; /* 调整背景图的位置 */
+.thisCard {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    background-size: cover;
+    aspect-ratio: 7 / 10;
 }

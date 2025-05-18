@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xs.novel.mapper.ReadingRecordMapper">
+    <insert id="insertReadingRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO readingrecord (book_id,chapter_id,chapter_name,user_id)
+        VALUES
+            (#{bookId},#{chapterId},#{chapterName},#{userId})
+    </insert>
+    <select id="findByUserIdAndBookId" resultType="com.xs.novel.pojo.ReadingRecord">
+        select * from readingrecord where user_id=#{userId} and book_id=#{bookId}
+    </select>
+</mapper>

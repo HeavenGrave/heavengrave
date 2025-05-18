@@ -2,22 +2,30 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
-    <title>倒趟三哇!</title>
+    <title>扣两圈哇!</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Common CSS -->
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <!-- BootStrap CSS -->
+    <link href="static/common/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- My CSS-->
+    <link href="static/css/common.css" rel="stylesheet">
     <link href="static/css/majiang/majiang_common.css" rel="stylesheet">
-    <!--结算div结束-->
+    <!-- Common JS-->
+    <script type="text/javascript" src="static/common/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
     <script type="text/javascript" src="static/js/stomp/sockjs.min.js"></script>
     <script type="text/javascript" src="static/js/stomp/stomp.umd.min.js"></script>
-    <script type="text/javascript" src="static/js/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="static/js/axios/axios.js"></script>
 </head>
 <body>
-<div class="div_body" >
+<div class="div_body">
     <div class="backgroundDiv_image"></div>
-    <div id="roomDiv" style="position: absolute;display: none;color: #ddd;font-size: 20px;">
-        <div>房间号：</div><div id="thisRoomId"></div>
+    <div id="roomDiv"  class="roomDiv" style="position: absolute;display: none;color: #ddd;">
+        <div>房号:</div><div id="thisRoomId"></div>
     </div>
-    <div id="player3" class="playerCards_mid_top">
-        <div class="card3" style="margin-top:0px;">
+    <div id="player3" class="playerCards playerCards_mid_top">
+        <div class="card3"  >
             <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card3">
@@ -48,49 +56,49 @@
             <img class="img_size" src="static/image/majiang/back.png" />
         </div>
     </div>
-    <div class="winer3" id="winer3"></div>
-    <div  style="width: 100px;height: 130px;top: 4%;position: absolute;left: 14%;">
-        <div style="width: 100px;height: 100px;"><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/3.png"></div>
-        <div id='playerName3' style="color: white;text-align: center; line-height: 30px;height: 30px;font-size: 16px;">玩家名称</div>
+<!--    <div class="winer3" id="winer3"></div>-->
+    <div  class="playerNameSpace3">
+        <div class="userAvatar"  ><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/3.png"></div>
+        <div id='playerName3' class="playerName" style="color: white;text-align: center;">玩家名</div>
     </div>
-    <div id="player2" class="playerCards_mid_right">
-        <div class="card2" style="margin-top:0px;">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+    <div id="player2" class="playerCards playerCards_mid_right">
+        <div class="card2" >
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card2">
-            <img class="img_size" src="static/image/majiang/rightBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
     </div>
     <div class="winer2" id="winer2"></div>
-    <div  style="width: 100px;height: 130px;top: 40%;position: absolute;right: 2%;">
-        <div style="width: 100px;height: 100px;"><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/2.png"></div>
-        <div id='playerName2' style="color: white;text-align: center; line-height: 30px;height: 30px;font-size: 16px;">玩家名称</div>
+    <div class="playerNameSpace2">
+        <div class="userAvatar"  ><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/2.png"></div>
+        <div id='playerName2' class="playerName" style="color: white;text-align: center;">玩家名</div>
     </div>
-    <div id="player1"  class="playerCards_mid_bottom">
+    <div id="player1"  class="playerCards playerCards_mid_bottom">
         <div class="card1" >
             <img class="img_size" src="static/image/majiang/back.png" />
         </div>
@@ -123,60 +131,66 @@
         </div>
     </div>
     <div class="winer1" id="winer1"></div>
-    <div  style="width: 100px;height: 130px;bottom: 9%;position: absolute;left:20%;">
-        <div style="width: 100px;height: 100px;"><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/1.png"></div>
-        <div id='playerName1' style="color: white;text-align: center; line-height: 30px;height: 30px;font-size: 16px;">玩家名称</div>
+    <div class="playerNameSpace1">
+        <div class="userAvatar"  ><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/1.png"></div>
+        <div id='playerName1' class="playerName" style="color: white;text-align: center;">玩家名</div>
     </div>
-    <div id="player4" class="playerCards_mid_left">
-        <div class="card4" style="margin-top:0px;">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+    <div id="player4" class="playerCards playerCards_mid_left">
+        <div class="card4" >
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
         <div class="card4">
-            <img class="img_size" src="static/image/majiang/leftBack.png" />
+            <img class="img_size" src="static/image/majiang/back.png" />
         </div>
     </div>
     <div class="winer4" id="winer4"></div>
-    <div  style="width: 100px;height: 130px;top: 40%;position: absolute;left: 2%;">
-        <div style="width: 100px;height: 100px;"><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/4.png"></div>
-        <div id='playerName4' style="color: white;text-align: center; line-height: 30px;height: 30px;font-size: 16px;">玩家名称</div>
+    <div class="playerNameSpace4">
+        <div class="userAvatar" ><img style="width: 100%;    border-radius: 50%;" src="static/image/userImage/4.png"></div>
+        <div id='playerName4' class="playerName" style="color: white;text-align: center;">玩家名</div>
     </div>
     <!--创建游戏或加入游戏模块-->
-    <div id="createDiv" style="position: absolute;width: 440px;height: 50px;display: flex;top: calc(50% - 25px);left: calc(50% - 220px);justify-content: space-around;align-items: center;">
+    <div id="createDiv"  class="createDiv">
         <div id="createGame" class="btnDiv" style="top: 48%;left: 32%;">创建游戏</div>
-        <div class="createGameDiv" style="display:none;height: 62px;position: absolute;background: #0095ff;top: 46px;left: 5px;flex-direction: column;width: 100px;border-radius: 4px;">
-            <div class="createGame" data-num="3" style="border-bottom: 1px solid #ffffff;">三人麻将</div>
-            <div class="createGame" data-num="3" >四人麻将</div></div>
-        <div style="display:flex;align-items: center;"><div style="width: 75px;color: #000000;font-size: 18px;font-weight: 600;">房间号：</div>
-            <label for="roomId"></label><input id="roomId" style="height: 28px;width:130px;border-radius: 8px;border: 0px;"/></div>
+<!--        <div class="createGameDiv" style="display:none;height: 62px;position: absolute;background: #0095ff;top: 46px;left: 5px;flex-direction: column;width: 100px;border-radius: 4px;">-->
+<!--            <div class="createGame" data-num="3" style="border-bottom: 1px solid #ffffff;">三人麻将</div>-->
+<!--            <div class="createGame" data-num="3" >四人麻将</div>-->
+<!--        </div>-->
+        <div style="display:flex;align-items: center;">
+            <div class="roomNumTitle" >房间号：</div>
+            <div id="roomId" class="roomNumDiv"></div>
+        </div>
+        <div id="room_list" class="room-list SliderBar"  >
+
+        </div>
         <div id="addGame" class="btnDiv" style="top: 48%;right: 32%;" >加入游戏</div>
     </div>
     <!-- 游戏准备人数，以及开始按钮展示-->
-    <div id="gameShowDiv" style="position: absolute;width: 440px;height: 50px;display:none;top: calc(50% - 25px);left: calc(50% - 220px);justify-content: space-around;align-items: center;">
-        <div style="display: flex;font-size: 28px;color: #0070ff;"><div id="nowPlayerNum" >1</div><div>/</div ><div id="playerTotal">4</div><div id="totalNum"></div></div>
+    <div id="gameShowDiv" class="gameShowDiv" style="">
+        <div class="playerReadyNum" style="display: flex;color: #0070ff;"><div id="nowPlayerNum" >1</div><div>/</div ><div id="playerTotal">4</div><div id="totalNum"></div></div>
         <div id="startGame" disabled="disabled" class="btnDiv startGameBtn " style="top: 48%;right: 32%;">开始游戏</div>
     </div>
     <!--出牌按钮展示开始-->
@@ -186,10 +200,10 @@
     </div>
     <!--出牌按钮展示结束-->
     <!--出牌头像展示开始-->
-    <div class="time1 duola"><img style="width: 100%;height: 100%;" src="static/image/timg.jpg"></div>
-    <div class="time2 duola"><img style="width: 100%;height: 100%;" src="static/image/timg.jpg"></div>
-    <div class="time3 duola"><img style="width: 100%;height: 100%;" src="static/image/timg.jpg"></div>
-    <div class="time4 duola"><img style="width: 100%;height: 100%;" src="static/image/timg.jpg"></div>
+    <div class="time1 duoLa"><img style="width: 100%;height: 100%;" src="static/image/time.jpg"></div>
+    <div class="time2 duoLa"><img style="width: 100%;height: 100%;" src="static/image/time.jpg"></div>
+    <div class="time3 duoLa"><img style="width: 100%;height: 100%;" src="static/image/time.jpg"></div>
+    <div class="time4 duoLa"><img style="width: 100%;height: 100%;" src="static/image/time.jpg"></div>
     <!--出牌头像展示结束-->
     <!--出牌用户名称展示区域开始-->
     <div id="outUserName" class="outUserName">
@@ -200,36 +214,152 @@
     <div id="outCards" class="outCards" >
 
     </div>
-    <!--出牌展示区域结束-->
-    <!--        游戏语音-->
-    <!--        <div>-->
-    <!--            <input type="file" class="input_audio" id="input_audio" accept="audio/*">-->
-    <!--            <audio controls>-->
-    <!--                <source src="" id="play_audio" type="audio/mpeg">-->
-    <!--            </audio>-->
-    <!--        </div>-->
-    <!--        倒计时暂时-->
-    <div id="time" style="display: none;height: 50px;width: 50px;position: absolute;bottom: 30%;left: 47%;color: red;font-size: 40px;"></div>
-    <!--        亮三提示展示-->
-    <div id="lightSanWa" style="display:none;position: absolute;color: #ff3d00;font-size: 60px;top: calc(50% -  60px);height: 80px;left: calc(58% + 150px);width: 300px;text-align: center;">亮三哇！</div>'
+    <!--    金牌展示-->
+    <div class="center" style="">
+        <div id="keyHot" class="keyHot"></div>
+        <div id="time" class="outTime"></div>
+    </div>
+    <div id="playerShowCards_1" class="bottomSpace"  ></div>
+    <div id="playerShowCards_2" class="rightSpace"  ></div>
+    <div id="playerShowCards_3" class="topSpace"  ></div>
+    <div id="playerShowCards_4" class="leftSpace"  ></div>
+    <!-- 碰、杠、胡按钮展示区域-->
+    <div id="pengGangHu" class="pengGangHuDiv" style="">
+        <div id="peng" class="pengGangHu"  >碰</div>
+        <div id="gang" class="pengGangHu"  >杠</div>
+        <div id="anGang" class="pengGangHu"  >暗杠</div>
+        <div id="hu"   class="pengGangHu"  >胡</div>
+        <div id="ziMo" class="pengGangHu"  >自摸</div>
+        <div id="skip" class="pengGangHu activeColor" style="margin-left:20px;">跳过</div>
+    </div>
+    <!-- 碰、杠、胡牌展示区域-->
+<!--    <div style="display: none;">-->
+        <div id="player1_pg" class="player-pg1" style=""></div>
+        <div id="player2_pg" class="player-pg2" style=""></div>
+        <div id="player3_pg" class="player-pg3" style=""></div>
+        <div id="player4_pg" class="player-pg4" style=""></div>
+<!--    </div>-->
+    <div id="dealer_1" class="dealerDiv dealer1" >
+        <i class="fas fa-solid fa-award "></i>
+    </div>
+    <div id="dealer_2" class="dealerDiv dealer2"  >
+        <i class="fas fa-solid fa-award "></i>
+    </div>
+    <div id="dealer_3" class="dealerDiv dealer3"  >
+        <i class="fas fa-solid fa-award "></i>
+    </div>
+    <div id="dealer_4" class="dealerDiv dealer4"  >
+        <i class="fas fa-solid fa-award "></i>
+    </div>
+
     <!--      退出房间-->
-    <div id="exitGame"  class="btnDiv" style="display:none;bottom: 1%;right: 10px;position: absolute;" >退出房间</div>
-    <div id="exitPage"  class="btnDiv" style="bottom: 1%;right: 10px;position: absolute;" >返回主页</div>
+    <div id="exitGame"  class="btnDiv exitBtn" style="display:none;" >退出房间</div>
+    <div id="exitPage"  class="btnDiv exitBtn" style="" >返回主页</div>
 </div>
 <!--结算div开始-->
 <div class="result-Div">
-    <div style="width: 300px;height: 200px;display: flex;background-color: #4654ff;flex-direction: column;border-radius: 25px;top: calc(50% - 100px);position: absolute;left: calc(50% - 150px);">
+    <div class="result-show">
+        <div id="result-cards" ></div>
         <div id="result-msg" class="result-msg"></div>
         <div id="result-money" class="result-money"></div>
         <div style="display: flex;justify-content: center;margin-top: 20px;">
-            <div id="continueGame" style="height: 30px;width: 100px;background-color: #47b947;color: white;line-height: 30px;text-align: center;border-radius: 8px;">继续</div>
+            <div id="continueGame" class="continueGame" >继续</div>
+            <div id="endGame" class="endGame" >继续</div>
         </div>
     </div>
 </div>
-<div style="position: absolute;left: 3px;bottom:5px;color:#fff;">版本号：V 23.12.2.2</div>
+<!--游戏配置div开始-->
+<div class="gameInfo-Div">
+    <div class="gameInfo-show">
+        <div class="gameInfo-row">
+            <div class="radio-title">人数</div>
+            <div>：</div>
+            <div class="radio-group">
+                <div class="switch-radio-item">
+                    <input type="radio" id="person_4" name="person-group" value="4" >
+                    <label for="person_4">4人</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="person_3" name="person-group" value="3" checked>
+                    <label for="person_3">3人</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="person_2" name="person-group" value="2">
+                    <label for="person_2">2人</label>
+                </div>
+            </div>
+        </div>
+        <div class="gameInfo-row"><div class="radio-title">玩法</div> <div>：</div>
+            <div class="radio-group">
+                <div class="switch-radio-item">
+                    <input type="radio" id="gamePlay_tuiDao" name="gamePlay-group" value="tuiDao" checked>
+                    <label for="gamePlay_tuiDao">推到</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="gamePlay_daiJin" name="gamePlay-group" value="daiJin">
+                    <label for="gamePlay_daiJin">带金</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="gamePlay_kanDuiQue" name="gamePlay-group" value="kanDuiQue">
+                    <label for="gamePlay_kanDuiQue">坎堆缺</label>
+                </div>
+            </div>
+        </div>
+        <div class="gameInfo-row"><div class="radio-title">圈数</div> <div>：</div>
+            <div class="radio-group">
+                <div class="switch-radio-item">
+                    <input type="radio" id="quan_4" name="quan-group" value="4" checked>
+                    <label for="quan_4">4圈</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="quan_8" name="quan-group" value="8" >
+                    <label for="quan_8">8圈</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="quan_16" name="quan-group" value="16">
+                    <label for="quan_16">16圈</label>
+                </div>
+            </div>
+        </div>
+        <div class="gameInfo-row"><div class="radio-title">坐庄</div> <div>：</div>
+            <div class="radio-group">
+                <div class="switch-radio-item">
+                    <input type="radio" id="deal_sort" name="deal-group" value="sort" checked>
+                    <label for="deal_sort">轮庄</label>
+                </div>
+<!--                <div class="switch-radio-item">-->
+<!--                    <input type="radio" id="deal_win" name="deal-group" value="win" >-->
+<!--                    <label for="deal_win">谁赢谁坐庄</label>-->
+<!--                </div>-->
+            </div>
+        </div>
+        <div class="gameInfo-row"><div class="radio-title">资产</div> <div>：</div>
+            <div class="radio-group">
+                <div class="switch-radio-item">
+                    <input type="radio" id="price_10" name="price-group" value="10" >
+                    <label for="price_10">10点</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="price_20" name="price-group" value="20" checked>
+                    <label for="price_20">20点</label>
+                </div>
+                <div class="switch-radio-item">
+                    <input type="radio" id="price_100" name="price-group" value="100" >
+                    <label for="price_100">100点(坎堆缺)</label>
+                </div>
+            </div>
+        </div>
+        <div class="gameInfo-row-botton"><div id="game_ok" class="btnDiv">开始</div><div id="backHall" class="btnDiv startGameBtn">返回</div></div>
+    </div>
+</div>
+<div style="display:none;position: absolute;left: 3px;bottom:5px;color:#fff;">版本号：V 23.12.2.2</div>
 <!--    游戏信息-->
-<div  style="position: absolute;display: flex;top: 0px;right: 0px;color: white;"><div>多大的胡：</div><div id="gameInfo"></div></div>
+<div class="gamePriceInfo" ><div>多大的胡：</div><div id="gameInfo"></div></div>
+<!-- My JS-->
+<script type="text/javascript" src="static/js/common.js"></script>
 <script type="text/javascript" src="static/js/majiang/majiang_init.js"></script>
+<script type="text/javascript" src="static/js/majiang/majiang_tools.js"></script>
+<script type="text/javascript" src="static/js/majiang/majiang_socket.js"></script>
 <script type="text/javascript" src="static/js/majiang/majiang.js"></script>
 </body>
 </html>

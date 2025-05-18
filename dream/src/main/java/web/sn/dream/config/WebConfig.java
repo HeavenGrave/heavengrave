@@ -15,21 +15,6 @@ import java.util.List;
  */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-//    @Autowired
-//    private DemoInterceptor demoInterceptor ;
-
-    //@Autowired
-    //private TokenInterceptor tokenInterceptor;
-
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(demoInterceptor).addPathPatterns("/**");
-
-//        registry.addInterceptor(tokenInterceptor)
-//                .addPathPatterns("/**") // 拦截所有请求
-//                .excludePathPatterns("/login"); // 不拦截哪些请求
-//    }
     // 创建拦截器对象
     @Autowired
     private TokenInterceptor tokenInterceptor;
@@ -37,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 //        // 白名单
-//        List<String> patterns = new ArrayList<String>();
+        List<String> patterns = new ArrayList<String>();
 //        //静态资源
 //        patterns.add("/docs/**");
 //        patterns.add("/image/**");
@@ -49,9 +34,9 @@ public class WebConfig implements WebMvcConfigurer {
 //        patterns.add("/game/**");
 //        patterns.add("/edit/**");
 //        patterns.add("/todo/**");
-//        //登录页面
-//        patterns.add("/favicon.ico");
-//        patterns.add("/login");
+        //登录页面
+        patterns.add("/favicon.ico");
+        patterns.add("/login");
 //        //主页
 //        patterns.add("/welcome");
 //        //文档编辑
@@ -62,13 +47,18 @@ public class WebConfig implements WebMvcConfigurer {
 //        patterns.add("/wx/**");
 //        //我的代办
 //        patterns.add("/myToDo");
-//        // 通过注册工具添加拦截器
-//        registry.addInterceptor(tokenInterceptor)
-//                .addPathPatterns("/**")// 拦截所有请求
-//                .excludePathPatterns(patterns);//放行哪些请求
+
+        patterns.add("/static/**");
+        patterns.add("/druid");
+        patterns.add("/fileUpload");
+        patterns.add("/files/**");
+        // 通过注册工具添加拦截器
+        registry.addInterceptor(tokenInterceptor)
+                .addPathPatterns("/**")// 拦截所有请求
+                .excludePathPatterns(patterns);//放行哪些请求
           //只放行登录页面和静态资源
-          registry.addInterceptor(new TokenInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/login", "/static/**","/favicon.ico");
+//          registry.addInterceptor(new TokenInterceptor())
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/login", "/static/**","/favicon.ico","/druid");
     }
 }

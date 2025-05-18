@@ -1,63 +1,129 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>梦想从这里开始</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Common CSS -->
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <!-- BootStrap CSS -->
+    <link href="static/common/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- My CSS-->
+    <link href="static/css/common.css" rel="stylesheet">
     <link href="static/css/login/login.css" rel="stylesheet">
+    <!-- Common JS-->
+    <script type="text/javascript" src="static/common/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
 </head>
-<body>
-    <div class="cont">
-        <div class="form sign-in">
-            <h2>欢迎回来</h2>
-            <label>
-                <span>用户名</span>
-                <input type="text" id="name" />
-            </label>
-            <label>
-          <span>
-            密码</span>
-                <input type="password" id="password" />
-            </label>
-            <p class="forgot-pass">
-                忘记密码？</p>
-            <button type="button" class="submit" id="doLogin">登录</button>
-        </div>
-        <div class="sub-cont">
-            <div class="img">
-                <div class="img__text m--up">
-                    <h2>新来的？</h2>
-                    <p>注册并发现跟多朋友吧</p>
+<body class="flex justify-center items-center min-h-screen p-4">
+
+<!-- 装饰元素 -->
+<i class="fas fa-sun decoration decoration-1"></i>
+<i class="fas fa-fire decoration decoration-2"></i>
+
+<div id="main-container"
+     class="container bg-white rounded-2xl shadow-lg relative overflow-hidden w-full max-w-xs sm:max-w-md md:max-w-3xl lg:max-w-4xl min-h-[520px] md:min-h-[600px]">
+
+    <!-- 注册表单容器 -->
+    <div class="sign-up-container form-container">
+        <form class="h-full flex justify-center items-center px-6 md:px-12 form-content" id="registerForm">
+            <div class="w-full max-w-sm">
+                <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">
+                    <i class="fas fa-user-plus mr-2 text-orange-500"></i>创建账户
+                </h1>
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" placeholder="用户名" id="new_name"
+                               class="form-input w-full px-4 py-3 rounded-lg text-sm transition duration-300 ease-in-out"/>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" placeholder="密码" id="registerPassword"
+                               class="form-input w-full px-4 py-3 rounded-lg text-sm transition duration-300 ease-in-out"/>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" placeholder="确认密码" id="confirmPassword"
+                               class="form-input w-full px-4 py-3 rounded-lg text-sm transition duration-300 ease-in-out"/>
+                    </div>
                 </div>
-                <div class="img__text m--in">
-                    <h2>登录?</h2>
-                    <p>如果您已经有帐户，只需登录即可。我们想念您！</p>
-                </div>
-                <div class="img__btn">
-                    <span class="m--up">注册</span>
-                    <span class="m--in">登录</span>
-                </div>
+                <div class="error-message" id="passwordError"></div>
+                <button type="submit"
+                        class="btn-primary mt-6 w-full text-white font-bold uppercase py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-paper-plane mr-2"></i>注册
+                </button>
+                <!-- 移动端切换链接 -->
+                <p class="mobile-switch mt-4" id="mobileSignIn">
+                    <i class="fas fa-sign-in-alt mr-2"></i>已有账户？点击登录
+                </p>
             </div>
-            <div class="form sign-up">
-                <h2>欢迎注册</h2>
-                <label>
-                    <span>用户名</span>
-                    <input type="text" id="new_name" />
-                </label>
-                <label>
-                    <span>个人签名</span>
-                    <input type="text" id="new_signature"/>
-                </label>
-                <label>
-                    <span>密码</span>
-                    <input type="password" id="new_password" />
-                </label>
-                <button type="button" class="submit" id="registered">注册</button>
+        </form>
+    </div>
+
+    <!-- 登录表单容器 -->
+    <div class="sign-in-container form-container">
+        <form class="h-full flex justify-center items-center px-6 md:px-12 form-content" id="loginForm">
+            <div class="w-full max-w-sm">
+                <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">
+                    <i class="fas fa-solid fa-award  mr-2 text-orange-500"></i>欢迎回来！
+                </h1>
+                <div class="space-y-4">
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" placeholder="用户名" id="name"
+                               class="form-input w-full px-4 py-3 rounded-lg text-sm transition duration-300 ease-in-out"/>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" placeholder="密码" id="password"
+                               class="form-input w-full px-4 py-3 rounded-lg text-sm transition duration-300 ease-in-out"/>
+                    </div>
+                </div>
+                <!--                <a href="#" class="text-sm text-gray-500 hover:text-orange-500 mt-3 inline-block transition duration-300">-->
+                <!--                    <i class="fas fa-question-circle mr-1"></i>忘记密码?-->
+                <!--                </a>-->
+                <button type="submit"
+                        class="btn-primary mt-4 w-full text-white font-bold uppercase py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out">
+                    <i class="fas fa-sign-in-alt mr-2"></i>登录
+                </button>
+                <!-- 移动端切换链接 -->
+                <p class="mobile-switch mt-4" id="mobileSignUp">
+                    <i class="fas fa-user-plus mr-2"></i>还没有账户？点击注册
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <!-- 覆盖层容器 (PC端动画) -->
+    <div class="overlay-container hidden md:block">
+        <div class="overlay">
+            <!-- 左侧覆盖面板 (对应注册) -->
+            <div class="overlay-panel overlay-left">
+                <h1 class="text-3xl font-bold mb-3">已有账户?</h1>
+                <p class="text-sm mb-5 px-4">输入您的个人信息，与我们保持联系</p>
+                <button class="ghost font-bold uppercase py-2 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+                        id="signIn">
+                    <i class="fas fa-sign-in-alt mr-2"></i>登录
+                </button>
+            </div>
+            <!-- 右侧覆盖面板 (对应登录) -->
+            <div class="overlay-panel overlay-right">
+                <h1 class="text-3xl font-bold mb-3">你好, 新朋友!</h1>
+                <p class="text-sm mb-5 px-4">输入您的个人信息，开始您的旅程</p>
+                <button class="ghost font-bold uppercase py-2 px-8 rounded-full transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+                        id="signUp">
+                    <i class="fas fa-user-plus mr-2"></i>注册
+                </button>
             </div>
         </div>
     </div>
-    <script type="text/javascript" src="static/js/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="static/js/axios/axios.js"></script>
-    <script type="text/javascript" src="static/js/login/login.js"></script>
+</div>
+<!-- My JS-->
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/login/login.js"></script>
 </body>
 </html>
