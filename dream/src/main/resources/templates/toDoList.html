@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的代办</title>
+    <!-- 引入外部资源 -->
+<!--    <script src="https://cdn.tailwindcss.com"></script>-->
+    <script src="static/js/tailwindcss/tailwindcss.js"></script>
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <!-- Common JS-->
+    <script type="text/javascript" src="static/common/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
+    <!-- 配置Tailwind自定义主题 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xiaomi: '#ff6700', // 小米橙色
+                        xiaomiDark: '#e65c00',
+                        priorityHigh: '#ff4d4f',
+                        priorityMedium: '#faad14',
+                        priorityLow: '#52c41a',
+                        grayBg: '#f5f5f5',
+                        cardGray: '#ffffff',
+                        textPrimary: '#333333',
+                        textSecondary: '#757575',
+                        textTertiary: '#b0b0b0'
+                    },
+                    fontFamily: {
+                        sans: ['Roboto', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .task-enter {
+                animation: taskEnter 0.3s ease-out forwards;
+            }
+            .task-exit {
+                animation: taskExit 0.3s ease-in forwards;
+            }
+            .fade-in {
+                animation: fadeIn 0.2s ease-out forwards;
+            }
+            .slide-up {
+                animation: slideUp 0.3s ease-out forwards;
+            }
+            .slide-down {
+                animation: slideDown 0.3s ease-out forwards;
+            }
+            .slide-up-hide {
+                animation: slideUpHide 0.3s ease-in forwards;
+            }
+        }
+
+        @keyframes taskEnter {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes taskExit {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUpHide {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+    </style>
+    <link href="static/css/myToDo/todo.css" rel="stylesheet">
+    <script type="text/javascript" src="static/js/myToDo/todo.js"></script>
+</head>
+<body class="bg-grayBg min-h-screen font-sans text-textPrimary">
+<!-- 顶部导航栏 -->
+<header class="bg-cardGray shadow-sm sticky top-0 z-30">
+    <div class="container mx-auto px-4 py-4">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-xiaomi flex items-center">
+                <i class="fa fa-list-ul mr-2"></i>
+                待办事项
+            </h1>
+            <div class="flex items-center space-x-2">
+                <button id="search-toggle-btn" class="p-2 rounded-full hover:bg-grayBg transition-colors">
+                    <i class="fa fa-search text-textSecondary"></i>
+                </button>
+                <button id="more-btn" class="p-2 rounded-full hover:bg-grayBg transition-colors">
+                    <i class="fa fa-gear text-textSecondary"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 搜索框 - 默认隐藏 -->
+        <div id="search-container" class="relative mb-1 hidden slide-down">
+            <input type="text" id="search-input"
+                   class="w-full pl-10 pr-4 py-2 bg-grayBg rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-xiaomi/30 transition-colors"
+                   placeholder="搜索任务...">
+            <i class="fa fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-textTertiary"></i>
+            <button id="clear-search" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-textTertiary hover:text-textSecondary transition-colors hidden">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+    </div>
+</header>
+
+<main class="container mx-auto px-4 py-5">
+    <!-- 分类标签 -->
+    <div class="mb-3 overflow-x-auto pb-2">
+        <div class="flex space-x-2 min-w-max">
+            <button class="category-tab bg-xiaomi text-white px-4 py-2 rounded-full text-sm font-medium active">
+                全部
+            </button>
+            <button class="category-tab bg-cardGray text-textPrimary px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
+                工作
+            </button>
+            <button class="category-tab bg-cardGray text-textPrimary px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
+                生活
+            </button>
+            <button class="category-tab bg-cardGray text-textPrimary px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
+                学习
+            </button>
+<!--            <button class="category-tab bg-cardGray text-textPrimary px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">-->
+<!--                健康-->
+<!--            </button>-->
+            <button class="category-tab bg-cardGray text-textPrimary px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors">
+                其他
+            </button>
+        </div>
+    </div>
+
+    <!-- 数据概览卡片 -->
+    <div class="bg-cardGray rounded-xl p-4 mb-3 shadow-sm">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="font-medium">任务概览</h2>
+            <span class="text-xs text-textTertiary">更新于刚刚</span>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+            <div class="bg-blue-50 rounded-lg p-3 text-center">
+                <p class="text-blue-500 text-xs mb-1">全部任务</p>
+                <p class="text-xl font-bold" id="total-tasks">7</p>
+            </div>
+            <div class="bg-yellow-50 rounded-lg p-3 text-center">
+                <p class="text-yellow-500 text-xs mb-1">待完成</p>
+                <p class="text-xl font-bold" id="pending-tasks">4</p>
+            </div>
+            <div class="bg-green-50 rounded-lg p-3 text-center">
+                <p class="text-green-500 text-xs mb-1">已完成</p>
+                <p class="text-xl font-bold" id="completed-tasks">3</p>
+            </div>
+            <div class="bg-red-50 rounded-lg p-3 text-center">
+                <p class="text-red-500 text-xs mb-1">已逾期</p>
+                <p class="text-xl font-bold" id="overdue-tasks">1</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 任务列表区域 -->
+    <div>
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">任务列表</h2>
+            <div class="flex space-x-2">
+                <button id="sort-btn" class="text-textSecondary hover:text-xiaomi p-2 rounded-lg hover:bg-grayBg transition-colors">
+                    <i class="fa fa-sort mr-1"></i> 排序
+                    <span id="sort-indicator" class="ml-1 text-xs hidden md:inline-block">
+                            <i class="fa fa-calendar-plus-o"></i>
+                        </span>
+                </button>
+                <button id="filter-btn" class="text-textSecondary hover:text-xiaomi p-2 rounded-lg hover:bg-grayBg transition-colors">
+                    <i class="fa fa-filter mr-1"></i> 筛选
+                    <span id="filter-indicator" class="ml-1 text-xs hidden md:inline-block">
+                            <i class="fa fa-bullseye"></i>
+                        </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 任务列表容器 -->
+        <div id="task-container" class="space-y-3">
+            <!-- 任务项将通过JS动态生成 -->
+        </div>
+
+        <!-- 空状态显示 -->
+        <div id="empty-state" class="hidden bg-cardGray rounded-xl p-8 text-center shadow-sm">
+            <div class="w-16 h-16 bg-grayBg rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa fa-check-square-o text-2xl text-textTertiary"></i>
+            </div>
+            <h3 class="text-lg font-medium mb-2">暂无任务</h3>
+            <p class="text-textSecondary mb-6">添加你的第一个任务，开始高效生活</p>
+            <button id="add-first-task" class="bg-xiaomi text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-xiaomiDark transition-colors">
+                添加任务
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- 添加任务按钮 -->
+<button id="add-task-btn" class="fixed bottom-6 right-6 w-14 h-14 bg-xiaomi rounded-full text-white shadow-lg flex items-center justify-center text-xl hover:bg-xiaomiDark transition-all transform hover:scale-110 z-20">
+    <i class="fa fa-plus"></i>
+</button>
+
+<!-- 添加/编辑任务模态框 -->
+<div id="task-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center fade-in">
+    <div class="bg-cardGray rounded-xl w-full max-w-md mx-4 shadow-lg slide-up">
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center">
+            <h3 id="modal-title" class="text-lg font-bold">添加新任务</h3>
+            <button id="close-modal" class="text-textTertiary hover:text-textPrimary transition-colors">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div class="p-5">
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                <input type="hidden" id="create-time">
+                <div class="mb-4">
+                    <label for="task-title" class="block text-sm font-medium text-textPrimary mb-1">任务名称</label>
+                    <input type="text" id="task-title" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-xiaomi/30 focus:border-xiaomi transition-colors" placeholder="请输入任务名称">
+                </div>
+                <div class="mb-4">
+                    <label for="task-desc" class="block text-sm font-medium text-textPrimary mb-1">任务描述（可选）</label>
+                    <textarea id="task-desc" rows="3" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-xiaomi/30 focus:border-xiaomi transition-colors" placeholder="请输入任务描述"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="task-category" class="block text-sm font-medium text-textPrimary mb-1">分类</label>
+                        <select id="task-category" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-xiaomi/30 focus:border-xiaomi transition-colors">
+                            <option value="工作">工作</option>
+                            <option value="生活">生活</option>
+                            <option value="学习">学习</option>
+<!--                            <option value="健康">健康</option>-->
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="task-priority" class="block text-sm font-medium text-textPrimary mb-1">优先级</label>
+                        <select id="task-priority" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-xiaomi/30 focus:border-xiaomi transition-colors">
+                            <option value=3>高</option>
+                            <option value=2 selected>中</option>
+                            <option value=1>低</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mb-5">
+                    <label for="task-date" class="block text-sm font-medium text-textPrimary mb-1">截止日期</label>
+                    <input type="datetime-local" id="task-date" class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-xiaomi/30 focus:border-xiaomi transition-colors">
+                </div>
+                <button type="submit" class="w-full bg-xiaomi text-white py-2.5 rounded-lg font-medium hover:bg-xiaomiDark transition-colors">
+                    保存任务
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- 确认删除模态框 -->
+<div id="delete-modal" class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center fade-in">
+    <div class="bg-cardGray rounded-xl w-full max-w-sm mx-4 shadow-lg slide-up">
+        <div class="p-5 text-center">
+            <div class="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fa fa-trash-o text-xl text-red-500"></i>
+            </div>
+            <h3 class="text-lg font-bold mb-2">确认删除</h3>
+            <p class="text-textSecondary mb-5">你确定要删除这个任务吗？删除后无法恢复。</p>
+            <div class="flex space-x-3">
+                <button id="cancel-delete" class="flex-1 bg-grayBg text-textPrimary py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                    取消
+                </button>
+                <button id="confirm-delete" class="flex-1 bg-red-500 text-white py-2 rounded-lg font-medium hover:bg-red-600 transition-colors">
+                    删除
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 通知提示框 -->
+<div id="toast" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 bg-textPrimary text-white px-4 py-2 rounded-lg shadow-lg z-50 hidden fade-in"></div>
+
+<script>
+
+</script>
+</body>
+</html>

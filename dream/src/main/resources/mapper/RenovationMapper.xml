@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.RenovationMapper">
+    <insert id="insertRenovation">
+        INSERT INTO renovation (id, category, brand, model, specifications, price, remark, time, unit, quantity,
+                                total_price,status)
+        VALUES (#{id}, #{category}, #{brand}, #{model}, #{specifications}, #{price}, #{remark}, #{time}, #{unit},
+                #{quantity}, #{totalPrice},#{status})
+    </insert>
+    <update id="updateRenovation">
+        UPDATE renovation
+        set total_price=#{totalPrice},
+            unit=#{unit},
+            quantity=#{quantity},
+            brand=#{brand},
+            category= #{category},
+            model= #{model},
+            specifications= #{specifications},
+            price= #{price},
+            remark= #{remark},
+            time= #{time},
+            status=#{status}
+        where id = #{id}
+    </update>
+    <delete id="deleteRenovationById">
+        DELETE
+        FROM renovation
+        WHERE id = #{id}
+    </delete>
+    <select id="findRenovationById" resultType="web.sn.dream.pojo.Renovation">
+        select *
+        from renovation
+        where id = #{id}
+    </select>
+    <select id="findAllRenovation" resultType="web.sn.dream.pojo.Renovation">
+        SELECT *
+        FROM renovation
+    </select>
+    <select id="findRenovationByCond" resultType="web.sn.dream.pojo.Renovation">
+        SELECT * FROM renovation where 1=1
+        <if test="brand != null">
+            and brand = #{brand}
+        </if>
+        <if test="cond != null">
+                                 and (category like concat('%',#{cond},'%') or model like concat('%',#{cond},'%') or
+                                     specifications like concat('%',#{cond},'%'))
+        </if>
+        <if test="status != null">
+            and status = #{status}
+        </if>
+        <if test="timeSort != null">
+            order by time ${timeSort}
+        </if>
+    </select>
+    <select id="getBrandList" resultType="java.lang.String">
+        SELECT DISTINCT brand
+        FROM renovation
+        WHERE brand IS NOT NULL
+    </select>
+</mapper>

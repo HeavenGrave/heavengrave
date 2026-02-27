@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能文字转语音 - AI语音合成工具</title>
+    <script src="static/js/tailwindcss/tailwindcss.js"></script>
+    <script src="static/common/jquery/jquery.min.js"></script>
+    <script src="static/js/axios/axios.js"></script>
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36CFC9',
+                        accent: '#722ED1',
+                        success: '#52C41A',
+                        warning: '#FAAD14',
+                        danger: '#FF4D4F',
+                        neutral: '#F5F5F5',
+                        'neutral-dark': '#E8E8E8'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-soft': 'pulseSoft 2s ease-in-out infinite',
+                        'bounce-light': 'bounceLight 1s ease-in-out infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        },
+                        pulseSoft: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.7' }
+                        },
+                        bounceLight: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        },
+                        glow: {
+                            'from': { boxShadow: '0 0 20px rgba(22, 93, 255, 0.3)' },
+                            'to': { boxShadow: '0 0 30px rgba(22, 93, 255, 0.6)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .glass-effect {
+                backdrop-filter: blur(10px);
+                background: rgba(255, 255, 255, 0.95);
+                border: 1px solid rgba(229, 231, 235, 0.5);
+            }
+            .input-focus {
+                @apply focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300;
+            }
+            .btn-hover {
+                @apply hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 active:translate-y-0;
+            }
+            .select-custom {
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='h-5 w-5' viewBox='0 0 20 20' fill='%23666'%3E%3Cpath d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z'/%3E%3C/svg%3E");
+                background-position: right 0.5rem center;
+                background-repeat: no-repeat;
+                background-size: 1.5em 1.5em;
+            }
+        }
+    </style>
+    <link href="static/css/textToAudio/style.css" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 font-inter">
+    <!-- 背景装饰 -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute top-20 left-10 w-72 h-72 bg-primary/5 rounded-full blur-3xl animate-pulse-soft"></div>
+        <div class="absolute bottom-20 right-10 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-pulse-soft" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-accent/5 rounded-full blur-3xl animate-pulse-soft" style="animation-delay: 2s;"></div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- 标题区域 -->
+        <div class="text-center mb-8 animate-fade-in">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary to-secondary rounded-2xl mb-4 animate-glow">
+                <i class="fa fa-volume-up text-white text-2xl"></i>
+            </div>
+            <h1 class="text-[clamp(1.8rem,3vw,2.5rem)] font-bold text-gray-800 mb-2">智能文字转语音</h1>
+            <p class="text-gray-600 text-lg">AI驱动的语音合成技术，让文字拥有声音</p>
+        </div>
+
+        <!-- 输入方式选择 -->
+        <div class="glass-effect rounded-2xl p-6 mb-6 animate-slide-up">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">选择输入方式</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button id="manualInputBtn" class="input-method-btn p-4 border-2 border-primary bg-primary/5 rounded-xl text-left btn-hover flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                            <i class="fa fa-edit text-primary"></i>
+                        </div>
+                        <span class="font-medium text-gray-800">手动输入</span>
+                    </div>
+                    <div class="w-6 h-6 bg-primary rounded-full flex items-center justify-center">
+                        <div class="w-3 h-3 bg-white rounded-full"></div>
+                    </div>
+                </button>
+
+                <button id="uploadFileBtn" class="input-method-btn p-4 border-2 border-gray-200 hover:border-primary/50 rounded-xl text-left btn-hover flex items-center justify-between transition-all duration-300">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                            <i class="fa fa-upload text-gray-500"></i>
+                        </div>
+                        <span class="font-medium text-gray-600">上传文件</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- 文本输入区域 -->
+        <div class="glass-effect rounded-2xl p-6 mb-6 animate-slide-up" style="animation-delay: 0.1s;">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">输入文本</h2>
+            <textarea
+                id="textInput"
+                class="w-full h-48 p-4 border border-gray-200 rounded-xl resize-none input-focus text-gray-700 leading-relaxed"
+                placeholder="请输入要转换的文字内容..."
+            >你好，林思之。
+
+【恭喜你获得邀请函，即将成为新世界的玩家。】
+
+【在你正式进入新世界之前，这里有一个简单的测试，用于确定你在新世界中的特殊身份。</textarea>
+
+            <div class="flex justify-between items-center mt-4">
+                <div class="flex space-x-4 text-sm text-gray-500">
+                    <span id="charCount">148 字符</span>
+                    <span id="estimatedTime">预计时长: 0:12</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="clearTextBtn" class="px-3 py-1.5 text-gray-500 hover:text-danger transition-colors duration-300 text-sm">
+                        <i class="fa fa-trash mr-1"></i>清空
+                    </button>
+                    <button id="sampleTextBtn" class="px-3 py-1.5 text-gray-500 hover:text-primary transition-colors duration-300 text-sm">
+                        <i class="fa fa-file-text mr-1"></i>示例
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 语音设置 -->
+        <div class="glass-effect rounded-2xl p-6 mb-6 animate-slide-up" style="animation-delay: 0.2s;">
+            <h2 class="text-lg font-semibold text-gray-700 mb-6">语音设置</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- 语音选择 -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-600">语音选择</label>
+                    <div class="relative">
+                        <select id="voiceSelect" class="w-full p-3 border border-gray-200 rounded-xl input-focus appearance-none select-custom bg-white">
+                            <option value="yunyang">云扬(男声阳光)</option>
+                            <option value="xiaoyi">小伊(女声甜美)</option>
+                            <option value="daming">大明(男声沉稳)</option>
+                            <option value="lily">Lily(英文女声)</option>
+                            <option value="mike">Mike(英文男声)</option>
+                            <option value="nana">娜娜(童声可爱)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 语速调节 -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-600">语速调节</label>
+                    <div class="relative">
+                        <select id="speedSelect" class="w-full p-3 border border-gray-200 rounded-xl input-focus appearance-none select-custom bg-white">
+                            <option value="0.5">很慢</option>
+                            <option value="0.8">较慢</option>
+                            <option value="1">正常</option>
+                            <option value="1.2">较快</option>
+                            <option value="1.5">很快</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 音调高低 -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-600">音调高低</label>
+                    <div class="relative">
+                        <select id="pitchSelect" class="w-full p-3 border border-gray-200 rounded-xl input-focus appearance-none select-custom bg-white">
+                            <option value="0.7">很低沉</option>
+                            <option value="0.9">较低沉</option>
+                            <option value="1">正常</option>
+                            <option value="1.2">较高昂</option>
+                            <option value="1.4">很高昂</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 语音风格 -->
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-gray-600">语音风格</label>
+                    <div class="relative">
+                        <select id="styleSelect" class="w-full p-3 border border-gray-200 rounded-xl input-focus appearance-none select-custom bg-white">
+                            <option value="assistant">智能助手</option>
+                            <option value="story">故事叙述</option>
+                            <option value="news">新闻播报</option>
+                            <option value="chat">聊天对话</option>
+                            <option value="emotional">情感丰富</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 生成按钮 -->
+        <div class="text-center mb-6 animate-slide-up" style="animation-delay: 0.3s;">
+            <button id="generateBtn" class="w-full lg:w-auto px-8 py-4 bg-gradient-to-r from-primary to-secondary text-white rounded-2xl font-semibold text-lg btn-hover animate-glow flex items-center justify-center space-x-3 mx-auto">
+                <i class="fa fa-magic text-xl"></i>
+                <span>开始生成语音</span>
+            </button>
+        </div>
+
+        <!-- 音频播放器 -->
+        <div id="audioPlayer" class="glass-effect rounded-2xl p-6 animate-slide-up" style="animation-delay: 0.4s;">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4">音频播放</h2>
+
+            <!-- 播放控制栏 -->
+            <div class="bg-gray-50 rounded-xl p-4 mb-4">
+                <div class="flex items-center justify-between mb-3">
+                    <button id="playPauseBtn" class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white btn-hover">
+                        <i class="fa fa-play ml-1"></i>
+                    </button>
+                    <div class="flex-1 mx-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span id="currentTime" class="text-sm text-gray-500">0:00</span>
+                            <span id="totalTime" class="text-sm text-gray-500">0:12</span>
+                        </div>
+                        <div class="relative">
+                            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="progressBar" class="h-full bg-gradient-to-r from-primary to-secondary rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                            <input
+                                type="range"
+                                id="progressSlider"
+                                class="absolute inset-0 w-full h-2 opacity-0 cursor-pointer"
+                                min="0"
+                                max="100"
+                                value="0"
+                            >
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <button id="volumeBtn" class="w-8 h-8 text-gray-500 hover:text-primary transition-colors duration-300">
+                            <i class="fa fa-volume-up"></i>
+                        </button>
+                        <div class="w-20">
+                            <input
+                                type="range"
+                                id="volumeSlider"
+                                class="w-full h-1 bg-gray-200 rounded-full appearance-none cursor-pointer"
+                                min="0"
+                                max="100"
+                                value="80"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 下载按钮 -->
+            <div class="flex justify-center">
+                <button id="downloadBtn" class="px-6 py-3 bg-success hover:bg-green-600 text-white rounded-xl font-medium btn-hover flex items-center space-x-2">
+                    <i class="fa fa-download"></i>
+                    <span>下载音频文件</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 功能特色 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 animate-slide-up" style="animation-delay: 0.5s;">
+            <div class="text-center p-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-bolt text-primary"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">快速生成</h3>
+                <p class="text-sm text-gray-600">实时转换，秒级生成语音</p>
+            </div>
+            <div class="text-center p-4">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-microphone text-success"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">自然音质</h3>
+                <p class="text-sm text-gray-600">AI驱动，声音自然流畅</p>
+            </div>
+            <div class="text-center p-4">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <i class="fa fa-download text-accent"></i>
+                </div>
+                <h3 class="font-semibold text-gray-800 mb-2">免费下载</h3>
+                <p class="text-sm text-gray-600">支持多种格式下载</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部信息 -->
+    <footer class="relative z-10 text-center py-6 mt-8 border-t border-gray-200">
+        <p class="text-gray-500 text-sm">智能文字转语音工具 © 2024 | AI驱动 · 技术创新</p>
+    </footer>
+
+    <!-- 提示消息 -->
+    <div id="toast" class="fixed top-4 right-4 z-50 transform translate-x-full transition-transform duration-300">
+        <div class="bg-white rounded-lg shadow-lg p-4 flex items-center space-x-3 min-w-64">
+            <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center">
+                <i class="fa fa-check text-white"></i>
+            </div>
+            <div>
+                <div id="toastTitle" class="font-semibold text-gray-800"></div>
+                <div id="toastMessage" class="text-sm text-gray-600"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载动画 -->
+    <div id="loadingModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-2xl p-8 text-center">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">正在生成语音</h3>
+            <p class="text-gray-600">请稍候，AI正在处理您的文本...</p>
+        </div>
+    </div>
+    <script src="static/js/textToAudio/textToAudio.js"></script>
+</body>
+</html>

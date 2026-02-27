@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>文章上传与管理系统</title>
+    <!-- 引入外部资源 -->
+    <script src="static/js/tailwindcss/tailwindcss.js"></script>
+    <script src="static/common/jquery/jquery.min.js"></script>
+    <link href="static/common/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="static/common/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/axios/axios.js"></script>
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#64748b',
+                        accent: '#10b981',
+                        danger: '#ef4444',
+                        neutral: '#f1f5f9',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+
+            .table-shadow {
+                box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+            }
+
+            .filter-input {
+                @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300;
+            }
+
+            .btn-action {
+                @apply px-2 py-1 rounded text-sm transition-all duration-200 flex items-center justify-center gap-1;
+            }
+
+            .btn-edit {
+                @apply text-primary hover:bg-primary/10;
+            }
+
+            .btn-delete {
+                @apply text-danger hover:bg-danger/10;
+            }
+
+            .audio-player {
+                @apply w-full max-w-xs transition-all duration-300 hover:shadow-md;
+            }
+
+            .table-row-hover {
+                @apply hover:bg-neutral/50 transition-colors duration-200;
+            }
+        }
+    </style>
+    <link href="static/css/novelManage/style.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+<div class="loading">
+    <div class="loader"></div>
+</div>
+<div class="container mx-auto px-4 py-6 md:py-8">
+    <header class="mb-6 md:mb-8">
+        <h1 class="text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-gray-800 mb-2 flex items-center">
+            <i class="fa fa-file-text-o text-primary mr-3"></i>文章音频信息列表
+        </h1>
+        <p class="text-gray-600 pl-8">管理文章的音频相关信息，支持筛选和音频试听</p>
+    </header>
+
+    <!-- 筛选区域 -->
+    <div class="bg-white rounded-xl p-4 md:p-5 mb-6 table-shadow transform transition-all duration-300 hover:shadow-lg">
+        <h2 class="text-lg font-semibold mb-4 flex items-center text-gray-700">
+            <i class="fa fa-filter text-primary mr-2"></i>筛选条件
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">文章名</label>
+                <input type="text" id="filter-title" class="filter-input" placeholder="输入文章名筛选">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">章节</label>
+                <input type="text" id="filter-chapter" class="filter-input" placeholder="输入章节筛选">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">角色</label>
+                <input type="text" id="filter-actorName" class="filter-input" placeholder="输入角色筛选">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">情绪</label>
+                <div class="flex gap-2">
+                    <input type="text" id="filter-emotion" class="filter-input" placeholder="输入情绪筛选">
+                    <button id="btn-reset"
+                            class="btn-action bg-gray-100 hover:bg-gray-200 text-gray-700 whitespace-nowrap self-end">
+                        <i class="fa fa-refresh"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 列表区域 -->
+    <div class="bg-white rounded-xl overflow-hidden table-shadow transform transition-all duration-300 hover:shadow-lg">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-neutral">
+                <tr>
+                    <th scope="col"
+                        class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase text-center tracking-wider w-12">
+                        序号
+                    </th>
+                    <th scope="col"
+                        class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase text-center tracking-wider">
+                        内容
+                    </th>
+<!--                    <th scope="col"-->
+<!--                        class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+<!--                        章节-->
+<!--                    </th>-->
+<!--                    <th scope="col"-->
+<!--                        class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+<!--                        文章名-->
+<!--                    </th>-->
+<!--                    <th scope="col"-->
+<!--                        class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+<!--                        角色-->
+<!--                    </th>-->
+<!--                    <th scope="col"-->
+<!--                        class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+<!--                        情绪-->
+<!--                    </th>-->
+<!--                    <th scope="col"-->
+<!--                        class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+<!--                        音调-->
+<!--                    </th>-->
+<!--                    <th scope="col"-->
+<!--                        class="px-4 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">-->
+<!--                        语速-->
+<!--                    </th>-->
+                    <th scope="col"
+                        class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase text-center tracking-wider">
+                        音频
+                    </th>
+                    <th scope="col"
+                        class="px-3 md:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase text-center tracking-wider w-20">
+                        操作
+                    </th>
+                </tr>
+                </thead>
+                <tbody id="article-list" class="bg-white divide-y divide-gray-100">
+                <!-- 列表内容将通过JS动态生成 -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 空状态 -->
+        <div id="empty-state" class="hidden py-16 text-center">
+            <i class="fa fa-file-text-o text-gray-300 text-5xl mb-4"></i>
+            <p class="text-gray-500">没有找到匹配的文章信息</p>
+        </div>
+
+        <!-- 分页 -->
+        <div class="px-4 md:px-6 py-3 bg-neutral border-t border-gray-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center">
+                    <span class="text-sm text-gray-600">
+                        显示 <span id="showing-range">1-10</span> 条，共 <span id="total-count">0</span> 条
+                    </span>
+            </div>
+            <div class="flex space-x-2">
+                <button id="prev-page"
+                        class="btn-action bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                    <i class="fa fa-chevron-left"></i> 上一页
+                </button>
+                <button id="next-page"
+                        class="btn-action bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled>
+                    下一页 <i class="fa fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 编辑模态框 -->
+<div id="edit-modal"
+     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden opacity-0 transition-opacity duration-300">
+    <div class="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300">
+        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+            <h3 class="text-lg font-semibold text-gray-800" id="modal-title">编辑信息</h3>
+            <button id="close-modal"
+                    class="text-gray-500 hover:text-gray-700 p-1 rounded-full hover:bg-gray-100 transition-colors">
+                <i class="fa fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <form id="edit-form">
+                <input type="hidden" id="edit-id">
+                <div class="mb-4">
+                    <label for="edit-content" class="block text-sm font-medium text-gray-700 mb-1">内容</label>
+                    <textarea id="edit-content" rows="3" class="filter-input" required></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                        <label for="edit-chapter" class="block text-sm font-medium text-gray-700 mb-1">章节</label>
+                        <input type="number" id="edit-chapter" class="filter-input" required>
+                    </div>
+                    <div>
+                        <label for="edit-title" class="block text-sm font-medium text-gray-700 mb-1">文章名</label>
+                        <input type="text" id="edit-title" class="filter-input" required>
+                    </div>
+                    <div>
+                        <label for="edit-actorVoice" class="block text-sm font-medium text-gray-700 mb-1">角色</label>
+                        <select class="form-select" id="edit-actorVoice" data-doubao-translate-traverse-mark="1">
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit-emotion" class="block text-sm font-medium text-gray-700 mb-1">语音风格</label>
+<!--                        <input type="text" id="edit-emotion" class="filter-input" required>-->
+                        <select class="form-select" id="edit-emotion" data-doubao-translate-traverse-mark="1">
+                            <option value="general" selected="" data-doubao-translate-traverse-mark="1">🎭 通用风格</option>
+                            <option value="assistant" data-doubao-translate-traverse-mark="1">🤖 智能助手</option>
+                            <option value="chat" data-doubao-translate-traverse-mark="1">💬 聊天对话</option>
+                            <option value="customerservice" data-doubao-translate-traverse-mark="1">📞 客服专业</option>
+                            <option value="newscast" data-doubao-translate-traverse-mark="1">📺 新闻播报</option>
+                            <option value="affectionate" data-doubao-translate-traverse-mark="1">💕 亲切温暖</option>
+                            <option value="calm" data-doubao-translate-traverse-mark="1">😌 平静舒缓</option>
+                            <option value="cheerful" data-doubao-translate-traverse-mark="1">😊 愉快欢乐</option>
+                            <option value="gentle" data-doubao-translate-traverse-mark="1">🌸 温和柔美</option>
+                            <option value="lyrical" data-doubao-translate-traverse-mark="1">🎼 抒情诗意</option>
+                            <option value="serious" data-doubao-translate-traverse-mark="1">🎯 严肃正式</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="edit-pitch" class="block text-sm font-medium text-gray-700 mb-1">音调</label>
+                        <input type="number" id="edit-pitch" min="-20" max="20" step="0.5" class="filter-input"
+                               required>
+                    </div>
+                    <div>
+                        <label for="edit-speed" class="block text-sm font-medium text-gray-700 mb-1">语速</label>
+                        <input type="number" id="edit-speed" min="0.5" max="2.0" step="0.1" class="filter-input"
+                               required>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">音频预览</label>
+                    <div class="flex flex-col sm:flex-row gap-3">
+                        <audio id="edit-audio-preview" controls class="flex-1 audio-player" ></audio>
+                        <button type="button" id="generate-audio"
+                                class="px-3 py-2 bg-primary text-white rounded text-sm hover:bg-primary/90 transition-colors self-start sm:self-center">
+                            <i class="fa fa-magic mr-1"></i>生成音频
+                        </button>
+                    </div>
+                    <input type="hidden" id="edit-audio-url">
+                </div>
+            </form>
+        </div>
+        <div class="px-6 py-4 border-t border-gray-200 flex justify-end space-x-3">
+            <button id="cancel-edit"
+                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 transition-colors">取消
+            </button>
+            <button id="save-edit" class="px-4 py-2 bg-accent text-white rounded hover:bg-accent/90 transition-colors">
+                保存
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="static/js/novelManage/novelManage.js"></script>
+</body>
+</html>
+
+
+

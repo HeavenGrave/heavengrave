@@ -1,0 +1,6 @@
+@charset "UTF-8";
+.text-textSecondary {
+    --tw-text-opacity: 1;
+    color: rgb(117 117 117 / var(--tw-text-opacity, 1));
+    word-break: break-word;
+}

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.NovelInfoMapper">
+    <insert id="insertNovelInfo">
+        insert into novelinfo(content,chapter_num,`index`,actor_voice,actor_name,novel_name,novel_voice_url,emotion,tone,speech_rate,volume) values(#{content},#{chapterNum},#{index},#{actorVoice},#{actorName},#{novelName},#{novelVoiceUrl},#{emotion},#{tone},#{speechRate},#{volume})
+    </insert>
+    <insert id="batchInsertNovelInfo">
+        insert into novelinfo(content,chapter_num,`index`,actor_voice,actor_name,novel_name,novel_voice_url,emotion,tone,speech_rate,volume) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.content},#{item.chapterNum},#{item.index},#{item.actorVoice},#{item.actorName},#{item.novelName},#{item.novelVoiceUrl},#{item.emotion},#{item.tone},#{item.speechRate},#{item.volume})
+        </foreach>
+    </insert>
+    <update id="updateNovelInfo">
+        update novelinfo set content=#{content},chapter_num=#{chapterNum},`index`=#{index},actor_voice=#{actorVoice},actor_name=#{actorName},novel_name=#{novelName},novel_voice_url=#{novelVoiceUrl},emotion=#{emotion},tone=#{tone},speech_rate=#{speechRate},volume=#{volume} where id=#{id}
+    </update>
+    <select id="findNovelInfoById" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo where id=#{id}
+    </select>
+    <select id="findNovelInfoByCond" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo where 1=1
+    </select>
+    <select id="findAllNovelInfo" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo
+    </select>
+    <select id="findNovelInfoByNovelNameToPage" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo where 1=1
+        <if test="novelName != null">
+            and novel_name like concat('%',#{novelName},'%')
+        </if>
+        order by chapter_num,`index`
+      <if test="startNum != null and pageSize != null and startNum >= 0 and pageSize != 0">
+           limit #{startNum},#{pageSize}
+      </if>
+    </select>
+    <select id="findNovelInfoByCondToPage" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo where 1=1
+        <if test="novelName != null and novelName!=''" >
+            and novel_name like concat('%',#{novelName},'%')
+        </if>
+        <if test="chapterNum != null and chapterNum!=0" >
+            and chapter_num like concat('%',#{chapterNum},'%')
+        </if>
+        <if test="actorName != null and actorName!=''">
+            and actor_name like concat('%',#{actorName},'%')
+        </if>
+        <if test="emotion != null and emotion!=''">
+            and emotion like concat('%',#{emotion},'%')
+        </if>
+        order by chapter_num,`index`
+        <if test="startNum != null and pageSize != null and startNum >= 0 and pageSize != 0">
+            limit #{startNum},#{pageSize}
+        </if>
+    </select>
+    <select id="findNovelInfoByCondCount" resultType="java.lang.Integer">
+        select count(*) from novelinfo where 1=1
+        <if test="novelName != null and novelName!=''" >
+            and novel_name like concat('%',#{novelName},'%')
+        </if>
+        <if test="chapterNum != null and chapterNum!=0" >
+            and chapter_num like concat('%',#{chapterNum},'%')
+        </if>
+        <if test="actorName != null and actorName!=''">
+            and actor_name like concat('%',#{actorName},'%')
+        </if>
+        <if test="emotion != null and emotion!=''">
+            and emotion like concat('%',#{emotion},'%')
+        </if>
+    </select>
+    <select id="findNovelInfoByNoAudio" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo where novel_voice_url is null
+        <if test="novelName != null">
+            and novel_name like concat('%',#{novelName},'%')
+        </if>
+        order by chapter_num,`index`
+    </select>
+    <select id="findNovelInfoChapterCount" resultType="java.lang.Integer">
+        select MAX(chapter_num) from novelinfo where novel_name like concat('%',#{novelName},'%')
+    </select>
+    <select id="findNovelInfoByNovelNameAndChapterNum" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo where novel_name like concat('%',#{novelName},'%') and chapter_num=#{chapterNum}
+    </select>
+    <delete id="deleteNovelInfoById">
+        delete from novelinfo where id=#{id}
+    </delete>
+    <delete id="deleteNovelInfoByNovelName">
+        delete from novelinfo where novel_name like concat('%',#{novelName},'%')
+    </delete>
+    <select id="findNovelInfoByHaveAudio" resultType="web.sn.dream.pojo.NovelInfo">
+        select * from novelinfo where novel_voice_url is not null
+        <if test="novelName != null">
+            and novel_name like concat('%',#{novelName},'%')
+        </if>
+        order by chapter_num,`index`
+    </select>
+</mapper>

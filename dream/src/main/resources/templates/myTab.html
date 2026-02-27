@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>新标签页</title>
+   <!-- 引入外部资源 -->
+    <script src="static/js/tailwindcss/tailwindcss.js"></script>
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <!-- Common JS-->
+    <script type="text/javascript" src="static/common/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
+  
+  <!-- 配置Tailwind自定义颜色和字体 -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3B82F6',
+            secondary: '#64748B',
+            accent: '#10B981',
+            dark: '#1E293B',
+            light: '#F8FAFC'
+          },
+          fontFamily: {
+            inter: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
+  
+  <!-- 自定义工具类 -->
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .backdrop-blur-xl {
+        backdrop-filter: blur(24px);
+      }
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .glass-effect-dark {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .hover-scale {
+        transition: transform 0.2s ease;
+      }
+      .hover-scale:hover {
+        transform: scale(1.05);
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="static/css/myTab/style.css">
+
+</head>
+
+<body>
+    <div class="pageBody" >
+        <div class="menuBar relative">
+            <div class="relative  menuList" >
+                <div class="relative  menuIconList "  style="width: 135px;overflow: auto;height: 100%;">
+                    <div class="menu-item relative flex pointer active"  data-type="home" >
+                        <div class="category-img-box p-[4px] hover" >
+                            <i class="menu-icon fa fa-home w-[28px]" ></i>
+                        </div>
+                        <div class="pointer-events-none text-[12px] absolute menu-info"  style="left: 52px;top: 10px;">
+                            <span class="overflow-hidden text-ellipsis whitespace-nowrap" >主页</span>
+                        </div>
+                    </div>
+                    <div class="menu-item relative flex pointer" data-type="ai" >
+                        <div class="category-img-box p-[4px]" >
+                            <i class="menu-icon  fa-brands fa-slack w-[28px]" ></i>
+                        </div>
+                        <div class="pointer-events-none text-[12px] absolute menu-info"  style="left: 52px;top: 10px;">
+                            <span class="overflow-hidden text-ellipsis whitespace-nowrap" >AI工具</span>
+                        </div>
+                    </div>
+                    <div class="menu-item relative flex pointer" data-type="my" >
+                        <div class="category-img-box p-[4px]" >
+                            <i class="menu-icon fa fa-heart w-[28px]" ></i>
+                        </div>
+                        <div class="pointer-events-none text-[12px] absolute menu-info"  style="left: 52px;top: 10px;">
+                            <span class="overflow-hidden text-ellipsis whitespace-nowrap" >我的</span>
+                        </div>
+                    </div>
+                    <div class="menu-item relative flex pointer" data-type="dev" >
+                        <div class="category-img-box p-[4px]" >
+                            <i class="menu-icon fa-brands fa-space-awesome w-[28px]" ></i>
+                        </div>
+                        <div class="pointer-events-none text-[12px] absolute menu-info"  style="left: 52px;top: 10px;">
+                            <span class="overflow-hidden text-ellipsis whitespace-nowrap" >开发</span>
+                        </div>
+                    </div>
+                    <div class="menu-item relative flex pointer" data-type="other" >
+                        <div class="category-img-box p-[4px]" >
+                            <i class="menu-icon  fa-brands fa-buffer  w-[28px] " ></i>
+                        </div>
+                        <div class="pointer-events-none text-[12px] absolute menu-info"  style="left: 52px;top: 10px;">
+                            <span class="overflow-hidden text-ellipsis whitespace-nowrap" >其他</span>
+                        </div>
+                    </div>
+                    <div class="menu-item relative flex pointer" data-type="movie" >
+                        <div class="category-img-box p-[4px]" >
+                            <i class="menu-icon fa-solid fa-film w-[28px]" ></i>
+                        </div>
+                        <div class="pointer-events-none text-[12px] absolute menu-info"  style="left: 52px;top: 10px;">
+                            <span class="overflow-hidden text-ellipsis whitespace-nowrap" >电影</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="blankBar"></div>
+        <div class="searchBar  relative">
+            <div class="search-box relative">
+                <div class="search-icon">
+                    <div class="search-icon-img"><i class="fa-brands fa-google"></i></div>
+                    <?xml version="1.0" encoding="UTF-8"?><svg width="12" height="12" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M36 19L24 31L12 19H36Z" fill="#ffffff" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/></svg>
+                </div>
+                <input class="search-input" id="search_input"  type="search" placeholder="输入搜索内容" autocomplete="off"  >
+            </div>
+        </div>
+        <div class="contentBar">
+          <!--  <div><div class="icon-box bg-cover pointer"></div><div class="icon_name">taobao</div></div>
+            <div><div class="icon-box bg-cover pointer"></div><div class="icon_name">終端和撞断</div></div>
+            <div><div class="icon-box bg-cover pointer"></div><div class="icon_name">qq</div></div>-->
+            <div class="addAppDiv"><div class="add-icon-box bg-cover pointer"><?xml version="1.0" encoding="UTF-8"?><svg width="30" height="30" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24.0605 10L24.0239 38" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 24L38 24" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div>
+        </div>
+    </div>
+    <div class="addAppArea absolute" >
+        <div class="relative" style="margin: auto;width: 400px;height: 500px;top: calc(50vh - 250px);background-color:#fffc;border-radius: 16px;">
+            <div class="flex gap-5 " style="padding:16px 18px 12px 18px;align-items: center;justify-content: space-between;">
+                <div class="flex gap-1">
+                    <div id="btn_back" class="pointer"><?xml version="1.0" encoding="UTF-8"?><svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M31 36L19 24L31 12" stroke="#8e8e94" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    <div style="color:#4f4f4f;">网页图标添加</div>
+                </div>
+                <div class="pointer" id="add_ok" style="background-color: #3768f5;color: #ffffff;border-radius:4px;padding: 0px 8px;">完成</div>
+            </div>
+            <div class="flex " style="margin:5px 18px 18px 18px;background-color: #0000000f;border-radius: 8px;height: 100px;align-items: center;">
+                <div class="p-[8px]" style=""><?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M24.7073 9.56521L9.85801 24.4145C6.34329 27.9292 6.34329 33.6277 9.85801 37.1424V37.1424C13.3727 40.6571 19.0712 40.6571 22.5859 37.1424L40.2636 19.4647C42.6067 17.1216 42.6067 13.3226 40.2636 10.9794V10.9794C37.9205 8.63628 34.1215 8.63628 31.7783 10.9794L14.1007 28.6571C12.9291 29.8287 12.9291 31.7282 14.1007 32.8997V32.8997C15.2722 34.0713 17.1717 34.0713 18.3433 32.8997L33.1925 18.0505" stroke="#8e8e94" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <textarea id="add_url" class="w-[300px] h-[100px] p-[8px]" style="outline: none; border: none;resize: none;background-color:initial;" placeholder="链接"></textarea>
+            </div>
+            <div class="flex " style="margin:18px;background-color: #0000000f;border-radius: 8px;height:40px;align-items: center;">
+                <div class="p-[8px]" style=""><?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M40 33V42C40 43.1046 39.1046 44 38 44H31.5" stroke="#8e8e94" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M40 16V6C40 4.89543 39.1046 4 38 4H10C8.89543 4 8 4.89543 8 6V42C8 43.1046 8.89543 44 10 44H16" stroke="#8e8e94" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16 16H30" stroke="#8e8e94" stroke-width="4" stroke-linecap="round"/><path d="M23 44L40 23" stroke="#8e8e94" stroke-width="4" stroke-linecap="round"/><path d="M16 24H24" stroke="#8e8e94" stroke-width="4" stroke-linecap="round"/></svg></div>
+                <input id="add_name" class="w-[300px] h-[40px] p-[8px]" style="outline: none; border: none;background-color:initial;" placeholder="图标名称" autocomplete="off"></input>
+            </div>
+            <div class="grid p-[3px]" style="margin:18px;grid-template-columns:repeat(3, 1fr);background-color:#0000000f;border-radius: 8px;">
+                <div class="icon-img-type pointer " data-type="url">在线图标</div>
+                <div class="icon-img-type pointer active" data-type="color">纯色图标</div>
+                <div class="icon-img-type pointer " data-type="upload">本地上传</div>
+            </div>
+            <div class="flex " style="margin:0px 18px;border-radius: 8px;align-items: center;">
+                <div class="icon-url-input">
+                    <input id="icon_url" class="w-[300px] h-[40px] p-[8px]" style="outline: none; border: none;background-color:initial;" placeholder="图标地址" autocomplete="off"></input>
+                </div>
+                <div class="color-picker">
+                    <!-- 颜色预览 -->
+                    <div class="color-preview" id="colorPreview"></div>
+
+                    <!-- 颜色面板 -->
+                    <div class="color-panel" id="colorPanel">
+                        <!-- 颜色选项会通过JS动态生成 -->
+<!--                        <div class="color-option" data-color="#ffc107" style="background-color: rgb(255, 193, 7);"></div>-->
+                    </div>
+
+                    <!-- 文字输入框 -->
+                    <div class="flex " style="background-color: #0000000f;border-radius: 8px;height:40px;align-items: center;">
+                        <div class="p-[8px]" style=""><?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="6" width="36" height="36" rx="3" fill="#8e8e94" stroke="#8e8e94" stroke-width="4" stroke-linejoin="round"/><path d="M16 19V16H32V19" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 34H26" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M24 18L24 34" stroke="#FFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                        <input id="add_info" class="w-[300px] h-[40px] p-[8px]" style="outline: none; border: none;background-color:initial;" placeholder="图标文字，建议1-2个字符" autocomplete="off"></input>
+                    </div>
+                </div>
+                <div class="icon-upload">
+                     <div>上传文件</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 通知提示 -->
+    <div id="toast" class="fixed top-4 right-0 z-50 px-4 py-3 rounded-lg shadow-lg transform translate-x-full transition-all duration-300 flex items-center gap-2">
+        <i id="toast-icon" class="fa fa-check-circle text-secondary"></i>
+        <span id="toast-message">操作成功</span>
+    </div>
+    <!-- 右键菜单 -->
+    <div class="context-menu" id="appMenu">
+        <div class="context-menu-item" id="openPage">当前页面打开</div>
+        <div class="context-menu-item" id="openNewTab">新标签页打开</div>
+        <div class="context-menu-item" id="editHome">编辑主页</div>
+        <div class="context-menu-item" id="editIcon">编辑图标</div>
+        <div class="context-menu-item" id="deleteIcon">删除</div>
+<!--        <div class="context-menu-item" id="searchIcon">搜索图标 (Ctrl+F)</div>-->
+    </div>
+
+    <script type="text/javascript" src="static/js/myTab/myTab.js"></script>
+</body>
+</html>

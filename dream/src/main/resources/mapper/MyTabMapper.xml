@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.MyTabMapper">
+    <insert id="insertMyTab" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO mytab (name,info,color,url,user_id,type,icon_type,icon_url,`index`) VALUES (#{name},#{info},#{color},#{url},#{userId},#{type},#{iconType},#{iconUrl},#{index})
+    </insert>
+    <update id="updateMyTab" parameterType="web.sn.dream.pojo.MyTab">
+        UPDATE mytab
+        SET
+            name = #{name},
+            info = #{info},
+            color = #{color},
+            url = #{url},
+            icon_type = #{iconType},
+            icon_url = #{iconUrl},
+            `index`=#{index}
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteMyTabById">
+        DELETE FROM mytab WHERE id = #{id}
+    </delete>
+    <select id="findMyTabById" resultType="web.sn.dream.pojo.MyTab">
+        select  * from mytab where id=#{id}
+    </select>
+    <select id="findAllMyTab" resultType="web.sn.dream.pojo.MyTab">
+        select  * from mytab
+    </select>
+    <select id="findMyTabByUserIdAndType" resultType="web.sn.dream.pojo.MyTab">
+        select  * from mytab where user_id=#{userId} and type=#{type}  order by `index`
+    </select>
+</mapper>

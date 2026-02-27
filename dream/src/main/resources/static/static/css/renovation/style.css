@@ -1,0 +1,56 @@
+@charset "UTF-8";
+/* 全局样式 */
+body {
+    background-color: #F8FAFC;
+}
+
+/* 表格动画 */
+.table-row {
+    transition: all 0.2s ease;
+}
+
+.table-row:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* 平滑滚动 */
+html {
+    scroll-behavior: smooth;
+}
+
+/* 加载动画 */
+.loader {
+    border-top-color: #3B82F6;
+    animation: spinner 0.6s linear infinite;
+}
+
+@keyframes spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+th{
+    text-align: center !important;
+}
+td{
+    text-align: center;
+}
+.justify_content{
+    justify-content: center;
+}
+
+/* 确保初始状态是隐藏的 */
+#toast {
+    transform: translateX(calc(100% + 2rem)); /* 完全移出屏幕 */
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+button{
+    cursor: pointer;
+}

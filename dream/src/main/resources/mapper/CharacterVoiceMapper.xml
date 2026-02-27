@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.CharacterVoiceMapper">
+    <insert id="insertCharacterVoice">
+        INSERT INTO charactervoice (id,book,actor,gender,url,voice,create_time,update_time,volume,tone,emotion,text,speech_rate)
+        VALUES
+            (#{id},#{book},#{actor},#{gender},#{url},#{voice},#{createTime},#{updateTime},#{volume},#{tone},#{emotion},#{text},#{speechRate})
+    </insert>
+    <delete id="deleteAllData">
+        DELETE FROM charactervoice
+    </delete>
+    <delete id="deleteCharacterVoiceById">
+        DELETE FROM charactervoice WHERE id=#{id}
+    </delete>
+    <update id="updateCharacterVoice">
+        UPDATE charactervoice set book=#{book},actor= #{actor},gender=#{gender},url=#{url},voice=#{voice},update_time=#{updateTime},tone= #{tone},volume= #{volume},emotion= #{emotion},text= #{text},speech_rate=#{speechRate} where id=#{id}
+    </update>
+    <select id="findCharacterVoiceById" resultType="web.sn.dream.pojo.CharacterVoice">
+        select  * from charactervoice where id=#{id}
+    </select>
+    <select id="findAllCharacterVoice" resultType="web.sn.dream.pojo.CharacterVoice">
+        select * from charactervoice
+    </select>
+    <select id="findCharacterVoiceByCond" resultType="web.sn.dream.pojo.CharacterVoice">
+        select * from charactervoice where 1=1
+        <if test="book != null">
+            and book=#{book}
+        </if>
+        <if test="actor != null">
+            and actor=#{actor}
+        </if>
+        <if test="gender != null">
+            and gender=#{gender}
+        </if>
+    </select>
+    <select id="findVoiceInfoByCondToPage" resultType="web.sn.dream.pojo.CharacterVoice">
+        select * from charactervoice where 1=1
+        <if test="novelName != null">
+            and book like '%${novelName}%'
+        </if>
+        <if test="actor != null">
+            and actor like '%${actor}%'
+        </if>
+        <if test="emotion != null">
+            and emotion like '%${emotion}%'
+        </if>
+        <if test="gender != null">
+            and gender like '%${gender}%'
+        </if>
+        limit #{startNum},#{pageSize}
+    </select>
+    <select id="findVoiceInfoByCondCount" resultType="java.lang.Integer">
+        select count(*) from charactervoice where 1=1
+        <if test="novelName != null">
+            and book like '%${novelName}%'
+        </if>
+        <if test="actor != null">
+            and actor like '%${actor}%'
+        </if>
+        <if test="emotion != null">
+            and emotion like '%${emotion}%'
+        </if>
+        <if test="gender != null">
+            and gender like '%${gender}%'
+        </if>
+    </select>
+</mapper>

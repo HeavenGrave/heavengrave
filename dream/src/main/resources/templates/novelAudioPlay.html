@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>响应式音频播放器</title>
+    <!-- 引入外部资源 -->
+    <script src="static/js/tailwindcss/tailwindcss.js"></script>
+    <script src="static/common/jquery/jquery.min.js"></script>
+    <link href="static/common/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <script src="static/common/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/axios/axios.js"></script>
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <script>
+        // Tailwind 配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#6B7280',
+                        light: '#F3F4F6',
+                        dark: '#1F2937'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                },
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .audio-player-shadow {
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            }
+            .audio-item-active {
+                @apply bg-primary/10 text-primary border-l-4 border-primary;
+            }
+            .progress-bar-thumb {
+                @apply w-3 h-3 rounded-full bg-primary absolute -top-1.5 -translate-x-1/2 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity;
+            }
+        }
+    </style>
+    <link href="static/css/novelAudioPlay/style.css" rel="stylesheet">
+</head>
+<body class="font-inter bg-gray-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+<div class="loading">
+    <div class="loader"></div>
+</div>
+<!-- 页面标题 -->
+<header class="w-full max-w-4xl mb-8 text-center">
+    <h1 class="text-[clamp(1.8rem,4vw,2.5rem)] font-bold text-dark mb-2">音频播放列表</h1>
+    <p class="text-secondary text-[clamp(0.9rem,1.5vw,1rem)]">支持播放速度调节 | 自动顺序播放 | 响应式适配PC/移动端</p>
+</header>
+
+<!-- 核心播放器容器 -->
+<main class="w-full max-w-4xl flex flex-col md:flex-row gap-6 bg-white rounded-xl audio-player-shadow overflow-hidden">
+    <!-- 音频控制区域（左侧/顶部） -->
+    <div class="w-full md:w-1/2 bg-light p-6 flex flex-col">
+        <div class="mb-6">
+            <h2 class="text-xl font-semibold text-dark mb-1" id="current-audio-title">请选择一个音频开始播放</h2>
+            <p class="text-secondary text-sm" id="current-audio-duration">00:00 / 00:00</p>
+        </div>
+
+        <!-- 进度条 -->
+        <div class="relative mb-6 group">
+            <div class="h-1.5 bg-gray-200 rounded-full overflow-hidden cursor-pointer" id="progress-bar">
+                <div class="h-full bg-primary rounded-full w-0 transition-all" id="progress-fill"></div>
+            </div>
+            <div class="progress-bar-thumb" id="progress-thumb"></div>
+        </div>
+
+        <!-- 播放控制按钮 -->
+        <div class="flex items-center justify-center gap-8 mb-8">
+            <button class="text-2xl text-secondary hover:text-primary transition-colors" id="prev-btn" title="上一曲">
+                <i class="fa fa-step-backward"></i>
+            </button>
+            <button class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center text-3xl hover:bg-primary/90 transition-colors shadow-lg" id="play-pause-btn" title="播放/暂停">
+                <i class="fa fa-play" id="play-pause-icon"></i>
+            </button>
+            <button class="text-2xl text-secondary hover:text-primary transition-colors" id="next-btn" title="下一曲">
+                <i class="fa fa-step-forward"></i>
+            </button>
+        </div>
+
+        <!-- 播放速度控制 -->
+        <div class="flex items-center justify-between mt-auto">
+            <label for="speed-select" class="text-sm text-secondary">播放速度：</label>
+            <select id="speed-select" class="bg-white border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50">
+                <option value="0.5">0.5x</option>
+                <option value="0.75">0.75x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.25">1.25x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- 音频列表区域（右侧/底部） -->
+    <div class="w-full md:w-1/2 bg-white border-t md:border-t-0 md:border-l border-gray-100">
+        <div class="p-4 border-b border-gray-100 flex items-center justify-between">
+            <h3 class="font-semibold text-dark">音频列表</h3>
+            <span class="text-sm text-secondary" id="audio-count">0 个音频</span>
+        </div>
+        <div class="h-[300px] overflow-y-auto" id="audio-list-container">
+            <!-- 音频列表项将通过JS动态生成 -->
+            <div class="flex items-center justify-center h-full text-secondary">
+                加载音频列表中...
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- 音频元素（隐藏） -->
+<audio id="audio-player" class="hidden" preload="metadata"></audio>
+
+
+<script src="static/js/novelAudioPlay/novelAudioPlay.js"></script>
+</body>
+</html>
