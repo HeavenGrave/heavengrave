@@ -12,9 +12,11 @@ import java.util.Date;
 public class MyToDo {
     private Integer id;//id
     private Integer userId;//用户id
+    private String title;//标题
     private String info;//信息
-    private Date ctime;//时间
+    private Date ctime;//创建时间
+    private Date endTime;//截至时间
     private Boolean ifFinish;//是否完成
-    private Boolean ifShow;//是否展示
-    private Date toDay;//对应日期
+    private String category;//任务类型
+    private Integer level;//任务等级
 }

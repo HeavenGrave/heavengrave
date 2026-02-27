@@ -8,239 +8,53 @@ html {
     --card-back: #122c47;
     --chip-color: #f1c40f;
     --active-border: #e74c3c;
+    --activeDo-border: #99fff6;
 }
-
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+    /*box-sizing: border-box;*/
+    /*margin: 0;*/
+    /*padding: 0;*/
     font-family: 'Segoe UI', sans-serif;
 }
-
 body {
     background: var(--table-color);
-    min-height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
     color: white;
 }
-
-.poker-table {
-    height: 96vh;
-    aspect-ratio: 16 / 9;
-    background: radial-gradient(circle at center, #004d00 0%, #002600 100%);
-    border-radius: 20px;
-    padding: 2vh;
-    display: grid;
-    grid-template-rows: 20% 68% 12%;
-    gap: 1vh;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-}
-
-/* 公共牌区域 */
-.community-cards {
-    display: flex;
-    justify-content: center;
-    gap: 2vw;
-    align-items: center;
-}
-
-.card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90%;
-    aspect-ratio: 7 / 10;
-    background: white;
-    border-radius: 8px;
-    font-size: 3rem;
-    font-weight: bold;
-    color: black;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-}
-
-.card.back {
-    background: var(--card-back);
-    color: #9d0a0a;
-}
-
-/* 玩家座位布局 */
-.player-area {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 15px;
-    position: relative;
-}
-
-.player-seat {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    border: 2px solid transparent;
-    transition: all 0.3s ease;
-}
-
-.player-seat.active {
-    border: 2px solid var(--active-border);
-    box-shadow: 0 0 10px var(--active-border);
-}
-
-.player-header {
-    display: flex;
-    justify-content: space-between;
-    font-size: 2rem;
-}
-
-.chips {
-    color: var(--chip-color);
-    font-weight: bold;
-}
-
-.player-name {
-    font-weight: 600;
-    margin-bottom: 5px;
-}
-
-.bet-info {
-    font-size: 1.6rem;
-    color: #ddd;
-}
-
-.status {
-    font-size: 1.8rem;
-    color: #aaa;
-    margin-top: 5px;
-}
-
-/* 操作区域 */
-.game-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-.pot-info {
-    font-size: 2rem;
-    font-weight: bold;
-}
-
-.action-buttons {
-    display: flex;
-    gap: 15px;
-}
-
-.button {
-    padding: 10px 20px;
-    background: #34495e;
-    border: none;
-    border-radius: 6px;
-    color: white;
-    font-size: 1.4rem;
-    cursor: not-allowed;
-    opacity: 0.7;
-}
-
-/* 响应式设计 */
-@media (max-width: 800px) {
-    .poker-table {
-        grid-template-rows: 25% 55% 20%;
-    }
-
-    .community-cards {
-        gap: 10px;
-    }
-
-    .card {
-        width: 60px;
-        height: 90px;
-        font-size: 18px;
-    }
-}
-
-@media (max-width: 600px) {
-    .player-area {
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(4, 1fr);
-    }
-}
-
-
 .container {
-    max-width: 800px;
     margin: 0 auto;
     height: 100%;
 }
 
-.create-room {
-    text-align: center;
-    margin-bottom: 30px;
+.poker-table{
+    display: none;
+    background: radial-gradient(circle at center, #004d00 0%, #002600 100%);
 }
 
-.create-btn {
-    background: #28a745;
-    border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
+.player-dealer{
+    display: none;
+}
+.player-dealer.active{
+    display: flex;
+}
+.player-SB{
+    display: none;
+}
+.player-SB.active{
+    display: flex;
+}
+.player-BB{
+    display: none;
+}
+.player-BB.active{
+    display: flex;
 }
 
-.create-btn:hover {
-    background: #218838;
+.operationBtn{
+    /*display: none;*/
 }
 
-.readyBody{
-    width: 100%;height: 100%;position: absolute;background-color: #000000;z-index: 999;color: #fff;margin: 0; padding: 20px;
-}
-
-.game-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    height: calc(100% - 135px);
-    padding: 0px 1vh;
-}
-
-.room-card {
-    background: #2a2a2a;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #444;
-    transition: transform 0.2s;
-}
-
-.room-card:hover {
-    transform: translateY(-5px);
-}
-
-.room-info {
-    margin-bottom: 15px;
-}
-
-.join-btn {
-    background: #007bff;
-    border: none;
-    padding: 10px 15px;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
-    float: right;
-}
-
-.join-btn:hover {
-    background: #0056b3;
-}
-
-.room-status {
-    color: #6c757d;
-    font-size: 14px;
+.operationBtn.active{
+    /*display: block;*/
+    /*background: #f39c13;*/
 }

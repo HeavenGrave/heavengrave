@@ -21,4 +21,6 @@ public interface MyToDoMapper {
     void deleteMyToDoById(int id);
 
     List<MyToDo> findAllToDo();
+
+    List<MyToDo> findMyToDoByUserIdAndFilterAndSort(int userId, String currentFilter, String currentSort);
 }

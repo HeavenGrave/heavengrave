@@ -13,7 +13,7 @@
         DELETE FROM dezhoupoker WHERE create_time BETWEEN '2023-01-01 00:00:00' AND DATE_SUB(NOW(), INTERVAL 5 HOUR)
     </delete>
     <update id="updateDeZhouPoker">
-        UPDATE dezhoupoker set player2=#{player2},player3=#{player3},player4=#{player4},player2=#{player5},player3=#{player6},player4=#{player7},player2=#{player8},player3=#{player9},player4=#{player10},player_num=#{playerNum},dealer=#{dealer} where id=#{id}
+        UPDATE dezhoupoker set player2=#{player2},player3=#{player3},player4=#{player4},player5=#{player5},player6=#{player6},player7=#{player7},player8=#{player8},player9=#{player9},player10=#{player10},player_num=#{playerNum},dealer=#{dealer},status= #{status} where id=#{id}
     </update>
     <select id="findDeZhouPokerById" resultType="web.sn.dream.pojo.DeZhouPoker">
         select  * from dezhoupoker where id=#{id}

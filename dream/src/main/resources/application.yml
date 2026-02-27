@@ -91,7 +91,7 @@ spring:
     redis:
       host: 8.141.4.23
       port: 6379
-      password: 123456
+      password: czmr125?
   # 指定外部资源路径（多个路径用逗号分隔）
   web:
     resources:
@@ -108,3 +108,6 @@ mybatis:
 file:
   upload:
     dir: /www/wwwroot/dream/files  # 替换为你的本地目录
+audio:
+  upload:
+    dir: /www/audio

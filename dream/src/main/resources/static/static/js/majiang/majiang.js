@@ -1,7 +1,7 @@
 /*init*/
 var roomId; //当前房间id
 //let ifStart = false;
-var myNum; //当前用户编号  最多位用户
+var myNum; //当前用户编号  第几位用户
 var myName; //当前用户名称
 var nowMaJiangData; //当前对局游戏数据
 //不同情况下人员位次表
@@ -43,7 +43,7 @@ var ContinuousDealNum = 1; //连庄数
 var quanTotal = 4; //总圈数
 var nowQuan = 1; //当前圈数
 
-var playerWorth = {};
+var playerWorth = {};//玩家资金信息
 /*js*/
 window.onload = function () {
     //根据设备类型添加样式文件
@@ -57,7 +57,7 @@ window.onload = function () {
         });
     }
     const socket = new SockJS('http://8.141.4.23:8086/stomp-websocket');
-    // const socket = new SockJS('http://192.168.10.110:8999/stomp-websocket');
+    // const socket = new SockJS('http://192.168.10.110:8086/stomp-websocket');
     stompClient = Stomp.over(socket);
     // 连接成功后的回调
     stompClient.connect({}, () => {
@@ -706,7 +706,6 @@ function distributedCard(data) {
     //判断我当前是不是庄家
     //TODO 添加庄家按钮展示
     if (nowDealerNum === myNum) {
-        // TODO
         $("#dealer_1").css("display", "block");
         $(".time1").css("display", "block");
         //判断是否有暗杠或是天胡
@@ -714,7 +713,6 @@ function distributedCard(data) {
     } else {
         //根据当前用户编号，获取当前用户视角位次数组
         let nowTableNum = tableNums[myNum];
-        // TODO
         $("#dealer_" + nowTableNum[0]).css("display", "block");
         $(".time" + nowTableNum[0]).css("display", "block"); //展示出牌标识
     }
@@ -816,7 +814,6 @@ function distributedCardNext(data) {
     //判断我当前是不是庄家
     //TODO 添加庄家按钮展示
     if (nowDealerNum === myNum) {
-        // TODO
         $("#dealer_1").css("display", "block");
         $(".time1").css("display", "block");
         //判断是否有暗杠或是天胡
@@ -824,7 +821,6 @@ function distributedCardNext(data) {
     } else {
         //根据当前用户编号，获取当前用户视角位次数组
         let nowTableNum = tableNums[myNum];
-        // TODO
         $("#dealer_" + nowTableNum[nowOutPlayer - 1]).css("display", "block");
         $(".time" + nowTableNum[nowOutPlayer - 1]).css("display", "block"); //展示出牌标识
     }
@@ -1200,6 +1196,13 @@ $("#continueGame").on("click", function () {
     }
 })
 /**
+ * 点击结束游戏
+ */
+$("#endGame").on("click",function(){
+    //重新访问麻将游戏
+    location.href = "/majiang";
+})
+/**
  * 退出房间
  */
 $("#exitGame").on("click", function () {
@@ -1248,12 +1251,6 @@ function loadCard(data, ifFz) {
     let html = '<div class="thisCard ';
     if (ifFz) {
         //牌高度 0.15*height  当前为 0.15*12vw=1.8vw
-        // TODO 改为css 样式
-        // if (isMobile()) {
-        //     // html += 'style="transform: rotate(90deg);margin-left:1.8vw;margin-top:1.8vw;"';
-        // } else {
-        //     html += 'style="transform: rotate(90deg);margin-left:1.2vh;margin-top:1.2vh;"';
-        // }
         html = '<div style="transform: rotate(90deg);" class="thisCard ';
         html += ' FzCard ';
     }

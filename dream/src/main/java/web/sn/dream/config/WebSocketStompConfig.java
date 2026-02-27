@@ -13,7 +13,7 @@ public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp-websocket")
                 .setAllowedOrigins("http://8.141.4.23:8086")
-//                .setAllowedOrigins("http://192.168.10.110:8999")
+//                .setAllowedOrigins("http://192.168.10.110:8086")
                 .withSockJS(); // 支持 SockJS（应对浏览器不支持 WebSocket 的情况）
     }
 

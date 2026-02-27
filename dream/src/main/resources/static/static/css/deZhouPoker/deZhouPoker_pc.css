@@ -1,162 +1,240 @@
 @charset "UTF-8";
-html {
-    height: 100%;
+html{
+    font-size: 1vh;
 }
-
 body {
+    background: var(--table-color);
     height: 100%;
     width: 100%;
-    padding: 0px;
-    margin: 0px;
-}
-.div_body {
-    width: 100vw;
-    height: 100vh;
-}
-.btnDiv {
-    height: 40px;
-    border-radius: 4px;
-    background-color: #0095ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
     color: white;
-    line-height: 40px;
-    width: 100px;
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
 }
 
+.poker-table {
+    height: 96%;
+    aspect-ratio: 16 / 9;
+    border-radius: 20px;
+    padding: 2vh;
+    grid-template-rows: 20% 68% 12%;
+    gap: 1vh;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
 .roomDiv{
     display: flex;
     position: absolute;
     color: #ddd;
-    font-size: 2rem;
+    font-size:1.6rem;
+    left: 2vw;
+    top: 1vw;
 }
-
-
-.createGame {
-    width: 100px;
-    color: white;
-    height: 30px;
-    line-height: 30px;
-    text-align: center;
+.backHome{
+    display: flex;
+    position: absolute;
+    font-size: 1.6rem;
+    right: 2vw;
+    top: 1vw;
+    color: #2096ff;
     cursor: pointer;
 }
 
-.startGameBtn {
-    background-color: #ccc;
+/* 公共牌区域 */
+.community-cards {
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
+    align-items: center;
 }
-.roomNumTitle{
-    width: 75px;color: #000000;font-size: 18px;font-weight: 600;
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90%;
+    aspect-ratio: 7 / 10;
+    background: white;
+    border-radius: 8px;
+    font-size: 3rem;
+    font-weight: bold;
+    color: black;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
-.roomNumDiv{
-    height: 28px;width:130px;border-radius: 8px;border:0px;background-color: white;
+
+.card.back {
+    background: var(--card-back);
+    color: #9d0a0a;
+}
+
+/* 玩家座位布局 */
+.player-area {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 15px;
+    position: relative;
+}
+
+.player-seat {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.player-seat.active {
+    border: 2px solid var(--active-border);
+    box-shadow: 0 0 10px var(--active-border);
+}
+
+.player-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: 2rem;
+}
+
+.chips {
+    color: var(--chip-color);
+    font-weight: bold;
+}
+
+.player-name {
+    font-weight: 600;
+}
+
+.bet-info {
+    font-size: 1.6rem;
+    color: #ddd;
+}
+
+.status {
+    font-size: 1.8rem;
+    color: #aaa;
+    margin-top: 5px;
+}
+
+/* 操作区域 */
+.game-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+.pot-info {
+    display: flex;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.button {
+    padding: 10px 20px;
+    background: #34495e;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-size: 1.4rem;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.container {
+    margin: 0 auto;
+    height: 100%;
+}
+
+.create-room {
     text-align: center;
-    line-height: 28px;
+    margin-bottom:2vh;
 }
 
-.gameShowDiv{
-    position: absolute;width: 440px;height: 50px;display:none;top: calc(50% - 25px);left: calc(50% - 220px);justify-content: space-around;align-items: center;
-}
-.playerReadyNum{
-    display: flex;color: #0070ff;
-    font-size: 28px;
-}
-
-.card1 {
-    height: 100%;
-    width: auto;
+.create-btn {
+    background: #28a745;
+    border: none;
+    padding: 1vh 2vh;
+    font-size: 2rem;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
 }
 
-.card2 {
-    height: 100%;
-    width: auto;
+.create-btn:hover {
+    background: #218838;
 }
 
-.card3 {
-    height: 100%;
-    width: auto;
+.readyBody{
+    width: 100%;top: 0px;height: 100%;position: absolute;background-color: #000000;z-index: 999;color: #fff;margin: 0; padding: 20px;
 }
 
-.card4 {
-    height: 100%;
-    width: auto;
+.game-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.4vh;
+    max-height: calc(100% - 135px);
+    padding: 0px 1vh;
 }
 
-.playerCards_mid_top {
-    margin-top: 2vh;
-    position: absolute;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.room-card {
+    background: #2a2a2a;
+    padding: 1.4vh;
+    border-radius: 8px;
+    border: 1px solid #444;
+    transition: transform 0.2s;
 }
 
-.playerCards_mid_left {
-    width:100vh;
-    align-items: center;
-    justify-content: center;
-    height: 10vw;
-    top: 50%;
-    left: 10vw;
-    transform: translate(-50%, -50%) rotate(90deg);
+.room-card:hover {
+    transform: translateY(-5px);
 }
 
-.playerCards_mid_right {
-    align-items: center;
-    justify-content: center;
-    width: 100vh;
-    top: 50%;
-    left: 90vw;
-    transform: translate(-50%, -50%) rotate(270deg);
+.room-info {
+    margin-bottom: 15px;
+    font-size: 2rem;
 }
 
-.playerCards_mid_bottom {
-    position: absolute;
-    bottom:2vh;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.join-btn {
+    background: #007bff;
+    border: none;
+    padding: 1vh 2vh;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    float: right;
+    font-size: 2rem;
 }
 
-.time1 {
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    bottom: 20%;
-    left: 30%;
+.join-btn:hover {
+    background: #0056b3;
+}
+
+.room-status {
+    color: #6c757d;
+    font-size: 14px;
+}
+.player-seat.activeDo {
+    border: 2px solid var(--activeDo-border);
+    box-shadow: 0 0 10px var(--activeDo-border);
+}
+
+.hand-cards {
     display: none;
-}
-
-.time2 {
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    top: 40%;
-    right: 16%;
-    display: none;
-}
-
-.time3 {
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    top: 19%;
-    left: 26%;
-    display: none;
-}
-
-.time4 {
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    top: 40%;
-    left: 14%;
-    display: none;
-}
-
-.thisCard.active {
-    margin-top: -20px;
+    height: 96%;
+    align-items: center;
+    gap: 2vw;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    padding: 0px 1vw;
 }
 
 .result-Div {
@@ -164,7 +242,7 @@ body {
     position: absolute;
     width: 100%;
     height: 100%;
-   /* background-color: #ffffff3d;*/
+    /* background-color: #ffffff3d;*/
     background-color : #303030f0;
     top:0;
 }
@@ -176,414 +254,4 @@ body {
     border-radius: 14px;
     padding: 2vh 2vw;
     margin: auto;
-}
-
-
-/**
- * 万字牌样式
- */
-.thisCard {
-    border-radius: 8px;
-}
-
-/**
- * 金牌样式
- */
-.tag {
-    position: absolute;
-    top: 28px;
-    left: -14px;
-    background-color: #ff0000;
-    color: white;
-    padding: 0px 24px 0px 20px;
-    transform: rotate(-45deg);
-    transform-origin: 0 0;
-    font-size: 14px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-}
-/*中心区域*/
-.center {
-    width: 120px;
-    display: none;
-    height: 120px;
-    position: absolute;
-    top: calc(50% - 60px);
-    left: calc(50% - 60px);
-    flex-direction: row;
-    border: 1px solid #419649;
-}
-
-.keyHot {
-    position: relative;
-    overflow: hidden;
-    width: 69px; /* 容器的宽度 */
-    height: 93px; /* 容器的高度 */
-    border-radius: 8px;
-}
-
-.outTime {
-    display: flex;
-    margin-top: 70px;
-    width: 50px;
-    height: 50px;
-    margin-left: 1px;
-    color: red;
-    font-size: 40px;
-    /*background-color: white;*/
-    justify-content: center;
-    align-items: center;
-}
-
-.bottomSpace {
-    position: absolute;
-    display: grid;
-    top:58vh;
-    left: calc(50vw - 22.4vh);
-    width: 44.8vh;
-    height: 24vh;
-    background-color: #cfcfcf30;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-}
-
-.rightSpace {
-    position: absolute;
-    display: grid;
-    top: calc(50% - 12vh);
-    left: calc(50vw + 12vh);
-    width: 44.8vh;
-    height: 24vh;
-    background-color: #cfcfcf30;
-    grid-template-columns:repeat(8, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    transform: rotate(270deg);
-}
-
-.topSpace {
-    position: absolute;
-    display: grid;
-    top: 18vh;
-    left: calc(50vw - 22.4vh);
-    width: 44.8vh;
-    height: 24vh;
-    background-color: #cfcfcf30;
-    grid-template-columns:repeat(8, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    transform: rotate(180deg);
-}
-
-.leftSpace {
-    position: absolute;
-    display: grid;
-    top: calc(50% - 12vh);
-    left: calc(50vw - 56.8vh);
-    width: 44.8vh;
-    height: 24vh;
-    background-color: #cfcfcf30;
-    grid-template-columns: repeat(8, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    transform: rotate(90deg);
-}
-
-.playerNameSpace1 {
-    width: auto;
-    height: auto;
-    bottom: 14vh;
-    position: absolute;
-    left: 20vw;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.playerNameSpace2 {
-    width: auto;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    top: 46vh;
-    position: absolute;
-    right: 2vw;
-}
-
-.playerNameSpace3 {
-    width: auto;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    top:4vh;
-    position: absolute;
-    left:20vw;
-}
-
-.playerNameSpace4 {
-    width: auto;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    top: 46vh;
-    position: absolute;
-    left: 2vw;
-}
-
-.gamePriceInfo {
-    position: absolute;
-    display: flex;
-    top: 0px;
-    right: 0px;
-    color: white;
-}
-
-.gameInfo-Div{
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    /* background-color: #ffffff3d; */
-    background-color: #ffffff01;
-    top: 0;
-}
-.gameInfo-show{
-    display: flex;
-    max-width: 400px;
-    max-height: 520px;
-    width: 40vw;
-    height: 50vh;
-    background-color: #6dac5b;
-    flex-direction: column;
-    border-radius: 14px;
-    padding: 10px 20px;
-    margin: auto;
-    gap: 1vh;
-    z-index: 100;
-}
-.gameInfo-row{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height:6vh;
-    justify-content: flex-start;
-    align-items: center;
-    gap:1vw;
-}
-
-
-.switch-radio-item {
-    display: inline-block; /* 或者 flex item */
-    position: relative;
-    margin-right: 5px; /* 按钮间距 */
-}
-
-/* 隐藏原始 input */
-.switch-radio-item input[type="radio"] {
-    opacity: 0;
-    position: absolute;
-    width: 0;
-    height: 0;
-}
-
-/* label 作为按钮背景 */
-.switch-radio-item label {
-    display: inline-block;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    background-color: #f0f0f0;
-    color: #555;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-    user-select: none; /* 防止文字被选中 */
-}
-
-/* 选中状态的 label 样式 */
-.switch-radio-item input[type="radio"]:checked + label {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
-
-/* Hover 状态 */
-.switch-radio-item:not(:has(input:checked)):hover label {
-    background-color: #e0e0e0;
-}
-
-/* Focus 状态 */
-.switch-radio-item input[type="radio"]:focus + label {
-    /*outline: 2px solid rgba(0, 123, 255, 0.5);*/
-    /*outline-offset: 2px;*/
-}
-
-/* 禁用状态 (如果需要) */
-.switch-radio-item input[type="radio"]:disabled + label {
-    background-color: #eee;
-    color: #aaa;
-    border-color: #ddd;
-    cursor: not-allowed;
-}
-.switch-radio-item input[type="radio"]:disabled:checked + label {
-    background-color: #a0cfff; /* 禁用且选中的颜色 */
-    border-color: #a0cfff;
-    color: #f0f0f0;
-}
-
-:focus-visible {
-    outline: -webkit-focus-ring-color auto 0px;
-}
-
-.radio-title{
-    text-align-last: justify;
-    width: 3vw;
-}
-
-.radio-group {
-    display: flex;
-    flex-direction: row; /* 或者 row */
-    gap: 10px; /* 选项间距 */
-}
-
-.gameInfo-row-botton{
-    display: flex;
-    margin-top: 2vh;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 2vw;
-}
-
-.room-list{
-    display: none;
-    position: absolute;
-    background-color: white;
-    width: 7vw;
-    flex-direction: column;
-    border-radius: 4px;
-    margin-top: 10vh;
-    margin-left: 3vw;
-    max-height:7vh;
-    overflow: auto;
-    z-index: 99;
-    min-width: 160px;
-}
-.room_info{
-    height: 20vh;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 10px;
-    width: auto;
-    white-space: nowrap;
-}
-.exitBtn{
-    position: absolute;
-    bottom: 1%;
-    right: 10px;
-}
-
-
-.createDiv{
-    position: absolute;
-    width: 440px;
-    height: 50px;
-    display: flex;
-    top: calc(50% - 25px);
-    left: calc(50% - 220px);
-    justify-content: space-around;
-    align-items: center;
-    z-index: 99;
-}
-
-.userAvatar{
-    width: 6vh;
-    height: 6vh;
-}
-
-.playerCards{
-    height: 9vh;
-    position: absolute;
-    display: flex;
-}
-
-.player-pg1{
-    display: flex;
-    height: 8vh;
-    position: absolute;
-    bottom: 2vh;
-    width: auto;
-    left: 0.5vw;
-}
-.player-pg2{
-    display: flex;
-    height: 8vh;right:18vh;position: absolute;top: 280px;width: auto;transform: rotate(270deg);
-}
-.player-pg3{
-    display: flex;
-    height: 8vh;right: 10px;position: absolute;top:5vh;width: auto;transform: rotate(180deg);
-}
-.player-pg4{
-    display: flex;
-    height: 8vh;left:18vh;position: absolute;top: 280px;width: auto;transform: rotate(90deg);
-}
-
-.pengGangHuDiv{
-    display:none;
-    position: absolute;
-    bottom: 12vh;
-    left: calc(100% - 400px);;
-    align-items: center;
-    gap: 15px;
-}
-
-
-
-.continueGame{
-    height: 6vh;line-height: 6vh;width: auto;background-color: #47b947;color: white;text-align: center;border-radius: 8px;cursor: pointer;font-size: 1rem;padding: 0px 4vh;
-}
-
-.endGame{
-    display: none;
-    height: 6vh;line-height: 6vh;width: auto;background-color: #47b947;color: white;text-align: center;border-radius: 8px;cursor: pointer;font-size: 1rem;padding: 0px 4vh;
-}
-
-
-.FzCard{
-    transform: rotate(90deg);
-    margin-left:1.2vh;margin-top:1.2vh;
-}
-
-
-.dealer1{
-    display: none;
-    color: red;
-    position: absolute;
-    font-size: 2rem;
-    bottom: calc(15vh - 1rem);
-    left: calc(20vw - 2rem);
-}
-.dealer2{
-    display: none;
-    color: red;
-    position: absolute;
-    font-size: 2rem;
-    bottom: calc(46vh - 2rem);
-    right: calc(2vw);
-}
-.dealer3{
-    display: none;
-    color: red;
-    position: absolute;
-    font-size: 2rem;
-    top: calc(12vh - 1rem);
-    left: calc(20vw - 2rem);
-}
-.dealer4{
-    display: none;
-    color: red;
-    position: absolute;
-    font-size: 2rem;
-    bottom: calc(46vh - 2rem);
-    left: calc(2vw);
 }

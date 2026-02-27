@@ -54,22 +54,33 @@ $(".dayType").on("click",".typeCell",function () {
         $(".typeActive").removeClass("typeActive");
         $(this).addClass("typeActive");
         let nowId = $(this).attr("id");
-        if (nowId=="trash"){
+        if (nowId==="trash"){
             $(".dayShow").css("display","none");
             $(".weekDiv").css("display","none");
             $(".dayDiv").css("display","none");
             $(".toDoShow").css("display","none");
+            $(".listToDoShow").css("display","none");
             $(".deleteToDoShow").css("display","flex");
             //加载我删除的代办
             loadDeleteToDo();
-        }else if (nowId=="calendar"){
+        }else if (nowId==="calendar"){
             $(".dayShow").css("display","flex");
             $(".weekDiv").css("display","grid");
             $(".dayDiv").css("display","grid");
             $(".toDoShow").css("display","flex");
+            $(".listToDoShow").css("display","none");
             $(".deleteToDoShow").css("display","none");
             //加载我的待办
             loadMyToDo();
+        }else if (nowId==="nowList"){//当前所有的代办
+            $(".dayShow").css("display","none");
+            $(".weekDiv").css("display","none");
+            $(".dayDiv").css("display","none");
+            $(".toDoShow").css("display","none");
+            $(".deleteToDoShow").css("display","none");
+            $(".listToDoShow").css("display","flex");
+            //根据实际排序将完成的待办放前面
+            loadToDoList();
         }
     }
 });
@@ -78,41 +89,7 @@ $(".dayType").on("click",".typeCell",function () {
 
 function loadDeleteToDo() {
     addLoading();
-    // $.ajax({
-    //     url: "/todo/showMyToDo",
-    //     type: "get",
-    //     data: {
-    //         userId: nowUserId,
-    //         ifShow: false
-    //     },
-    //     success: function (res) {
-    //         removeLoading();
-    //         if (res.state === 200) {
-    //             let nowMyToDoList = res.data.data;
-    //             console.log(nowMyToDoList);
-    //             //清空之前的数据
-    //             $(".deleteToDoShow").empty();
-    //             for (let i = 0; i < nowMyToDoList.length; i++) {
-    //                 let nowToDo = nowMyToDoList[i];
-    //                 let html='<div class="toDoCell" id="'+nowToDo.id+'">';
-    //                 if(nowToDo.ifFinish){
-    //                     html+= '<input type="checkbox" class="checkBtn" checked disabled>';
-    //                     html+= '<div class="toDoContent active completed">'+nowToDo.info;
-    //                 }else{
-    //                     html+= '<input type="checkbox" class="checkBtn" disabled>';
-    //                     html+= '<div class="toDoContent active">'+nowToDo.info;
-    //                 }
-    //                 html+= '</div>  <input  class="toDoInput"  value="'+nowToDo.info+'" /> ';
-    //                 html+=`<div  class="toDoRestoreBtn" style="display:flex;">
-    //                             <?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.2721 36.7279C14.5294 39.9853 19.0294 42 24 42C33.9411 42 42 33.9411 42 24C42 14.0589 33.9411 6 24 6C19.0294 6 14.5294 8.01472 11.2721 11.2721C9.61407 12.9301 6 17 6 17" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 9V17H14" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    //                              </div>
-    //                 </div>`;
-    //                 $(".deleteToDoShow").append(html);
-    //             }
-    //         }
-    //     }
-    // });
-    axios.get('/todo/showMyToDo','userId='+nowUserId+'&ifShow='+false)
+    axios.get('/todo/showMyToDo?userId='+nowUserId+'&ifShow='+false)
         .then(res => {
             removeLoading();
             console.log(res);
@@ -436,6 +413,90 @@ function addBtnClick() {
         //根据当前选中日期加载代办数据
         loadMyToDo();
     });
+
+
+    //点击编辑按钮
+    $(".listToDoShow").on("click",".toDoEditBtn",function() {
+        let nowInfo = $(this).parent().find(".toDoContent").html();
+        if($(this).parent().find(".active").hasClass("toDoContent")){
+            $(this).parent().find(".active").removeClass("active");
+            $(this).parent().find(".toDoInput").addClass("active");
+            $(this).parent().find(".toDoDelBtn").css("display","none");
+            $(this).parent().find(".toDoEditBtn").css("display","none");
+            $(this).parent().find(".toDoOkBtn").css("display","flex");
+        }
+        // if(nowInfo != ""){
+        //     $(this).parent().find(".toDoContent").html(nowInfo);
+        // }
+    });
+    //点击删除按钮
+    $(".listToDoShow").on("click",".toDoDelBtn",function() {
+        let nowToDoId = $(this).parent().attr("id");
+        if(nowToDoId != ""){
+            let toDoCellDiv = $(this).parent();
+            axios.post('/todo/updateToDoIfShow','myToDoId='+ parseInt(nowToDoId+"")+'&ifShow='+false)
+                .then(res => {
+                    console.log(res);
+                    console.log(res.data);
+                    if(res.status===200){
+                        toDoCellDiv.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('更新todo失败:', error);
+                });
+        }
+    });
+    //点击完成按钮
+    $(".listToDoShow").on("click",".toDoOkBtn",function() {
+        let nowInfo = $(this).parent().find(".toDoInput").val();
+        if($(this).parent().find(".active").hasClass("toDoInput")){
+            $(this).parent().find(".active").removeClass("active");
+            $(this).parent().find(".toDoContent").addClass("active");
+            $(this).parent().find(".toDoOkBtn").css("display","none");
+            $(this).parent().find(".toDoEditBtn").css("display","flex");
+        }else{
+            return;
+        }
+        if(nowInfo !== "") {
+            $(this).parent().find(".toDoDelBtn").css("display","flex");//展示删除按钮
+            $(this).parent().find(".toDoContent").html(nowInfo);
+            let nowToDoId = $(this).parent().attr("id");
+            let toDoCellDiv = $(this).parent();
+            if (nowToDoId === "") {
+                //新增数据
+                axios.post('/todo/addToDo','userId='+nowUserId+'&info='+nowInfo+'&toDay='+nowToDay)
+                    .then(res => {
+                        console.log(res);
+                        console.log(res.data);
+                        if(res.status===200){
+                            let info=res.data;
+                            let nowMyToDo = info.data;
+                            console.log(nowMyToDo);
+                            toDoCellDiv.attr("id", nowMyToDo.id);
+                            toDoCellDiv.find(".toDoDelBtn").css("display","flex");
+                            addNewToDo();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('登录失败:', error);
+                    });
+            } else {
+                //更新数据
+                axios.put('/todo/updateToDo','myToDoId='+ parseInt(nowToDoId+"")+'&info='+nowInfo)
+                    .then(res => {
+                        console.log(res);
+                        console.log(res.data);
+                        if(res.status===200){
+                            console.error('更新todo成功:', error);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('更新todo失败:', error);
+                    });
+            }
+        }
+    });
 }
 
 /**
@@ -485,4 +546,83 @@ function getParameterByName(name) {
         return '';
     }
     return decodeURIComponent(results[2].replace('/+/g', ' '));
+}
+
+
+function loadToDoList(){
+    addLoading();
+    axios.get('/todo/getToDoList?userId='+nowUserId+'&ifShow='+true)
+        .then(res => {
+            removeLoading();
+            console.log(res);
+            console.log(res.data);
+            if(res.status===200){
+                let info = res.data;
+                let nowMyToDoList = info.data;
+                //清空之前的数据
+                $(".listToDoShow").empty();
+                //根据ctime和ifFinish排序
+                nowMyToDoList.sort(function(a,b){
+                    if(a.ifFinish===b.ifFinish){
+                        return new Date(b.ctime)-new Date(a.ctime);
+                    }else {
+                        if(a.ifFinish===true){
+                            return 1;
+                        }else{
+                            return -1;
+                        }
+                    }
+                })
+                for (let i = 0; i < nowMyToDoList.length; i++) {
+                    let nowToDo = nowMyToDoList[i];
+                    let html='<div class="toDoCell" id="'+nowToDo.id+'">';
+                    if(nowToDo.ifFinish){
+                        html+= '<input type="checkbox" class="checkBtn" checked>';
+                        html+= '<div class="toDoContent active completed">'+nowToDo.info;
+                    }else{
+                        html+= '<input type="checkbox" class="checkBtn">';
+                        html+= '<div class="toDoContent active">'+nowToDo.info;
+                    }
+                    html+= '</div>  <input  class="toDoInput"     value="'+nowToDo.info+'" /> ';
+                    // html+= '</div>  <textarea  class="toDoInput" rows="5"   value="">'+nowToDo.info+'</textarea>';
+                    if(nowToDo.ifFinish){
+                        html+= '<div  class="toDoEditBtn" style="display:none;">';
+                    }else{
+                        html+= '<div class="toDoEditBtn" >';
+                    }
+                    html+=`<?xml version="1.0" encoding="UTF-8"?>
+                                <svg width="22" height="22" viewBox="0 0 48 48" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 42H43" stroke="#333" stroke-width="4" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                    <path d="M11 26.7199V34H18.3172L39 13.3081L31.6951 6L11 26.7199Z" fill="#333"
+                                          stroke="#333" stroke-width="4" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                            <div  class="toDoDelBtn" style="display:flex;">
+                                <?xml version="1.0" encoding="UTF-8"?><svg width="22" height="22" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 12L16.2 5H31.8L33 12" stroke="#000000" stroke-width="4" stroke-linejoin="round"/><path d="M6 12H42" stroke="#000000" stroke-width="4" stroke-linecap="round"/><path fill-rule="evenodd" clip-rule="evenodd" d="M37 12L35 43H13L11 12H37Z" fill="#ff0000" stroke="#000000" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 35H29" stroke="#000000" stroke-width="4" stroke-linecap="round"/></svg> </div>
+                            <div style="" class="toDoOkBtn">
+                                <?xml version="1.0" encoding="UTF-8"?>
+                                <svg width="22" height="22" viewBox="0 0 48 48" fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                          d="M4 24L9 19L19 29L39 9L44 14L19 39L4 24Z" fill="#333" stroke="#333"
+                                          stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+                    </div>`;
+                    $(".listToDoShow").append(html);
+                }
+                addNewToDo();
+                if(!ifAddClickFinish){
+                    ifAddClickFinish = true;
+                    //添加点击事件
+                    addBtnClick();
+                }
+            }
+        })
+        .catch(error => {
+            removeLoading();
+            console.error('查询失败:', error);
+        });
 }

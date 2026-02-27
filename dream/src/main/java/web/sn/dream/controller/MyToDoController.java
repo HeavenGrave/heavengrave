@@ -10,6 +10,8 @@ import web.sn.dream.pojo.Result;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -22,58 +24,81 @@ public class MyToDoController {
     @Autowired
     private MyToDoMapper myToDoMapper;
     //时间格式化工具
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     @PostMapping("/addToDo")
-    public Result addToDo(String info, int userId, String toDay){
+    public Result addToDo(String info,String title,int userId,String endTime,String category,int level){
+        // 定义输入格式（解析时使用）
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        // 定义输出格式（转换后使用）
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        // 转换过程
+        LocalDateTime dateTime = LocalDateTime.parse(endTime, inputFormatter);
+        String convertedDateTime = dateTime.format(outputFormatter);
         MyToDo myToDo = new MyToDo();
         myToDo.setInfo(info);
         myToDo.setUserId(userId);
+        myToDo.setTitle(title);
         myToDo.setIfFinish(Boolean.FALSE);
-        myToDo.setIfShow(Boolean.TRUE);
         myToDo.setCtime(new Date());
-        String toDayStr =toDay+" 00:00:01";
+        Date nowEndTime = null;
         try {
-            myToDo.setToDay(sdf.parse(toDayStr));
+            nowEndTime = sdf.parse(convertedDateTime);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+        myToDo.setEndTime(nowEndTime);
+        myToDo.setCategory(category);
+        myToDo.setLevel(level);
         myToDoMapper.insertMyToDo(myToDo);
         log.info("添加成功");
         //data 用于当前账户的信息处理
         return Result.success(myToDo);
     }
-    @GetMapping("/showMyToDo")
-    public Result showMyToDo(int userId,boolean ifShow,String startDay,String endDay){
-        Date startDate = null;
-        Date endDate = null;
-        try {
-            if(startDay!=null&&!"".equals(startDay)) {
-                startDate = sdf.parse(startDay + " 00:00:00");
-            }
-            if(endDay!=null&&!"".equals(endDay)){
-                endDate = sdf.parse(endDay + " 23:59:59");
-            }
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+    @GetMapping("/searchMyToDo")
+    public Result searchMyToDo(int userId,String currentFilter,String currentSort){
         List<MyToDo> list_myToDo ;
         // 调用业务对象的方法执行登录，并获取返回值
-        if(startDate==null&&endDate==null){
-            list_myToDo= myToDoMapper.findMyToDoByUserId(userId,ifShow);
-        }else{
-            list_myToDo= myToDoMapper.findMyToDoBysTOeTimeAndUserId(startDate,endDate,userId,ifShow);
-        }
+        list_myToDo= myToDoMapper.findMyToDoByUserIdAndFilterAndSort(userId,currentFilter,currentSort);
         //data 用于当前账户的信息处理
         return Result.success(list_myToDo);
     }
 
 
-    @PutMapping("/updateToDo")
-    public Result updateToDo(String info,int myToDoId) {
+    @PostMapping("/updateToDo")
+    public Result updateToDo(String info,int myToDoId,String title,int level,String category,String endTime,boolean ifFinish) {
         MyToDo myToDo = myToDoMapper.findMyToDoById(myToDoId);
+        // 定义输入格式（解析时使用）
+        DateTimeFormatter inputFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        // 定义输出格式（转换后使用）
+        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        // 转换过程
+        LocalDateTime dateTime = LocalDateTime.parse(endTime, inputFormatter);
+        String convertedDateTime = dateTime.format(outputFormatter);
         myToDo.setInfo(info);
+        myToDo.setTitle(title);
+        myToDo.setIfFinish(ifFinish);
+        myToDo.setCtime(new Date());
+        Date nowEndTime = null;
+        try {
+            nowEndTime = sdf.parse(convertedDateTime);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        myToDo.setLevel(level);
+        myToDo.setCategory(category);
+        myToDo.setEndTime(nowEndTime);
         myToDoMapper.updateMyToDo(myToDo);
         log.info("更新成功");
+        //data 用于当前账户的信息处理
+        return Result.success();
+    }
+
+    @PostMapping("/deleteToDo")
+    public Result deleteToDo(int myToDoId) {
+        myToDoMapper.deleteMyToDoById(myToDoId);
+        log.info("删除成功");
         //data 用于当前账户的信息处理
         return Result.success();
     }
@@ -93,10 +118,20 @@ public class MyToDoController {
     public Result updateToDoIfShow(int myToDoId,boolean ifShow) {
 //        myToDoMapper.deleteMyToDoById(myToDoId);
         MyToDo myToDo = myToDoMapper.findMyToDoById(myToDoId);
-        myToDo.setIfShow(ifShow);
+
         myToDoMapper.updateMyToDo(myToDo);
         log.info("移除成功");
         //data 用于当前账户的信息处理
         return Result.success();
     }
+
+    @RequestMapping ("/getToDoList")
+    public Result getToDoList(int userId,boolean ifShow){
+        List<MyToDo> list_myToDo ;
+        // 调用业务对象的方法执行登录，并获取返回值
+        list_myToDo= myToDoMapper.findMyToDoByUserId(userId,ifShow);
+        //data 用于当前账户的信息处理
+        return Result.success(list_myToDo);
+    }
+
 }

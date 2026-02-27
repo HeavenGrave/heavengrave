@@ -52,6 +52,25 @@ public class WebConfig implements WebMvcConfigurer {
         patterns.add("/druid");
         patterns.add("/fileUpload");
         patterns.add("/files/**");
+        patterns.add("/myToDo");
+        patterns.add("/todo/**");
+        patterns.add("/todoList");
+        patterns.add("/todolist/**");
+        patterns.add("/voice/**");
+        patterns.add("/renovation");
+        patterns.add("/renovation/**");
+        patterns.add("/novelUpload");
+        patterns.add("/textToAudio");
+        patterns.add("/novelManage");
+        patterns.add("/voiceManage");
+        patterns.add("/voice");
+        patterns.add("/voice/**");
+        patterns.add("/novelInfo");
+        patterns.add("/novelInfo/**");
+        patterns.add("/novelAudioPlay");
+        patterns.add("/myTab");
+        patterns.add("/myTab/**");
+
         // 通过注册工具添加拦截器
         registry.addInterceptor(tokenInterceptor)
                 .addPathPatterns("/**")// 拦截所有请求

@@ -62,7 +62,7 @@ public class WelcomeController {
 
     @GetMapping("/myToDo")
     public String openMyToDoPage() {
-        return "myToDo";
+        return "toDoList";
     }
 
     @GetMapping("/TexasPoker")
@@ -75,4 +75,38 @@ public class WelcomeController {
         return "fileUpload";
     }
 
+    @GetMapping("/renovation")
+    public String openRenovation() {
+        return "renovation";
+    }
+
+    @GetMapping("/novelUpload")
+    public String openNovelUpload() {
+        return "novelUpload";
+    }
+
+    @GetMapping("/novelManage")
+    public String openNovelManage() {
+        return "novelManage";
+    }
+
+    @GetMapping("/voiceManage")
+    public String openVoiceManage() {
+        return "voiceManage";
+    }
+
+    @GetMapping("/textToAudio")
+    public String openTextToAudio() {
+        return "textToAudio";
+    }
+
+    @GetMapping("/myTab")
+    public String openMyTab() {
+        return "myTab";
+    }
+
+    @GetMapping("/novelAudioPlay")
+    public String novelAudioPlay() {
+        return "novelAudioPlay";
+    }
 }

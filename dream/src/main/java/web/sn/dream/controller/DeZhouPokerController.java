@@ -120,6 +120,14 @@ public class DeZhouPokerController {
             ifNewPlayer = false;
         } else if (deZhouPoker.getPlayer4() != null && deZhouPoker.getPlayer4().equals(session.getAttribute("name").toString())) {
             ifNewPlayer = false;
+        }else if (deZhouPoker.getPlayer5() != null && deZhouPoker.getPlayer5().equals(session.getAttribute("name").toString())) {
+            ifNewPlayer = false;
+        }else if (deZhouPoker.getPlayer6() != null && deZhouPoker.getPlayer6().equals(session.getAttribute("name").toString())) {
+            ifNewPlayer = false;
+        }else if (deZhouPoker.getPlayer7() != null && deZhouPoker.getPlayer7().equals(session.getAttribute("name").toString())) {
+            ifNewPlayer = false;
+        }else if (deZhouPoker.getPlayer8() != null && deZhouPoker.getPlayer8().equals(session.getAttribute("name").toString())) {
+            ifNewPlayer = false;
         }
         Map<String, Object> data = new HashMap<>();
         if (ifNewPlayer) {
@@ -129,9 +137,17 @@ public class DeZhouPokerController {
                 deZhouPoker.setPlayer3(session.getAttribute("name").toString());
             } else if (nowNum == 3) {
                 deZhouPoker.setPlayer4(session.getAttribute("name").toString());
-            } else if (nowNum == 4) {
+            }  else if (nowNum == 4) {
+                deZhouPoker.setPlayer5(session.getAttribute("name").toString());
+            }  else if (nowNum == 5) {
+                deZhouPoker.setPlayer6(session.getAttribute("name").toString());
+            }  else if (nowNum ==6) {
+                deZhouPoker.setPlayer7(session.getAttribute("name").toString());
+            }  else if (nowNum == 7) {
+                deZhouPoker.setPlayer8(session.getAttribute("name").toString());
+            }  else if (nowNum == 8) {
                 data.put("type", "addGameError");
-                data.put("maJiang", deZhouPoker);
+                data.put("deZhouPoker", deZhouPoker);
                 return Result.success(data);
             }
             deZhouPoker.setPlayerNum(nowNum + 1);
@@ -140,7 +156,7 @@ public class DeZhouPokerController {
             if (check) {
                 log.info(data.toString());
                 data.put("type", "addGame");
-                data.put("maJiang", deZhouPoker);
+                data.put("deZhouPoker", deZhouPoker);
                 data.put("playerNum", deZhouPoker.getPlayerNum());//当前玩家编号 座位号
                 webSocketService.sendMessageToClient("/topic/messages", data);
             } else {
@@ -171,6 +187,8 @@ public class DeZhouPokerController {
         System.out.println("用户：" + name + " 作为房主开始了游戏  房间号为：" + roomId);
         //根据房间id查询游戏信息
         DeZhouPoker deZhouPoker = deZhouPokerService.findDeZhouPokerById(roomId);
+        deZhouPoker.setStatus(2);//游戏中
+        deZhouPokerService.updateDeZhouPoker(deZhouPoker);
         //洗牌   将牌随机打乱
         Collections.shuffle(oneBox_new);
         HashMap<String, Object> json = new HashMap<>();
@@ -184,7 +202,7 @@ public class DeZhouPokerController {
         }
         List<CardPoker> cords_other = new ArrayList<>();
         //将剩余的牌加入牌堆中
-        for (int i = index; i < oneBox_new.size(); i++) {
+        for (int i = index; i < index+5; i++) {
             cords_other.add(oneBox_new.get(i));
         }
         json.put("other", cords_other);

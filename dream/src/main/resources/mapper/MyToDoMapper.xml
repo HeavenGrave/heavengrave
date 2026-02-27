@@ -6,12 +6,31 @@
         SET
             info = #{info},
             user_id = #{userId},
+            title = #{title},
             if_finish = #{ifFinish},
-            ctime = #{ctime},
-            if_show = #{ifShow},
-            to_day = #{toDay}
+            end_time = #{endTime},
+            category = #{category},
+            level = #{level}
         WHERE id = #{id}
     </update>
+    <select id="findMyToDoByUserIdAndFilterAndSort" resultType="web.sn.dream.pojo.MyToDo">
+        select  * from mytodo where user_id=#{userId}
+        <if test="currentFilter=='incomplete'">
+            and if_finish is false
+        </if>
+        <if test="currentFilter=='complete'">
+            and if_finish is true
+        </if>
+        <if test="currentSort=='priority'">
+            order by level desc
+        </if>
+        <if test="currentSort=='createTime'">
+            order by ctime desc
+        </if>
+        <if test="currentSort=='dueDate'">
+            order by end_time desc
+        </if>
+    </select>
     <delete id="deleteMyToDoById">
         DELETE FROM mytodo WHERE id = #{id}
     </delete>
@@ -22,7 +41,7 @@
         select  * from mytodo
     </select>
     <select id="findMyToDoBysTOeTimeAndUserId" resultType="web.sn.dream.pojo.MyToDo">
-        select  * from mytodo where user_id=#{userId} and to_day BETWEEN #{time_s} AND #{time_e} and if_show=#{ifShow} order by ctime
+        select  * from mytodo where user_id=#{userId} and ctime BETWEEN #{time_s} AND #{time_e} and if_show=#{ifShow} order by ctime
     </select>
     <select id="findMyToDoByUserId" resultType="web.sn.dream.pojo.MyToDo">
         select  * from mytodo where user_id=#{userId} and if_show=#{ifShow} order by ctime
@@ -31,6 +50,6 @@
         select  * from mytodo
     </select>
     <insert id="insertMyToDo" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO mytodo (user_id,info,if_finish,ctime,if_show,to_day) VALUES (#{userId},#{info},#{ifFinish},#{ctime},#{ifShow},#{toDay})
+        INSERT INTO mytodo (user_id,title,info,ctime,end_time,if_finish,category,level) VALUES (#{userId},#{title},#{info},#{ctime},#{endTime},#{ifFinish},#{category},#{level})
     </insert>
 </mapper>
