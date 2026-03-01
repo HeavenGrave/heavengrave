@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
         claims.put("name",user.getName());
         String jwt = JwtUtils.generateToken(claims);
         // 返回用户登录信息对象
-        return new LoginInfo(user.getId(),user.getName(),jwt);
+        return new LoginInfo(user.getId(),user.getName(),jwt,user.getType());
     }
 
 

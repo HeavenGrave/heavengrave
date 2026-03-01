@@ -40,7 +40,11 @@ window.onload = function () {
                         toast.show('登录成功');
                         // location.href="/showEdit?userId="+info.data.id+"&token="+info.data.token;//重定向到首页
                         setTimeout(() => {
-                            location.href = "/myPage";
+                            if(info.data.type !== "普通用户") {
+                                location.href = "/myPage";//重定向到欢迎页面
+                            }else{
+                                location.href = "/myToDo?userId="+info.data.id;//重定向到笔记页面
+                            }
                         }, 800);
                     } else {
                         $("#name").val("");

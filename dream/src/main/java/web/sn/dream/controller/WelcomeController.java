@@ -26,10 +26,10 @@ public class WelcomeController {
         return "myEdit";
     }
 
-    //    @GetMapping("/daosan")
-//    public String DaoSan(){
-//        return "daosan";
-//    }
+    @GetMapping("/daoSan")
+    public String DaoSan(){
+        return "daoSan";
+    }
     @GetMapping("/majiang")
     public String majiang() {
         return "majiang";
