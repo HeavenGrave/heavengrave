@@ -171,6 +171,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 关键配置：指定主类的全限定名 -->
+                <configuration>
+                    <mainClass>web.sn.dream.DreamApplication</mainClass>
+                </configuration>
             </plugin>
         </plugins>
 <!--        <resources>-->

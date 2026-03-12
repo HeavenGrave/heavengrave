@@ -75,7 +75,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(tokenInterceptor)
                 .addPathPatterns("/**")// 拦截所有请求
                 .excludePathPatterns(patterns);//放行哪些请求
-          //只放行登录页面和静态资源
+        //只放行登录页面和静态资源
 //          registry.addInterceptor(new TokenInterceptor())
 //                .addPathPatterns("/**")
 //                .excludePathPatterns("/login", "/static/**","/favicon.ico","/druid");

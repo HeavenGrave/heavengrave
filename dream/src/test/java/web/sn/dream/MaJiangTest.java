@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @SpringBootTest
 public class MaJiangTest {
 
-    @Autowired
-    private MaJiangService maJiangService;
-    @Test
-    public void cleanupMaJiangData(){
-        // 在这里编写清理数据库中MaJiang表的逻辑
-        maJiangService.deleteAllData();
-    }
+//    @Autowired
+//    private MaJiangService maJiangService;
+//    @Test
+//    public void cleanupMaJiangData(){
+//        // 在这里编写清理数据库中MaJiang表的逻辑
+//        maJiangService.deleteAllData();
+//    }
 }

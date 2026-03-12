@@ -24,7 +24,7 @@ function createDayPage() {
     // 创建一个新的Date对象
     let nowMonthOneDay = new Date(nowCheckYear +"-" + nowCheckMonth + "-01");
     // 使用自定义函数格式化日期
-    let startDay = nowMonthOneDay.getDay()==0?6:nowMonthOneDay.getDay()-1;
+    let startDay = nowMonthOneDay.getDay()===0?6:nowMonthOneDay.getDay()-1;
     // 清除之前的日期
     $(".dayDiv").empty();
     // 生成空白日期
@@ -39,7 +39,7 @@ function createDayPage() {
         if(i<10){
             value = nowYearAndMonth+'0'+i;
         }
-        if(i==nowCheckDay){
+        if(i===nowCheckDay){
             let html = '<div class="dayCell dayActive" data-value="'+value+'">'+i+'</div>';
             $(".dayDiv").append(html);
         }else {
@@ -126,7 +126,7 @@ function loadDeleteToDo() {
 
 $(".dayShow").on("click",".dayChange",function () {
     let nowDivId=$(this).attr("id");
-    if(nowDivId=="nextMonth"){
+    if(nowDivId==="nextMonth"){
         let nowMonth = nowCheckMonth+1;
         if(nowMonth>12){
             nowCheckMonth=1;
@@ -135,15 +135,15 @@ $(".dayShow").on("click",".dayChange",function () {
             nowCheckMonth=nowMonth;
         }
         updatePageInfo();
-    }else if(nowDivId=="nextYear"){
+    }else if(nowDivId==="nextYear"){
         nowCheckYear=nowCheckYear+1;
         updatePageInfo();
-    }else if(nowDivId=="beforeYear"){
+    }else if(nowDivId==="beforeYear"){
         nowCheckYear=nowCheckYear-1;
         updatePageInfo();
-    }else if(nowDivId=="beforeMonth"){
+    }else if(nowDivId==="beforeMonth"){
         let nowMonth = nowCheckMonth-1;
-        if(nowMonth==0){
+        if(nowMonth===0){
             nowCheckMonth=12;
             nowCheckYear=nowCheckYear-1;
         }else{
@@ -278,7 +278,7 @@ function addBtnClick() {
             $(this).parent().find(".toDoContent").toggleClass("completed");
             let nowToDoId = $(this).parent().attr("id");
             let ifFinish= $(this).prop("checked");
-            if (nowToDoId != "") {
+            if (nowToDoId !== "") {
                 //更新数据
                 axios.put('/todo/updateToDoStatus','myToDoId='+ nowToDoId+'&ifFinish='+ifFinish)
                     .then(res => {
@@ -327,12 +327,12 @@ function addBtnClick() {
         }else{
             return;
         }
-        if(nowInfo != "") {
+        if(nowInfo !== "") {
             $(this).parent().find(".toDoDelBtn").css("display","flex");//展示删除按钮
             $(this).parent().find(".toDoContent").html(nowInfo);
             let nowToDoId = $(this).parent().attr("id");
             let toDoCellDiv = $(this).parent();
-            if (nowToDoId == "") {
+            if (nowToDoId === "") {
                 //新增数据
                 axios.post('/todo/addToDo','userId='+nowUserId+'&info='+nowInfo+'&toDay='+nowToDay)
                     .then(res => {
@@ -369,7 +369,7 @@ function addBtnClick() {
     //点击删除按钮
     $(".toDoShow").on("click",".toDoDelBtn",function() {
         let nowToDoId = $(this).parent().attr("id");
-        if(nowToDoId != ""){
+        if(nowToDoId !== ""){
             let toDoCellDiv = $(this).parent();
             axios.post('/todo/updateToDoIfShow','myToDoId='+ parseInt(nowToDoId+"")+'&ifShow='+false)
                 .then(res => {
@@ -387,7 +387,7 @@ function addBtnClick() {
     //点击恢复按钮
     $(".deleteToDoShow").on("click",".toDoRestoreBtn",function() {
         let nowToDoId = $(this).parent().attr("id");
-        if(nowToDoId != ""){
+        if(nowToDoId !== ""){
             let toDoCellDiv = $(this).parent();
             axios.post('/todo/updateToDoIfShow','myToDoId='+ parseInt(nowToDoId+"")+'&ifShow='+true)
                 .then(res => {
@@ -432,7 +432,7 @@ function addBtnClick() {
     //点击删除按钮
     $(".listToDoShow").on("click",".toDoDelBtn",function() {
         let nowToDoId = $(this).parent().attr("id");
-        if(nowToDoId != ""){
+        if(nowToDoId !== ""){
             let toDoCellDiv = $(this).parent();
             axios.post('/todo/updateToDoIfShow','myToDoId='+ parseInt(nowToDoId+"")+'&ifShow='+false)
                 .then(res => {

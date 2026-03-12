@@ -5,9 +5,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import web.sn.dream.mapper.UserMapper;
+import web.sn.dream.pojo.DaoSan;
+import web.sn.dream.pojo.Result;
+import web.sn.dream.service.impl.DaoSanServiceImpl;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -25,10 +30,10 @@ import java.util.*;
 @RequestMapping("daoSan")
 public class DaoSanController {
 //
-//    @Autowired
-//    private DaoSanServiceImpl daoSanService;
-//    @Autowired
-//    private UserMapper userMapper;
+    @Autowired
+    private DaoSanServiceImpl daoSanService;
+    @Autowired
+    private UserMapper userMapper;
 //
 //    static  ArrayList<Card> oneBox_new=new ArrayList<>();
 //
@@ -78,44 +83,43 @@ public class DaoSanController {
 //        oneBox_new.add(card_xw);
 //    }
 //
-//    /**
-//     * 创建倒三游戏房间
-//     * @param session
-//     * @return
-//     */
-//    @RequestMapping("/create")
-//    public JsonResult<Map<String, Object>> create(HttpSession session){
-//        DaoSan daoSan =new DaoSan();
-//        // 获取当前时间
-//        LocalDateTime currentTime = LocalDateTime.now();
-//        // 定义日期时间格式
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-//        // 格式化当前时间
-//        String formattedTime = currentTime.format(formatter);
-//        String[] nums=formattedTime.split(":");
-//
-//        //将当前时间作为房间号,可以避免房间ID重复,也可以让房间号变的没有那么复杂   因为只使用了6位数字   需要一个月清除一次数据库   后续可以研究一个定时任务
-//        String roomId="";
-//        for(String num:nums){
-//            roomId+=num;
-//        }
-//        //初始化游戏房间信息
-//        daoSan.setId(roomId);
-//        daoSan.setCreateuser(getUsernameFromSession(session)); //创建人
-//        daoSan.setPlayer1(getUsernameFromSession(session)); //创建人即为1号玩家
-//        daoSan.setPlayernum(1); //当前对局加入的玩家数
-//        //将当前数据插入数据库
-//        daoSanService.insertDaosn(daoSan);
-//        //输出log信息
-//        System.out.println("用户："+daoSan.getCreateuser()+"创建了房间："+roomId+"等待其他玩家进入。。。");
-//
-//        //拼接post请求返回值
-//        Map<String, Object> data = new HashMap<>();
-//        data.put("roomId",roomId);//房间ID
-//        data.put("daoSan",daoSan);//游戏信息
-//        return  new JsonResult<>(OK,data);
-//
-//    }
+    /**
+     * 创建倒三游戏房间
+     * @param session
+     * @return
+     */
+    @RequestMapping("/create")
+    public Result create(HttpSession session){
+        DaoSan daoSan =new DaoSan();
+        // 获取当前时间
+        LocalDateTime currentTime = LocalDateTime.now();
+        // 定义日期时间格式
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        // 格式化当前时间
+        String formattedTime = currentTime.format(formatter);
+        String[] nums=formattedTime.split(":");
+
+        //将当前时间作为房间号,可以避免房间ID重复,也可以让房间号变的没有那么复杂   因为只使用了6位数字   需要一个月清除一次数据库   后续可以研究一个定时任务
+        String roomId="";
+        for(String num:nums){
+            roomId+=num;
+        }
+        //初始化游戏房间信息
+        daoSan.setId(roomId);
+        daoSan.setCreateUserId(session.getAttribute("id").toString()); //创建人id
+        daoSan.setCreateUserName(session.getAttribute("name").toString()); //创建人名称
+        daoSan.setPlayer1(session.getAttribute("name").toString()); //创建人即为1号玩家
+        daoSan.setPlayerNum(1); //当前对局加入的玩家数
+        //将当前数据插入数据库
+        daoSanService.insertDaoSan(daoSan);
+        //输出log信息
+        System.out.println("用户："+daoSan.getCreateUserName()+"创建了房间："+roomId+"等待其他玩家进入。。。");
+        //拼接post请求返回值
+        Map<String, Object> data = new HashMap<>();
+        data.put("roomId", roomId.toString());//房间ID
+        data.put("daoSan",daoSan);//游戏信息
+        return Result.success(data);
+    }
 //
 //    /**
 //     * 加入一场游戏

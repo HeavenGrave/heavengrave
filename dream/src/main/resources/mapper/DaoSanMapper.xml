@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.DaoSanMapper">
+    <insert id="insertDaoSan">
+        INSERT INTO daosan (id,create_user_id,create_user_name,player1,player2,player3,player4,player5,player_num,status,create_time)
+        VALUES
+            (#{id},#{createUserId},#{createUserName},#{player1},#{player2},#{player3},#{player4},#{player5},#{playerNum},#{status},#{createTime})
+    </insert>
+    <delete id="deleteAllData">
+        DELETE FROM daosan
+    </delete>
+    <delete id="deleteOutTimeDaoSan">
+        DELETE FROM daosan WHERE create_time BETWEEN '2023-01-01 00:00:00' AND DATE_SUB(NOW(), INTERVAL 5 HOUR)
+    </delete>
+    <update id="updateDaoSan">
+        UPDATE daosan set player2=#{player2},player3=#{player3},player4=#{player4},player5=#{player5},player_num=#{playerNum} where id=#{id}
+    </update>
+    <select id="findDaoSanById" resultType="web.sn.dream.pojo.DaoSan">
+        select  * from daosan where id=#{id}
+    </select>
+    <select id="findRoomInfoByStatus" resultType="web.sn.dream.pojo.DaoSan">
+        select * from daosan where status=#{status}
+    </select>
+    <update id="updateDaoSanByCreateId">
+        UPDATE daosan set status=#{status} where create_user_id=#{createUserId}
+    </update>
+</mapper>

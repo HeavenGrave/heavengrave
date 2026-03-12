@@ -5,14 +5,19 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 @EnableWebSocketMessageBroker  // 启用 STOMP 消息代理
 public class WebSocketStompConfig implements WebSocketMessageBrokerConfigurer {
+    // 1. 调用单个简单变量
+    @Value("${myConfig.ip}")
+    private String ipValue;
+
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp-websocket")
-                .setAllowedOrigins("http://8.141.4.23:8086")
+                .setAllowedOrigins(ipValue)
 //                .setAllowedOrigins("http://192.168.10.110:8086")
                 .withSockJS(); // 支持 SockJS（应对浏览器不支持 WebSocket 的情况）
     }

@@ -1,93 +1,157 @@
+var socket;
+var roomId;//当前房间id
+var ifStart=false;
+var myNum;//当前用户编号  一共5位用户
+var myName;//当前用户名称
+var nowDaoSanData;//当前对局游戏数据
+//不同情况下人员位次表
+var tableNums={
+    1:[4,3,2,1,5],
+    2:[5,4,3,2,1],
+    3:[1,5,4,3,2],
+    4:[2,1,5,4,3],
+    5:[3,2,1,5,4]
+}
+var myCards=[];
+var lastCards=[];
+var myClickCard=[];
+var outName;
+var winers=[];//出完的用户id
+var redWin =[];//红三胜者组
+var blackWin=[];//黑三胜者组
+var lightSanNum=0;//亮三数
+var nowTime = 10;//到计时时间
+var ifRedFive = false;//是不是红5
+var oneWiner;//大游
+var baseNum = 0.5;//几毛的胡
+var timer;//定时器
+var howBig="五毛滴。"
 //游戏开始
 window.onload = function() {
+    //根据设备类型添加样式文件
+    if (isMobile()) {
+        loadCSS("static/css/daoSan/daosan_mobile.css", function () {
+            // $(".bodyLoading").css("display","none");
+        });
+    } else {
+        loadCSS("static/css/daoSan/daosan_pc.css", function () {
+            // $(".bodyLoading").css("display","none");
+        });
+    }
     //连接webSocket
     if (typeof (WebSocket) == "undefined") { //判断 WebSocket 是否存在
         console.log("当前环境不支持WebSocket！！！");
     } else {
-        // socket = new WebSocket("wss://0ce5-2409-8a02-2425-c9d1-1f40-6dfa-f7ea-9323.ngrok-free.app/websocket"); //内网穿透
-        // 连接websocket
-        socket = new WebSocket("ws://8.141.4.23:8080/websocket"); //服务器连接websocket
-        // socket = new WebSocket("ws://127.0.0.1:8080/websocket"); //本地连接websocket
-        socket.onopen = function() {
-            console.log("WebSocket已打开！");
-        }
-        socket.onmessage = function(res) {
-            let msg = JSON.parse(res.data); //websocket传递的信息
-            switch (msg.type) { //当前操作类型
-                case 'addGame': //加入游戏
-                    addGame(msg);
-                    break;
-                case 'distributedCard': //发牌
-                    distributedCard(msg);
-                    break;
-                case "lightSan":
-                    lightSan(msg);
-                    break;
-                case "outNext":
-                    outNextOne(msg);
-                    break;
-                case "PlayerWin":
-                    PlayerWin(msg);
-                    break;
-            }
-        }
-        socket.onclose = function() {
-            console.log("WebSocket关闭");
-        }
-        socket.onerror = function() {
-            console.log("未知错误");
-        }
+        const socket = new SockJS('https://heavengrave.top/stomp-websocket');
+        // const socket = new SockJS('http://192.168.31.110:8086/stomp-websocket');
+        stompClient = Stomp.over(socket);
+        // 连接成功后的回调
+        stompClient.connect({}, () => {
+            stompClient.subscribe('/topic/messages', (response) => {
+                // console.log('收到 JSON 对象:', JSON.parse(response.body))
+                let jsonData = JSON.parse(response.body);
+                let info = jsonData;
+                if (jsonData.received) {
+                    // 1. 提取 received 字段
+                    let base64String = jsonData.received;
+                    // 2. 解码 Base64 字符串
+                    let decodedString = atob(base64String); // 输出: {"key":"value","list":[1,2,3]}
+                    // 3. 解析为 JSON 对象
+                    info = JSON.parse(decodedString);
+                }
+                switch (info.type) { //当前操作类型
+                    case 'addGame': //加入游戏
+                        addGame(info);
+                        break;
+                    case 'distributedCard': //发牌
+                        distributedCard(info);
+                        break;
+                    case "lightSan":
+                        lightSan(info);
+                        break;
+                    case "outNext":
+                        outNextOne(info);
+                        break;
+                    case "PlayerWin":
+                        PlayerWin(info);
+                        break;
+                }
+            });
+        });
     }
     $("#gameInfo").html(howBig);
-
-    let device = navigator.userAgent.toLowerCase();
-    if (/ipad|iphone|midp|rv:1.2.3.4|ucweb|android|windows ce|windows mobile/.test(device)) {
-        //移动端
-        // alert("手机端");
-        console.log("手机端");
-        //加载一套移动端css
-    } else {
-        //pc端
-        console.log("PC端");
-    }
 }
 //创建游戏
 $("#createGame").on("click", function() {
-    $.ajax({
-        url : "/game/create",
-        type : "POST",
-        // data:"roomId="+randomNum,
-        data : '',
-        dataType : "JSON",
-        success : function(res) {
-            if (res.state == 200) {
+    axios.post('/daoSan/create')
+        .then(res => {
+            //console.log(res.data);
+            if (res.status === 200) {
+                let info = res.data.data;
                 //返回主页隐藏  退出房间显示
                 $("#exitPage").css("display", "none");
                 $("#exitGame").css("display", "block");
-                //在右上角显示房间号
+                //在左上角显示房间号
                 $("#roomDiv").css("display", "flex");
-                $("#thisRoomId").html(res.data.roomId);
+                $("#thisRoomId").html(info.roomId);
                 //记录当前房间id
-                roomId = res.data.roomId;
+                roomId = info.roomId;
                 //记录当前用户编号
                 myNum = 1;
-                // 加载用户名  加载准备哆啦爱梦图标
+                //加载用户名  加载准备哆啦爱梦图标
                 //隐藏创建游戏按钮
                 $("#createDiv").css("display", "none");
                 //展示准备人数，以及开始按钮
                 $("#gameShowDiv").css("display", "flex");
+                $("#playerTotal").html(info.daoSan.playerNum);
                 //给玩家排桌次
-                addPlayerName(res.data.daoSan);
+                addPlayerName(info.daoSan);
                 //获取当前用户名称
-                myName = res.data.daoSan.createuser;
+                myName = info.daoSan.createUserName;
+                nowMaJiangData = info.daoSan;
             } else {
-                alert("创建失败");
+                alert("创建房间失败! <br>(请重新登录后,尝试再次创建..)");
             }
-        },
-        error : function(xhr) {
-            alert("创建游戏时产生未知的异常" + xhr.message);
-        }
-    })
+        })
+        .catch(error => {
+            console.error('创建失败:', error);
+            alert("创建游戏时产生未知的异常" + error);
+        });
+    // $.ajax({
+    //     url : "/daoSan/create",
+    //     type : "POST",
+    //     // data:"roomId="+randomNum,
+    //     data : '',
+    //     dataType : "JSON",
+    //     success : function(res) {
+    //         if (res.state == 200) {
+    //             //返回主页隐藏  退出房间显示
+    //             $("#exitPage").css("display", "none");
+    //             $("#exitGame").css("display", "block");
+    //             //在右上角显示房间号
+    //             $("#roomDiv").css("display", "flex");
+    //             $("#thisRoomId").html(res.data.roomId);
+    //             //记录当前房间id
+    //             roomId = res.data.roomId;
+    //             //记录当前用户编号
+    //             myNum = 1;
+    //             // 加载用户名  加载准备哆啦爱梦图标
+    //             //隐藏创建游戏按钮
+    //             $("#createDiv").css("display", "none");
+    //             //展示准备人数，以及开始按钮
+    //             $("#gameShowDiv").css("display", "flex");
+    //             //给玩家排桌次
+    //             addPlayerName(res.data.daoSan);
+    //             //获取当前用户名称
+    //             myName = res.data.daoSan.createuser;
+    //         } else {
+    //             alert("创建失败");
+    //         }
+    //     },
+    //     error : function(xhr) {
+    //         alert("创建游戏时产生未知的异常" + xhr.message);
+    //     }
+    // })
 })
 //加入游戏
 $("#addGame").on("click", function() {
@@ -288,7 +352,7 @@ function distributedCard(data) {
                     console.log('亮三请求失败:', error);
                 }
             });
-        }else if (myCards[i].decor ==="RedHearts" && myCards[i].size == 5) {
+        }else if (myCards[i].decor ==="RedHearts" && myCards[i].size === 5) {
             ifRedFive=true;
             //如果我是红五，加载哆啦爱梦
             setTimeout(function() {
@@ -370,10 +434,10 @@ function distributedCard(data) {
             let ifPass = compareDX();
             if (ifPass) {
                 //判断是不是红5的第一手牌
-                if (ifRedFive && $(".mycard").length == 10) {
+                if (ifRedFive && $(".mycard").length === 10) {
                     var ifOut5 = false;
                     for (var kk = 0; kk < myClickCard.length; kk++) {
-                        if (myClickCard[kk].decor == "RedHearts" && myClickCard[kk].size == 5) {
+                        if (myClickCard[kk].decor === "RedHearts" && myClickCard[kk].size === 5) {
                             ifOut5 = true;
                         }
                     }
@@ -403,12 +467,12 @@ function distributedCard(data) {
             //看看你的身份
             var type = "black";
             for (var i = 0;i< myCards.length; i++) {
-                if (myCards[i].number == "3" && myCards[i].decor == "RedHearts") {
+                if (myCards[i].number === "3" && myCards[i].decor === "RedHearts") {
                     type = "red1";
                     // redWin.push("RedHearts");
                 }
-                if (myCards[i].number == "3" && myCards[i].decor == "Square") {
-                    if (type == "red1") {
+                if (myCards[i].number === "3" && myCards[i].decor === "Square") {
+                    if (type === "red1") {
                         type = "red3";
                     } else {
                         type = "red2";
@@ -443,7 +507,7 @@ function distributedCard(data) {
     })
     //让步监听
     $("#passCards").on("click", function() {
-        if (outName == myName) {
+        if (outName === myName) {
             alert("该你了!还让步呢？");
             return;
         }
@@ -505,7 +569,7 @@ function lightSan(data) {
     if (!$("#" + data.decor + "_" + data.player).hasClass("active")) {
         $("#" + data.decor + "_" + data.player).addClass("active");
         if (!ifStart) {
-            if (data.decor == "RedHearts") {
+            if (data.decor === "RedHearts") {
                 lightSanNum = lightSanNum + 2;
             } else {
                 lightSanNum++;
@@ -534,38 +598,38 @@ function PlayerWin(data) {
         $("#winer"+(tableNums[myNum].indexOf(userNum)+1)).html("三油！！！<br>（我尽力，你们挣展哇？）");
     }
     //判断大油是啥成色
-    if (data.playerType == "black") {
+    if (data.playerType === "black") {
         blackWin.push("black");
         if (winers.length == 1) {
             oneWiner = "black";
         }
-    } else if (data.playerType == "red1") {
+    } else if (data.playerType === "red1") {
         redWin.push("RedHearts");
-        if (winers.length == 1) {
+        if (winers.length === 1) {
             oneWiner = "RedHearts";
         }
-    } else if (data.playerType == "red2") {
+    } else if (data.playerType === "red2") {
         redWin.push("Square");
-        if (winers.length == 1) {
+        if (winers.length === 1) {
             oneWiner = "Square";
         }
-    } else if (data.playerType == "red3") {
+    } else if (data.playerType === "red3") {
         redWin.push("RedHearts");
         redWin.push("Square");
-        if (winers.length == 1) {
+        if (winers.length === 1) {
             oneWiner = "DoubleSan";
         }
     }
     //判断游戏是否结束
-    if ((redWin.length == 2 && oneWiner != "black") || (blackWin.length == 3 && oneWiner == "black")) {
+    if ((redWin.length === 2 && oneWiner !== "black") || (blackWin.length === 3 && oneWiner === "black")) {
         //看一下你的身份
         var youType = "black";
         for (var i = 0;i<myCards.length; i++) {
-            if (myCards[i].number == "3" && myCards[i].decor == "RedHearts") {
+            if (myCards[i].number === "3" && myCards[i].decor === "RedHearts") {
                 youType = "red1";
             }
-            if (myCards[i].number == "3" && myCards[i].decor == "Square") {
-                if (youType == "red1") {
+            if (myCards[i].number === "3" && myCards[i].decor === "Square") {
+                if (youType === "red1") {
                     youType = "red3";
                 } else {
                     youType = "red2";
@@ -576,19 +640,19 @@ function PlayerWin(data) {
         var arrestNum=0;
         //判断展示输赢的结算
         var result = 0;
-        if (redWin.length == 2) {
+        if (redWin.length === 2) {
             arrestNum=3-blackWin.length;
-            if (youType == "red1") {
+            if (youType === "red1") {
                 result = (lightSanNum+arrestNum) * baseNum * 2;
-            } else if (youType == "red2") {
+            } else if (youType === "red2") {
                 result = (lightSanNum+arrestNum) * baseNum;
-            } else if (youType == "red3") {
+            } else if (youType === "red3") {
                 arrestNum=4-blackWin.length;
                 result = (lightSanNum+arrestNum) * baseNum * 4;
-            } else if (youType == "black") {
+            } else if (youType === "black") {
                 result = -(lightSanNum+arrestNum) * baseNum ;
             }
-        } else if (blackWin.length == 3) {
+        } else if (blackWin.length === 3) {
             if(redWin.indexOf("RedHearts")>=0){
                 arrestNum=2;
                 if(redWin.indexOf("Square")>=0){
@@ -597,13 +661,13 @@ function PlayerWin(data) {
             }else{
                 arrestNum=1;
             }
-            if (youType == "red1") {
+            if (youType === "red1") {
                 result = -(lightSanNum+arrestNum) * baseNum * 2;
-            } else if (youType == "red2") {
+            } else if (youType === "red2") {
                 result = -(lightSanNum+arrestNum) * baseNum;
-            } else if (youType == "red3") {
+            } else if (youType === "red3") {
                 result = -(lightSanNum+arrestNum) * baseNum * 4;
-            } else if (youType == "black") {
+            } else if (youType === "black") {
                 result = (lightSanNum+arrestNum) * baseNum ;
             }
         }
@@ -636,7 +700,7 @@ function PlayerWin(data) {
                 console.log('请求失败:', error);
             }
         });
-    } else if ((redWin.length == 2 && oneWiner == "black") || (blackWin.length == 3 && oneWiner != "black")) {
+    } else if ((redWin.length === 2 && oneWiner === "black") || (blackWin.length === 3 && oneWiner !== "black")) {
         //白拦了  在结算页面展示
         $("#result-msg").html("白拦了!");
         $("#result-money").html(0);

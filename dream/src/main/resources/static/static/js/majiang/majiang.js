@@ -56,7 +56,7 @@ window.onload = function () {
             // $(".bodyLoading").css("display","none");
         });
     }
-    const socket = new SockJS('http://8.141.4.23:8086/stomp-websocket');
+    const socket = new SockJS('https://heavengrave.top/stomp-websocket');
     // const socket = new SockJS('http://192.168.10.110:8086/stomp-websocket');
     stompClient = Stomp.over(socket);
     // 连接成功后的回调
