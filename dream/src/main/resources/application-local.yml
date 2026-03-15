@@ -1,0 +1,4 @@
+server:
+  port: 8086
+myConfig:
+  ip: http://1192.168.31.110:8086"
