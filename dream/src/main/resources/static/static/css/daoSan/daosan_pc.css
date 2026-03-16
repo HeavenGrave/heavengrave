@@ -1,6 +1,13 @@
 @charset "UTF-8";
 
 
+/* 背景层（可以换成任意图片） */
+.backgroundDiv_image {
+    position: absolute;
+    z-index: 0;
+    height: 100%;
+    width: 100%;
+}
 .container-all {
     height: 48vh;
     display: grid;
@@ -82,4 +89,10 @@
     position: absolute;
     bottom: 1%;
     right: 10px;
+}
+
+.roomNumDiv{
+    height: 28px;width:130px;border-radius: 8px;border:0px;background-color: white;
+    text-align: center;
+    line-height: 28px;
 }

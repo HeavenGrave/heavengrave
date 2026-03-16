@@ -42,8 +42,8 @@ window.onload = function() {
     if (typeof (WebSocket) == "undefined") { //判断 WebSocket 是否存在
         console.log("当前环境不支持WebSocket！！！");
     } else {
-        const socket = new SockJS('https://heavengrave.top/stomp-websocket');
-        // const socket = new SockJS('http://192.168.31.110:8086/stomp-websocket');
+        // const socket = new SockJS('https://heavengrave.top/stomp-websocket');
+        const socket = new SockJS('http://192.168.31.110:8086/stomp-websocket');
         stompClient = Stomp.over(socket);
         // 连接成功后的回调
         stompClient.connect({}, () => {
@@ -997,3 +997,38 @@ function ifHaveRedSan(nowOutCard){
         });
     }
 }
+
+/**
+ * 点击房间号
+ */
+$("#roomId").on("click", function () {
+    $("#room_list").css("display", "flex"); //展示房间列表
+    axios.get('/daoSan/getRoom')
+        .then(res => {
+            if (res.status === 200) {
+                let info = res.data.data; //当前活跃的房间信息
+                $("#room_list").empty(); //清空列表
+                for (let i = 0; i < info.length; i++) {
+                    let html = '<div class="room_info" data-id="' + info[i].id + '">' + info[i].id + '【' + info[i].createUserName + '】' + '</div>';
+                    $("#room_list").append(html);
+                }
+                //添加房间信息点击监听
+                $(".room_info").on("click", function () {
+                    let nowClickRoomId = $(this).attr("data-id");
+                    $("#roomId").html(nowClickRoomId);
+                    $("#roomId").val(nowClickRoomId);
+                    $("#room_list").css("display", "none");
+                })
+            }
+        })
+        .catch(error => {
+            console.error('创建失败:', error);
+            alert("创建游戏时产生未知的异常" + error);
+        });
+});
+/**
+ * 返回大厅
+ */
+$("#backHall").on("click", function () {
+    $(".gameInfo-Div").css("display", "none");
+})

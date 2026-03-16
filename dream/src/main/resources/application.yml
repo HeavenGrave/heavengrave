@@ -6,7 +6,7 @@ spring:
   application:
     name: dream
   profiles:
-    active: prod  # 这里是开关，改成 prod 就是线上 改成 local 就是本地
+    active: local  # 这里是开关，改成 prod 就是线上 改成 local 就是本地
   #文件格式为 UTF-8
   messages:
     encoding: utf-8

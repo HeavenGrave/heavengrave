@@ -24,6 +24,6 @@ public class DaoSan {
     private String player4;//玩家4名称
     private String player5;//玩家5名称
     private Integer playerNum;//当前玩家数
-    private Integer status;//游戏状态
+    private Integer status;//游戏状态 0游戏结束 1准备中 2游戏中
     private Date createTime;//创建时间
 }

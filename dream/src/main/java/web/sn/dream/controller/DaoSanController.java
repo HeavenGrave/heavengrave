@@ -7,10 +7,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import web.sn.dream.mapper.UserMapper;
 import web.sn.dream.pojo.DaoSan;
+import web.sn.dream.pojo.MaJiang;
 import web.sn.dream.pojo.Result;
 import web.sn.dream.service.impl.DaoSanServiceImpl;
 
@@ -109,6 +111,7 @@ public class DaoSanController {
         daoSan.setCreateUserId(session.getAttribute("id").toString()); //创建人id
         daoSan.setCreateUserName(session.getAttribute("name").toString()); //创建人名称
         daoSan.setPlayer1(session.getAttribute("name").toString()); //创建人即为1号玩家
+        daoSan.setStatus(1);//游戏准备中
         daoSan.setPlayerNum(1); //当前对局加入的玩家数
         //将当前数据插入数据库
         daoSanService.insertDaoSan(daoSan);
@@ -120,6 +123,16 @@ public class DaoSanController {
         data.put("daoSan",daoSan);//游戏信息
         return Result.success(data);
     }
+
+    /**
+     * 查询当前的活跃的房间信息
+     */
+    @GetMapping("/getRoom")
+    public Result getRoom(){
+        List<DaoSan> list_ds = daoSanService.findRoomInfoByStatus(1);
+        return Result.success(list_ds);
+    }
+
 //
 //    /**
 //     * 加入一场游戏
