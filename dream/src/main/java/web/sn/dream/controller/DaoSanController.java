@@ -6,15 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import web.sn.dream.mapper.UserMapper;
-import web.sn.dream.pojo.DaoSan;
-import web.sn.dream.pojo.MaJiang;
-import web.sn.dream.pojo.Result;
+import web.sn.dream.pojo.*;
 import web.sn.dream.service.impl.DaoSanServiceImpl;
+import web.sn.dream.websoket.WebSocketService;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -28,63 +28,65 @@ import java.util.*;
  * @description: TODO
  * @date 2023/7/13 21:06
  */
+@Slf4j
 @RestController
 @RequestMapping("daoSan")
 public class DaoSanController {
-//
     @Autowired
     private DaoSanServiceImpl daoSanService;
     @Autowired
     private UserMapper userMapper;
-//
-//    static  ArrayList<Card> oneBox_new=new ArrayList<>();
-//
-//    static{
-//        //创建一幅牌
-//        int index=1;
-//        String [] ses={"RedHearts","Spades","Square","ThePlumBlossom"};
-//        String [] nums={"A","2","3","4","5","7","8","9","10","J","Q","K"};
-//        int [] lights={14,15,16,17,5,7,8,9,10,11,12,13};
-//        for(String se : ses){
-//            int size =1;
-//            for(int i=0;i<nums.length;i++){
-//                Card card=new Card();
-//                card.setDecor(se);
-//                card.setNumber(nums[i]);
-//                card.setId(index);
-//                if(size==6){
-//                    size++;
-//                }
-//                card.setSize(size);
-//                if(se.equals("RedHearts")&&lights[i]==16){
-//                    card.setLenght(19);
-//                }else  if(se.equals("Square")&&lights[i]==16){
-//                    card.setLenght(18);
-//                }else{
-//                    card.setLenght(lights[i]);
-//                }
-//                index++;
-//                size++;
-//                oneBox_new.add(card);
-//            }
-//        }
-//        Card card_dw=new Card();
-//        card_dw.setNumber("DW");
-//        card_dw.setSize(15);
-//        card_dw.setDecor("color");
-//        card_dw.setLenght(21);
-//        card_dw.setId(index);
-//        index++;
-//        oneBox_new.add(card_dw);
-//        Card card_xw=new Card();
-//        card_xw.setNumber("XW");
-//        card_xw.setSize(14);
-//        card_xw.setDecor("grey");
-//        card_xw.setLenght(20);
-//        card_xw.setId(index);
-//        oneBox_new.add(card_xw);
-//    }
-//
+    @Autowired
+    private WebSocketService webSocketService;
+
+    static  ArrayList<CardDaoSan> oneBox_new=new ArrayList<>();
+
+    static{
+        //创建一幅牌
+        int index=1;
+        String [] ses={"RedHearts","Spades","Square","ThePlumBlossom"};
+        String [] nums={"A","2","3","4","5","7","8","9","10","J","Q","K"};
+        int [] lights={14,15,16,17,5,7,8,9,10,11,12,13};
+        for(String se : ses){
+            int size =1;
+            for(int i=0;i<nums.length;i++){
+                CardDaoSan card=new CardDaoSan();
+                card.setDecor(se);
+                card.setNumber(nums[i]);
+                card.setId(index);
+                if(size==6){
+                    size++;
+                }
+                card.setSize(size);
+                if(se.equals("RedHearts")&&lights[i]==16){
+                    card.setPriority(19);
+                }else  if(se.equals("Square")&&lights[i]==16){
+                    card.setPriority(18);
+                }else{
+                    card.setPriority(lights[i]);
+                }
+                index++;
+                size++;
+                oneBox_new.add(card);
+            }
+        }
+        CardDaoSan card_dw=new CardDaoSan();
+        card_dw.setNumber("DW");
+        card_dw.setSize(15);
+        card_dw.setDecor("color");
+        card_dw.setPriority(21);
+        card_dw.setId(index);
+        index++;
+        oneBox_new.add(card_dw);
+        CardDaoSan card_xw=new CardDaoSan();
+        card_xw.setNumber("XW");
+        card_xw.setSize(14);
+        card_xw.setDecor("grey");
+        card_xw.setPriority(20);
+        card_xw.setId(index);
+        oneBox_new.add(card_xw);
+    }
+
     /**
      * 创建倒三游戏房间
      * @param session
@@ -93,6 +95,7 @@ public class DaoSanController {
     @RequestMapping("/create")
     public Result create(HttpSession session){
         DaoSan daoSan =new DaoSan();
+        String userName=session.getAttribute("userName").toString();
         // 获取当前时间
         LocalDateTime currentTime = LocalDateTime.now();
         // 定义日期时间格式
@@ -108,18 +111,18 @@ public class DaoSanController {
         }
         //初始化游戏房间信息
         daoSan.setId(roomId);
-        daoSan.setCreateUserId(session.getAttribute("id").toString()); //创建人id
-        daoSan.setCreateUserName(session.getAttribute("name").toString()); //创建人名称
-        daoSan.setPlayer1(session.getAttribute("name").toString()); //创建人即为1号玩家
+        daoSan.setCreateUserId(userName); //创建人id
+        daoSan.setCreateUserName(userName); //创建人名称
+        daoSan.setPlayer1(userName); //创建人即为1号玩家
         daoSan.setStatus(1);//游戏准备中
         daoSan.setPlayerNum(1); //当前对局加入的玩家数
         //将当前数据插入数据库
         daoSanService.insertDaoSan(daoSan);
         //输出log信息
-        System.out.println("用户："+daoSan.getCreateUserName()+"创建了房间："+roomId+"等待其他玩家进入。。。");
+        System.out.println("用户："+userName+"创建了房间："+roomId+"等待其他玩家进入。。。");
         //拼接post请求返回值
         Map<String, Object> data = new HashMap<>();
-        data.put("roomId", roomId.toString());//房间ID
+        data.put("roomId", roomId);//房间ID
         data.put("daoSan",daoSan);//游戏信息
         return Result.success(data);
     }
@@ -133,132 +136,123 @@ public class DaoSanController {
         return Result.success(list_ds);
     }
 
-//
-//    /**
-//     * 加入一场游戏
-//     * @param roomId
-//     * @param session
-//     * @return
-//     */
-//    @RequestMapping("/add")
-//    public JsonResult<Map<String, Object>> add(String roomId,HttpSession session) {
-//        // 根据房间id查询游戏
-//        DaoSan daoSan = daoSanService.findDaosnById(roomId);
-//        //从session中获取当前用户名称
-//        String name =getUsernameFromSession(session);
-//        //输出log信息
-//        System.out.println("用户："+name+"加入了房间："+roomId);
-//        //当前玩家编号
-//        int nowNum = daoSan.getPlayernum();
-//        //判断是否为新玩家
-//        Boolean ifNewPlayer=true;
-//        if(daoSan.getPlayer1().equals(name)){
-//            ifNewPlayer=false;
-//        }else if(daoSan.getPlayer2()!=null&&daoSan.getPlayer2().equals(name)){
-//            ifNewPlayer=false;
-//        }else if(daoSan.getPlayer3()!=null&&daoSan.getPlayer3().equals(name)){
-//            ifNewPlayer=false;
-//        }else if(daoSan.getPlayer4()!=null&&daoSan.getPlayer4().equals(name)){
-//            ifNewPlayer=false;
-//        }else if(daoSan.getPlayer5()!=null&&daoSan.getPlayer5().equals(name)){
-//            ifNewPlayer=false;
-//        }
-//        Map<String, Object> data = new HashMap<>();
-//        if(ifNewPlayer) {
-//            JSONObject json = new JSONObject();
-//            if (nowNum == 1) {
-//                daoSan.setPlayer2(name);
-//            } else if (nowNum == 2) {
-//                daoSan.setPlayer3(name);
-//            } else if (nowNum == 3) {
-//                daoSan.setPlayer4(name);
-//            } else if (nowNum == 4) {
-//                daoSan.setPlayer5(name);
-//            } else if (nowNum == 5) {
-//                data.put("type", "addGameError");
-//                data.put("daoSan", daoSan);
-//                return new JsonResult<>(OK, data);
-//            }
-//            daoSan.setPlayernum((nowNum + 1));
-//            //更新游戏数据
-//            daoSanService.updateDaoSan(daoSan);
-//            json.put("type", "addGame");
-//            //当前对局信息
-//            json.put("daoSan", daoSan);
-//            json.put("playernum", daoSan.getPlayernum());//当前玩家编号 座位号
-//            try {
-//                //发送websocket，告诉其他人加入了新的玩家
-//                WebSocketServer.sendInfo(json.toString());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            //拼接返回数据
-//            data.put("type", "addGame");
-//            data.put("daoSan", daoSan);
-//        }else{
-//            //拼接返回数据
-//            data.put("type", "addOldGame");
-//            data.put("daoSan", daoSan);
-//            //后续添加找回对局的逻辑
-//        }
-//        //data 用于当前账户的信息处理
-//        return new JsonResult<>(OK, data);
-//    }
-//
-//
-//    /**
-//     * 房主开启游戏对局
-//     * @param roomId
-//     * @param session
-//     */
-//    @RequestMapping("/start")
-//    public void start(String roomId,HttpSession session) {
-//        //从session中获取当前用户名称
-//        String name =getUsernameFromSession(session);
-//        //输出log信息
-//        System.out.println("用户："+name+" 作为房主开始了游戏  房间号为："+roomId);
-//        //洗牌   将牌随机打乱
-//        Collections.shuffle(oneBox_new);
-//        ArrayList<Card> cords1=new ArrayList<>();
-//        ArrayList<Card> cords2=new ArrayList<>();
-//        ArrayList<Card> cords3=new ArrayList<>();
-//        ArrayList<Card> cords4=new ArrayList<>();
-//        ArrayList<Card> cords5=new ArrayList<>();
-//        int num=1; //玩家编号
-//        //将牌顺序分发给五个人
-//        for(Card card:oneBox_new){
-//            if(num==1){
-//                cords1.add(card);
-//                num++;
-//            }else if(num==2){
-//                cords2.add(card);
-//                num++;
-//            }else if(num==3){
-//                cords3.add(card);
-//                num++;
-//            }else if(num==4){
-//                cords4.add(card);
-//                num++;
-//            }else if(num==5){
-//                cords5.add(card);
-//                num=1;
-//            }
-//        }
-//        JSONObject json = new JSONObject();
-//        json.put("type","distributedCard");//发牌
-//        json.put("player1",cords1);
-//        json.put("player2",cords2);
-//        json.put("player3",cords3);
-//        json.put("player4",cords4);
-//        json.put("player5",cords5);
-//        try {
-//            //发送websocket，告诉其他人开始游戏了
-//            WebSocketServer.sendInfo(json.toString());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
+    /**
+     * 加入一场游戏
+     * @param roomId
+     * @param session
+     * @return
+     */
+    @RequestMapping("/add")
+    public Result add(String roomId,HttpSession session) {
+        // 根据房间id查询游戏
+        DaoSan daoSan = daoSanService.findDaoSanById(roomId);
+        String userName=session.getAttribute("name").toString();
+        //输出log信息
+        System.out.println("用户："+userName+"加入了房间："+roomId);
+        //当前玩家编号
+        int nowNum = daoSan.getPlayerNum();
+        //判断是否为新玩家
+        Boolean ifNewPlayer=true;
+        if(daoSan.getPlayer1().equals(userName)){
+            ifNewPlayer=false;
+        }else if(daoSan.getPlayer2()!=null&&daoSan.getPlayer2().equals(userName)){
+            ifNewPlayer=false;
+        }else if(daoSan.getPlayer3()!=null&&daoSan.getPlayer3().equals(userName)){
+            ifNewPlayer=false;
+        }else if(daoSan.getPlayer4()!=null&&daoSan.getPlayer4().equals(userName)){
+            ifNewPlayer=false;
+        }else if(daoSan.getPlayer5()!=null&&daoSan.getPlayer5().equals(userName)){
+            ifNewPlayer=false;
+        }
+        Map<String, Object> data = new HashMap<>();
+        if(ifNewPlayer) {
+            if (nowNum == 1) {
+                daoSan.setPlayer2(userName);
+            } else if (nowNum == 2) {
+                daoSan.setPlayer3(userName);
+            } else if (nowNum == 3) {
+                daoSan.setPlayer4(userName);
+            } else if (nowNum == 4) {
+                daoSan.setPlayer5(userName);
+            } else if (nowNum == 5) {
+                data.put("type", "addGameError");
+                data.put("daoSan", daoSan);
+                return Result.success(data);
+            }
+            daoSan.setPlayerNum(nowNum + 1);
+            //更新游戏数据
+            boolean check=daoSanService.updateDaoSan(daoSan);
+            if(check) {
+                log.info(data.toString());
+                data.put("type", "addGame");
+                data.put("daoSan", daoSan);
+                data.put("playerNum", daoSan.getPlayerNum());//当前玩家编号 座位号
+                webSocketService.sendMessageToClient("/topic/messages", data);
+            }else{
+                System.out.println("用户："+userName+"加入房间："+roomId+"失败！");
+                return Result.error("加入房间失败");
+            }
+        }else{
+            //拼接返回数据
+            data.put("type", "addOldGame");
+            data.put("daoSan", daoSan);
+            //后续添加找回对局的逻辑
+        }
+        //data 用于当前账户的信息处理
+        return Result.success(data);
+    }
+
+    /**
+     * 房主开启游戏对局
+     * @param roomId
+     * @param session
+     */
+    @RequestMapping("/start")
+    public void start(String roomId,HttpSession session) {
+        //从session中获取当前用户名称
+        String name =session.getAttribute("name").toString();
+        //输出log信息
+        System.out.println("用户："+name+" 作为房主开始了游戏  房间号为："+roomId);
+        //根据房间id查询游戏信息
+        DaoSan daoSan = daoSanService.findDaoSanById(roomId);
+        //洗牌   将牌随机打乱
+        Collections.shuffle(oneBox_new);
+        List<CardDaoSan> cords1=new ArrayList<>();
+        List<CardDaoSan> cords2=new ArrayList<>();
+        List<CardDaoSan> cords3=new ArrayList<>();
+        List<CardDaoSan> cords4=new ArrayList<>();
+        List<CardDaoSan> cords5=new ArrayList<>();
+        int num=1; //玩家编号
+        //将牌顺序分发给五个人
+        for(CardDaoSan card:oneBox_new){
+            if(num==1){
+                cords1.add(card);
+                num++;
+            }else if(num==2){
+                cords2.add(card);
+                num++;
+            }else if(num==3){
+                cords3.add(card);
+                num++;
+            }else if(num==4){
+                cords4.add(card);
+                num++;
+            }else if(num==5){
+                cords5.add(card);
+                num=1;
+            }
+        }
+        HashMap<String,Object> json= new HashMap<>();
+        json.put("type","distributedCard");//发牌
+        json.put("player1",cords1);
+        json.put("player2",cords2);
+        json.put("player3",cords3);
+        json.put("player4",cords4);
+        json.put("player5",cords5);
+        //发送websocket，告诉其他人开始游戏了
+        webSocketService.sendMessageToClient("/topic/messages", json);
+    }
+
 //    /**
 //     * 出牌或让步
 //     * @param type 出牌 让步 喝风
@@ -282,7 +276,7 @@ public class DaoSanController {
 //                card.setDecor(json1.get("decor").asText());
 //                card.setSize(json1.get("size").asInt());
 //                card.setNumber(json1.get("number").asText());
-//                card.setLenght(json1.get("lenght").asInt());
+//                card.setPriority(json1.get("lenght").asInt());
 //                list_card.add(card);
 //                cardInfo+=card.getDecor()+" "+card.getNumber()+"; ";
 //            }
@@ -438,7 +432,6 @@ public class DaoSanController {
 //        System.out.println("用户："+name+"更新了积分; 当前的积分为："+(user.getScore()));
 //        return  new JsonResult<>(OK);
 //    }
-//
 }
 
 

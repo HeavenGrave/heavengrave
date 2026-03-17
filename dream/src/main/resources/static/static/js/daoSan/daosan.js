@@ -103,12 +103,11 @@ $("#createGame").on("click", function() {
                 $("#createDiv").css("display", "none");
                 //展示准备人数，以及开始按钮
                 $("#gameShowDiv").css("display", "flex");
-                $("#playerTotal").html(info.daoSan.playerNum);
                 //给玩家排桌次
                 addPlayerName(info.daoSan);
                 //获取当前用户名称
                 myName = info.daoSan.createUserName;
-                nowMaJiangData = info.daoSan;
+                nowDaoSanData = info.daoSan;
             } else {
                 alert("创建房间失败! <br>(请重新登录后,尝试再次创建..)");
             }
@@ -117,56 +116,47 @@ $("#createGame").on("click", function() {
             console.error('创建失败:', error);
             alert("创建游戏时产生未知的异常" + error);
         });
-    // $.ajax({
-    //     url : "/daoSan/create",
-    //     type : "POST",
-    //     // data:"roomId="+randomNum,
-    //     data : '',
-    //     dataType : "JSON",
-    //     success : function(res) {
-    //         if (res.state == 200) {
-    //             //返回主页隐藏  退出房间显示
-    //             $("#exitPage").css("display", "none");
-    //             $("#exitGame").css("display", "block");
-    //             //在右上角显示房间号
-    //             $("#roomDiv").css("display", "flex");
-    //             $("#thisRoomId").html(res.data.roomId);
-    //             //记录当前房间id
-    //             roomId = res.data.roomId;
-    //             //记录当前用户编号
-    //             myNum = 1;
-    //             // 加载用户名  加载准备哆啦爱梦图标
-    //             //隐藏创建游戏按钮
-    //             $("#createDiv").css("display", "none");
-    //             //展示准备人数，以及开始按钮
-    //             $("#gameShowDiv").css("display", "flex");
-    //             //给玩家排桌次
-    //             addPlayerName(res.data.daoSan);
-    //             //获取当前用户名称
-    //             myName = res.data.daoSan.createuser;
-    //         } else {
-    //             alert("创建失败");
-    //         }
-    //     },
-    //     error : function(xhr) {
-    //         alert("创建游戏时产生未知的异常" + xhr.message);
-    //     }
-    // })
 })
+/**
+ * 点击房间号
+ */
+$("#roomId").on("click", function () {
+    $("#room_list").css("display", "flex"); //展示房间列表
+    axios.get('/daoSan/getRoom')
+        .then(res => {
+            if (res.status === 200) {
+                let info = res.data.data; //当前活跃的房间信息
+                $("#room_list").empty(); //清空列表
+                for (let i = 0; i < info.length; i++) {
+                    let html = '<div class="room_info" data-id="' + info[i].id + '">' + info[i].id + '【' + info[i].createUserName + '】' + '</div>';
+                    $("#room_list").append(html);
+                }
+                //添加房间信息点击监听
+                $(".room_info").on("click", function () {
+                    let nowClickRoomId = $(this).attr("data-id");
+                    $("#roomId").html(nowClickRoomId);
+                    $("#roomId").val(nowClickRoomId);
+                    $("#room_list").css("display", "none");
+                })
+            }
+        })
+        .catch(error => {
+            console.error('创建失败:', error);
+            alert("创建游戏时产生未知的异常" + error);
+        });
+});
 //加入游戏
 $("#addGame").on("click", function() {
     let nowRoomId = $("#roomId").val();
     if (nowRoomId === "") {
-        alert("请先输入房间号！");
+        alert("请先选择房间！");
     } else {
-        $.ajax({
-            url : "/game/add",
-            type : "POST",
-            data : "roomId=" + nowRoomId,
-            dataType : "JSON",
-            success : function(res) {
-                if (res.state === 200) {
-                    if(res.data.type==="addGameError"){
+        axios.post('/daoSan/add', 'roomId=' + nowRoomId)
+            .then(res => {
+                //console.log(res.data);
+                if (res.status === 200) {
+                    let info = res.data.data;
+                    if (info.type === "addGameError") {
                         alert("当前房间人数已满,等下一局吧！");
                         return;
                     }
@@ -175,51 +165,51 @@ $("#addGame").on("click", function() {
                     $("#exitGame").css("display", "block");
                     //展示当前加入的房间号
                     $("#roomDiv").css("display", "flex");
-                    $("#thisRoomId").html(res.data.daoSan.id);
+                    $("#thisRoomId").html(info.daoSan.id);
                     //给房间号赋值
-                    roomId = res.data.daoSan.id;
-                    myNum = res.data.daoSan.playernum;
-                    myName = res.data.daoSan["player" + myNum];
-                    console.log("玩家座位号：" + myNum);
-                    console.log("玩家名称：" + myName);
+                    roomId = info.daoSan.id;
+                    myNum = info.daoSan.playerNum;
+                    myName = info.daoSan["player" + myNum];
                     //隐藏创建游戏按钮
                     $("#createDiv").css("display", "none");
                     //展示准备人数，以及开始按钮
                     $("#gameShowDiv").css("display", "flex");
                     //根据游戏信息加载座位表
-                    addPlayerName(res.data.daoSan);
+                    addPlayerName(info.maJiang);
+                    //初始化所有用户准备状态 以及筹码
+                    // for (let i = 1; i <= info.maJiang.nowNum; i++) {
+                    //     areYouReady[i] = false;
+                    //     playerWorth[i] = info.maJiang.price;
+                    //     gangInfo[i] = 0;
+                    //     winInfo[i] = 0;
+                    // }
                 } else {
-                    alert("创建房间失败! <br>(请重新登录后,尝试再次创建..)");
+                    alert("加入失败");
                 }
-            },
-            error : function(xhr) {
-                alert("创建游戏时产生未知的异常" + xhr.message);
-            }
-        })
+            })
+            .catch(error => {
+                console.error('加入游戏异常:', error);
+                alert("加入游戏时产生未知的异常" + error);
+            });
     }
 })
 //开始游戏
 $("#startGame").on("click", function() {
-    if($("#startGame").attr("disabled")=="disabled"){
+    if ($("#startGame").attr("disabled") == "disabled") {
         return;
-    }else {
-        $.ajax({
-            url: '/game/start',
-            method: 'PUT', // 请求方法，可以是 'GET', 'POST', 'PUT', 'DELETE' 等
-            dataType: 'JSON', // 响应数据的格式，可以是 'json', 'xml', 'text' 等
-            data: {
-                // 请求参数 (可选)
-                data: nowDaoSanData,
-                roomId: roomId
-            },
-            success: function (res) {
-                // console.log('请求成功:', response);
-            },
-            error: function (xhr, status, error) {
-                // 请求失败时的处理函数
-                // console.log('请求失败:', error);
-            }
-        });
+    } else {
+        axios.put('/daoSan/start', "roomId=" + roomId)
+            .then(res => {
+                if (res.status === 200) {
+                    let info = res.data.data;
+                } else {
+                    alert("开始失败!");
+                }
+            })
+            .catch(error => {
+                console.error('开始游戏异常:', error);
+                alert("开始游戏时产生未知的异常" + error);
+            });
     }
 })
 
@@ -998,34 +988,7 @@ function ifHaveRedSan(nowOutCard){
     }
 }
 
-/**
- * 点击房间号
- */
-$("#roomId").on("click", function () {
-    $("#room_list").css("display", "flex"); //展示房间列表
-    axios.get('/daoSan/getRoom')
-        .then(res => {
-            if (res.status === 200) {
-                let info = res.data.data; //当前活跃的房间信息
-                $("#room_list").empty(); //清空列表
-                for (let i = 0; i < info.length; i++) {
-                    let html = '<div class="room_info" data-id="' + info[i].id + '">' + info[i].id + '【' + info[i].createUserName + '】' + '</div>';
-                    $("#room_list").append(html);
-                }
-                //添加房间信息点击监听
-                $(".room_info").on("click", function () {
-                    let nowClickRoomId = $(this).attr("data-id");
-                    $("#roomId").html(nowClickRoomId);
-                    $("#roomId").val(nowClickRoomId);
-                    $("#room_list").css("display", "none");
-                })
-            }
-        })
-        .catch(error => {
-            console.error('创建失败:', error);
-            alert("创建游戏时产生未知的异常" + error);
-        });
-});
+
 /**
  * 返回大厅
  */
