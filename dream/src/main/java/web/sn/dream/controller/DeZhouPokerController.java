@@ -21,8 +21,8 @@ public class DeZhouPokerController {
 
     @Autowired
     private DeZhouPokerService deZhouPokerService;
-    @Autowired
-    private UserMapper userMapper;
+//    @Autowired
+//    private UserMapper userMapper;
     @Autowired
     private WebSocketService webSocketService;
 

@@ -1,9 +1,5 @@
 package web.sn.dream.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +12,6 @@ import web.sn.dream.pojo.*;
 import web.sn.dream.service.impl.DaoSanServiceImpl;
 import web.sn.dream.websoket.WebSocketService;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -103,8 +98,7 @@ public class DaoSanController {
         // 格式化当前时间
         String formattedTime = currentTime.format(formatter);
         String[] nums=formattedTime.split(":");
-
-        //将当前时间作为房间号,可以避免房间ID重复,也可以让房间号变的没有那么复杂   因为只使用了6位数字   需要一个月清除一次数据库   后续可以研究一个定时任务
+        //将当前时间作为房间号,可以避免房间ID重复,也可以让房间号变的没有那么复杂   因为只使用了6位数字   需要一个月清除一次数据库   后续可以添加一个定时任务
         String roomId="";
         for(String num:nums){
             roomId+=num;
@@ -153,15 +147,21 @@ public class DaoSanController {
         int nowNum = daoSan.getPlayerNum();
         //判断是否为新玩家
         Boolean ifNewPlayer=true;
+        int playerNum=0;
         if(daoSan.getPlayer1().equals(userName)){
+            playerNum=1;
             ifNewPlayer=false;
         }else if(daoSan.getPlayer2()!=null&&daoSan.getPlayer2().equals(userName)){
+            playerNum=2;
             ifNewPlayer=false;
         }else if(daoSan.getPlayer3()!=null&&daoSan.getPlayer3().equals(userName)){
+            playerNum=3;
             ifNewPlayer=false;
         }else if(daoSan.getPlayer4()!=null&&daoSan.getPlayer4().equals(userName)){
+            playerNum=4;
             ifNewPlayer=false;
         }else if(daoSan.getPlayer5()!=null&&daoSan.getPlayer5().equals(userName)){
+            playerNum=5;
             ifNewPlayer=false;
         }
         Map<String, Object> data = new HashMap<>();
@@ -196,6 +196,8 @@ public class DaoSanController {
             //拼接返回数据
             data.put("type", "addOldGame");
             data.put("daoSan", daoSan);
+            data.put("userName", userName);
+            data.put("playerNum", playerNum);
             //后续添加找回对局的逻辑
         }
         //data 用于当前账户的信息处理

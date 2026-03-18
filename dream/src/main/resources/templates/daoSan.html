@@ -344,9 +344,9 @@
                     <div style="height:12vh;">
                         <img style="height:100%;width:100%;" src="https://heavengrave.top/img/2.png">
                     </div>
-                    <div style="height:3vh;font-size:0.6rem;width: 100%;display: flex;align-items: center;">名称</div>
+                    <div style="height:3vh;font-size:0.6rem;width: 100%;display: flex;align-items: center;" id="playerName2" class="userName">名称</div>
                     <div style="height:3vh;font-size:0.6rem;width: 100%;display: flex;align-items: center;">积分</div>
-                    <div style="height:4vh;display:none;font-size:3vh;">
+                    <div style="height:4vh;display:none;font-size:3vh;" id="player2">
                         <div data-type="RedHearts" class="RedSan lightCard" style="">♥</div>
                         <div data-type="Square" class="RedSan lightCard" style="">♦</div>
                         <div data-type="Spades" class="BlackSan lightCard" style="">♠</div>
@@ -360,7 +360,7 @@
                     <div style="height:12vh;">
                         <img style="height:100%;width:100%;" src="https://heavengrave.top/img/3.png">
                     </div>
-                    <div style="height:3vh;">名称</div>
+                    <div style="height:3vh;" id="playerName3" class="userName">名称</div>
                     <div style="height:3vh;">积分</div>
                     <div style="height:4vh;display:none;font-size:3vh;">
                         <div data-type="RedHearts" class="RedSan lightCard" style="">♥</div>
@@ -375,7 +375,7 @@
                     <div style="height:12vh;">
                         <img style="height:100%;width:100%;" src="https://heavengrave.top/img/4.png">
                     </div>
-                    <div style="height:3vh;">名称</div>
+                    <div style="height:3vh;" id="playerName4" class="userName">名称</div>
                     <div style="height:3vh;">积分</div>
                     <div style="height:4vh;display:none;font-size:3vh;">
                         <div data-type="RedHearts" class="RedSan lightCard" style="">♥</div>
@@ -391,7 +391,7 @@
                     <div style="height:12vh;">
                         <img style="height:100%;width:100%;" src="https://heavengrave.top/img/5.png">
                     </div>
-                    <div style="height:3vh;">名称</div>
+                    <div style="height:3vh;" id="playerName5" class="userName">名称</div>
                     <div style="height:3vh;">积分</div>
                     <div style="height:4vh;display:none;font-size:3vh;">
                         <div data-type="RedHearts" class="RedSan lightCard" style="">♥</div>
@@ -422,7 +422,7 @@
                 <img style="height:100%;width:100%;" src="https://heavengrave.top/img/1.png">
             </div>
             <div style="height:6vh;margin: 1vh 0vh 1vh 13vh;display:flex;flex-direction: column;">
-                <div style="height:3vh;">名称</div>
+                <div style="height:3vh;" id="playerName1" class="userName">名称</div>
                 <div style="height:3vh;">积分</div>
             </div>
             <div style="height:6vh;margin: 1vh 1vh;display:none;font-size: 4vh;">
@@ -461,6 +461,8 @@
             </div>
         </div>
     </div>
+    <div id="exitGame"  class="btnDiv" style="display:none;bottom: 1%;right: 10px;position: absolute;z-index: 99;" >退出房间</div>
+    <div id="exitPage"  class="btnDiv" style="bottom: 1%;right: 10px;position: absolute;z-index: 99;" >返回主页</div>
 </div>
 <!--结算div结束-->
 <!-- My JS-->

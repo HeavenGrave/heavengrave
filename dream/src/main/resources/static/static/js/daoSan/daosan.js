@@ -6,11 +6,11 @@ var myName;//当前用户名称
 var nowDaoSanData;//当前对局游戏数据
 //不同情况下人员位次表
 var tableNums={
-    1:[4,3,2,1,5],
-    2:[5,4,3,2,1],
-    3:[1,5,4,3,2],
-    4:[2,1,5,4,3],
-    5:[3,2,1,5,4]
+    1:[1,2,3,4,5],
+    2:[2,3,4,5,1],
+    3:[3,4,5,1,2],
+    4:[4,5,1,2,3],
+    5:[5,1,2,3,4]
 }
 var myCards=[];
 var lastCards=[];
@@ -159,23 +159,46 @@ $("#addGame").on("click", function() {
                     if (info.type === "addGameError") {
                         alert("当前房间人数已满,等下一局吧！");
                         return;
+                    }else if (info.type === "addOldGame") {
+                        alert("当前是要加入一个已经开始了的对局");
+                        if(info.daoSan.status===1){
+                            $("#nowPlayerNum").html(info.daoSan.playerNum);
+                            //返回主页隐藏  退出房间显示
+                            $("#exitPage").css("display", "none");
+                            $("#exitGame").css("display", "block");
+                            //展示当前加入的房间号
+                            $("#roomDiv").css("display", "flex");
+                            $("#thisRoomId").html(info.daoSan.id);
+                            roomId = info.daoSan.id;
+                            myNum = info.playerNum;
+                            myName = info.userName;
+                            //隐藏创建游戏按钮
+                            $("#createDiv").css("display", "none");
+                            //展示准备人数，以及开始按钮
+                            $("#gameShowDiv").css("display", "flex");
+                            //根据游戏信息加载座位表
+                            addPlayerName(info.daoSan);
+                        }else if(info.daoSan.status===2){
+
+                        }
+                    }else {
+                        //返回主页隐藏  退出房间显示
+                        $("#exitPage").css("display", "none");
+                        $("#exitGame").css("display", "block");
+                        //展示当前加入的房间号
+                        $("#roomDiv").css("display", "flex");
+                        $("#thisRoomId").html(info.daoSan.id);
+                        //给房间号赋值
+                        roomId = info.daoSan.id;
+                        myNum = info.daoSan.playerNum;
+                        myName = info.daoSan["player" + myNum];
+                        //隐藏创建游戏按钮
+                        $("#createDiv").css("display", "none");
+                        //展示准备人数，以及开始按钮
+                        $("#gameShowDiv").css("display", "flex");
+                        //根据游戏信息加载座位表
+                        addPlayerName(info.daoSan);
                     }
-                    //返回主页隐藏  退出房间显示
-                    $("#exitPage").css("display", "none");
-                    $("#exitGame").css("display", "block");
-                    //展示当前加入的房间号
-                    $("#roomDiv").css("display", "flex");
-                    $("#thisRoomId").html(info.daoSan.id);
-                    //给房间号赋值
-                    roomId = info.daoSan.id;
-                    myNum = info.daoSan.playerNum;
-                    myName = info.daoSan["player" + myNum];
-                    //隐藏创建游戏按钮
-                    $("#createDiv").css("display", "none");
-                    //展示准备人数，以及开始按钮
-                    $("#gameShowDiv").css("display", "flex");
-                    //根据游戏信息加载座位表
-                    addPlayerName(info.maJiang);
                     //初始化所有用户准备状态 以及筹码
                     // for (let i = 1; i <= info.maJiang.nowNum; i++) {
                     //     areYouReady[i] = false;
@@ -279,9 +302,9 @@ function outCard(type, cards, name) {
 function addGame(data) {
     //通过json转对象的方法，获取当前游戏数据
     let daoSan = parseDaoSan(data.daoSan);
-    daoSan.playernum = data.playernum;//第几个加入的人
+    daoSan.playerNum = data.playerNum;//第几个加入的人
     //显示游戏组人进度  n/5
-    $("#nowPlayerNum").html(data.playernum);
+    $("#nowPlayerNum").html(data.playerNum);
     //判断人数是否满足五个人了，开启房主开启游戏的权限
     if (data.playernum === 5 && daoSan.createuser === myName) {
         //移除按钮的不可点击逻辑
@@ -939,18 +962,18 @@ function timeOut() {
  */
 $("#continueGame").on("click",function (){
     //重新访问倒三游戏
-    location.href="/daosan";
+    location.href="/daoSan";
 })
 
 //退出房间
 $("#exitGame").on("click",function (){
     //重新访问倒三游戏
-    location.href="/daosan";
+    location.href="/daoSan";
 })
 //返回主页
 $("#exitPage").on("click",function (){
     //返回到主页
-    location.href="/welcome";
+    location.href="/myPage";
 })
 
 /**
