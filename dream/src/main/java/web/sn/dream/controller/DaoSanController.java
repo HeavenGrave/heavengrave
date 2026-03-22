@@ -198,7 +198,8 @@ public class DaoSanController {
             data.put("daoSan", daoSan);
             data.put("userName", userName);
             data.put("playerNum", playerNum);
-            //后续添加找回对局的逻辑
+            // TODO 添加找回对局的逻辑
+            log.info(data.toString());
         }
         //data 用于当前账户的信息处理
         return Result.success(data);

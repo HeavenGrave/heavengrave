@@ -7,10 +7,10 @@ var nowDaoSanData;//当前对局游戏数据
 //不同情况下人员位次表
 var tableNums={
     1:[1,2,3,4,5],
-    2:[2,3,4,5,1],
-    3:[3,4,5,1,2],
-    4:[4,5,1,2,3],
-    5:[5,1,2,3,4]
+    2:[5,1,2,3,4],
+    3:[4,5,1,2,3],
+    4:[3,4,5,1,2],
+    5:[2,3,4,5,1]
 }
 var myCards=[];
 var lastCards=[];
@@ -85,7 +85,6 @@ window.onload = function() {
 $("#createGame").on("click", function() {
     axios.post('/daoSan/create')
         .then(res => {
-            //console.log(res.data);
             if (res.status === 200) {
                 let info = res.data.data;
                 //返回主页隐藏  退出房间显示
@@ -153,27 +152,27 @@ $("#addGame").on("click", function() {
     } else {
         axios.post('/daoSan/add', 'roomId=' + nowRoomId)
             .then(res => {
-                //console.log(res.data);
                 if (res.status === 200) {
                     let info = res.data.data;
                     if (info.type === "addGameError") {
                         alert("当前房间人数已满,等下一局吧！");
                         return;
-                    }else if (info.type === "addOldGame") {
+                    }
+                    //返回主页隐藏  退出房间显示
+                    $("#exitPage").css("display", "none");
+                    $("#exitGame").css("display", "block");
+                    //展示当前加入的房间号
+                    $("#roomDiv").css("display", "flex");
+                    $("#thisRoomId").html(info.daoSan.id);
+                    roomId = info.daoSan.id;
+                    //隐藏创建游戏按钮
+                    $("#createDiv").css("display", "none");
+                    if (info.type === "addOldGame") {
                         alert("当前是要加入一个已经开始了的对局");
+                        myNum = info.playerNum;
+                        myName = info.userName;
                         if(info.daoSan.status===1){
                             $("#nowPlayerNum").html(info.daoSan.playerNum);
-                            //返回主页隐藏  退出房间显示
-                            $("#exitPage").css("display", "none");
-                            $("#exitGame").css("display", "block");
-                            //展示当前加入的房间号
-                            $("#roomDiv").css("display", "flex");
-                            $("#thisRoomId").html(info.daoSan.id);
-                            roomId = info.daoSan.id;
-                            myNum = info.playerNum;
-                            myName = info.userName;
-                            //隐藏创建游戏按钮
-                            $("#createDiv").css("display", "none");
                             //展示准备人数，以及开始按钮
                             $("#gameShowDiv").css("display", "flex");
                             //根据游戏信息加载座位表
@@ -182,18 +181,8 @@ $("#addGame").on("click", function() {
 
                         }
                     }else {
-                        //返回主页隐藏  退出房间显示
-                        $("#exitPage").css("display", "none");
-                        $("#exitGame").css("display", "block");
-                        //展示当前加入的房间号
-                        $("#roomDiv").css("display", "flex");
-                        $("#thisRoomId").html(info.daoSan.id);
-                        //给房间号赋值
-                        roomId = info.daoSan.id;
                         myNum = info.daoSan.playerNum;
                         myName = info.daoSan["player" + myNum];
-                        //隐藏创建游戏按钮
-                        $("#createDiv").css("display", "none");
                         //展示准备人数，以及开始按钮
                         $("#gameShowDiv").css("display", "flex");
                         //根据游戏信息加载座位表
@@ -434,7 +423,7 @@ function distributedCard(data) {
                 //你的牌比上家的牌大,打出你的牌
                 outCard("outCard", myClickCard, myName);
                 //判断是不是出了红三  出了红三就亮三
-                 ifHaveRedSan(myClickCard);
+                ifHaveRedSan(myClickCard);
                 //将你选择中的牌移除你手牌
                 $(".next_out_card").remove();
                 //清空你的选牌数组
@@ -864,7 +853,7 @@ function compareDX() {
             } else if ((myClickCard[0].size === myClickCard[1].size) && myClickCard[0].lenght > lastCards[0].lenght) {
                 //你是大对 判断对面是不是双三
                 if (!(myClickCard[0].lenght ===18 && myClickCard[1].lenght === 19)&&!(myClickCard[0].lenght ===19 && myClickCard[1].lenght === 18)) {
-                        ifD = true;
+                    ifD = true;
                 }
             }
         } else if (myClickCard.length === 3) {
