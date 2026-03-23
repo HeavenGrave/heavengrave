@@ -90,7 +90,7 @@ public class DaoSanController {
     @RequestMapping("/create")
     public Result create(HttpSession session){
         DaoSan daoSan =new DaoSan();
-        String userName=session.getAttribute("userName").toString();
+        String userName=session.getAttribute("name").toString();
         // 获取当前时间
         LocalDateTime currentTime = LocalDateTime.now();
         // 定义日期时间格式
