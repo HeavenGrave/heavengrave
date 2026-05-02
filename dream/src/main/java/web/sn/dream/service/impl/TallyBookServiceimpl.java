@@ -32,6 +32,11 @@ public class  TallyBookServiceimpl implements TallyBookService {
     }
 
     @Override
+    public TallyBook findTallyBookById(int id) {
+        return tallyBookMapper.findTallyBookById( id);
+    }
+
+    @Override
     public void deleteTallyBookById(int id) {
         tallyBookMapper.deleteTallyBookById(id);
     }

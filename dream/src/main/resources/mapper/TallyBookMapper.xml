@@ -12,6 +12,9 @@
     <update id="updateTallyBook">
         UPDATE tallybook set name=#{name},type= #{type},amount=#{amount},budget= #{budget},target= #{target} where id=#{id}
     </update>
+    <select id="findTallyBookById" resultType="web.sn.dream.pojo.TallyBook">
+        select * from tallybook where id= #{id}
+    </select>
     <select id="findTallyBookByUserId" resultType="web.sn.dream.pojo.TallyBook">
         select  * from tallybook where user_id=#{userId}
     </select>

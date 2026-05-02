@@ -13,4 +13,5 @@ public interface TallyBookMapper {
     void deleteTallyBookById(int id);
     List<TallyBook> findAllTallyBook();
     List<TallyBook> findTallyBookByCond(String name, String type,int userId);
+    TallyBook findTallyBookById(int id);
 }
