@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.AccountMapper">
+    <insert id="insertAccount">
+        INSERT INTO account (id,name,type,amount,tally_book_id)
+        VALUES
+            (#{id},#{name},#{type},#{amount},#{tallyBookId})
+    </insert>
+    <delete id="deleteAccountById">
+        DELETE FROM account WHERE id=#{id}
+    </delete>
+    <update id="updateAccount">
+        UPDATE account set name=#{name},type= #{type},amount=#{amount} where id=#{id}
+    </update>
+    <select id="findAccountByTallyBookId" resultType="web.sn.dream.pojo.Account">
+        select  * from account where tally_book_id=#{tallyBookId}
+    </select>
+    <select id="findAccountByCond" resultType="web.sn.dream.pojo.Account">
+        select * from account where 1=1
+        <if test="name != null">
+            and name=#{name}
+        </if>
+        <if test="type != null">
+            and type=#{type}
+        </if>
+        <if test="tallyBookId != null">
+            and tally_book_id=#{tallyBookId}
+        </if>
+    </select>
+</mapper>

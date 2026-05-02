@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.TallyBookMapper">
+    <insert id="insertTallyBook">
+        INSERT INTO tallybook (id,name,type,amount,budget,target,user_id)
+        VALUES
+            (#{id},#{name},#{type},#{amount},#{budget},#{target},#{userId})
+    </insert>
+    <delete id="deleteTallyBookById">
+        DELETE FROM tallybook WHERE id=#{id}
+    </delete>
+    <update id="updateTallyBook">
+        UPDATE tallybook set name=#{name},type= #{type},amount=#{amount},budget= #{budget},target= #{target} where id=#{id}
+    </update>
+    <select id="findTallyBookByUserId" resultType="web.sn.dream.pojo.TallyBook">
+        select  * from tallybook where user_id=#{userId}
+    </select>
+    <select id="findAllTallyBook" resultType="web.sn.dream.pojo.TallyBook">
+        select * from tallybook
+    </select>
+    <select id="findTallyBookByCond" resultType="web.sn.dream.pojo.TallyBook">
+        select * from tallybook where 1=1
+        <if test="name != null">
+            and name=#{name}
+        </if>
+        <if test="type != null">
+            and type=#{type}
+        </if>
+        <if test="userId != null">
+            and user_id=#{userId}
+        </if>
+    </select>
+</mapper>

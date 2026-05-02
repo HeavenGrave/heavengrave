@@ -109,4 +109,9 @@ public class WelcomeController {
     public String novelAudioPlay() {
         return "novelAudioPlay";
     }
+
+    @GetMapping("/tallyBook")
+    public String tallyBook() {
+        return "tallyBook";
+    }
 }

@@ -19,10 +19,15 @@ public class DaoSan {
     private String createUserId;//房主id
     private String createUserName;//房主名称
     private String player1;//玩家1名称
+    private Integer chips1;//玩家1的积分
     private String player2;//玩家2名称
+    private Integer chips2;//玩家2的筹码
     private String player3;//玩家3名称
+    private Integer chips3;//玩家3的筹码
     private String player4;//玩家4名称
+    private Integer chips4;//玩家4的筹码 
     private String player5;//玩家5名称
+    private Integer chips5;//玩家5的积分
     private Integer playerNum;//当前玩家数
     private Integer status;//游戏状态 0游戏结束 1准备中 2游戏中
     private Date createTime;//创建时间

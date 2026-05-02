@@ -116,3 +116,7 @@
 .startGameBtn {
     background-color: #ccc;
 }
+
+.timeDiv{
+    display: none;
+}

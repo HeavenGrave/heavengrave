@@ -165,6 +165,12 @@
             <version>5.2.3</version>
             <scope>compile</scope>
         </dependency>
+        <!-- FastJSON2（解析微信返回的 JSON）-->
+        <dependency>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>2.0.43</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

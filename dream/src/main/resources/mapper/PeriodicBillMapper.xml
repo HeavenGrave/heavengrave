@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="web.sn.dream.mapper.PeriodicBillMapper">
+    <insert id="insertPeriodicBill">
+        INSERT INTO periodicbill (id,name,type,amount,account_name,account_id,tally_book_id)
+        VALUES
+            (#{id},#{name},#{type},#{amount},#{accountName},#{accountId},#{tallyBookId})
+    </insert>
+    <delete id="deletePeriodicBillById">
+        DELETE FROM periodicbill WHERE id=#{id}
+    </delete>
+    <update id="updatePeriodicBill">
+        UPDATE periodicbill set name=#{name},type= #{type},amount=#{amount},account_name=#{accountName},account_id=#{accountId} where id=#{id}
+    </update>
+    <select id="findPeriodicBillsByTallyBookId" resultType="web.sn.dream.pojo.PeriodicBill">
+        select  * from periodicbill where tally_book_id=#{tallyBookId}
+    </select>
+    <select id="findAllPeriodicBill" resultType="web.sn.dream.pojo.PeriodicBill">
+        select * from periodicbill
+    </select>
+    <select id="findPeriodicBillByCond" resultType="web.sn.dream.pojo.PeriodicBill">
+        select * from periodicbill where 1=1
+        <if test="name != null">
+            and name=#{name}
+        </if>
+        <if test="type != null">
+            and type=#{type}
+        </if>
+        <if test="accountId != null">
+            and account_id=#{accountId}
+        </if>
+        <if test="tallyBookId != null">
+            and tally_book_id=#{tallyBookId}
+        </if>
+    </select>
+</mapper>

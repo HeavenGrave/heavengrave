@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>web.sn</groupId>
-    <artifactId>dream</artifactId>
+    <artifactId>heavengrave</artifactId>
     <version>0.0.1</version>
-    <name>dream</name>
-    <description>dream</description>
+    <name>heavengrave</name>
+    <description>heavengrave</description>
     <url/>
     <licenses>
         <license/>

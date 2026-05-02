@@ -8,6 +8,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ *  用户信息类
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

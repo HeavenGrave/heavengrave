@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <title>💰 记账助手 | 手机紧凑优化 · 双按钮记账</title>
+    <!-- TailwindCSS + FontAwesome + Bootstrap 核心 + ECharts -->
+    <!-- 引入 Tailwind CSS -->
+    <script src="static/js/tailwindcss/tailwindcss.js"></script>
+    <!-- FontAwesome CSS-->
+    <link href="static/common/font-awesom/css/all.min.css" rel="stylesheet">
+    <!-- BootStrap CSS -->
+    <link href="static/common/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- My CSS-->
+    <link href="static/css/common.css" rel="stylesheet">
+    <link href="static/css/tallyBook/tallyBook.css" rel="stylesheet">
+    <!-- Common JS-->
+    <!-- Common JS-->
+    <script type="text/javascript" src="static/common/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="static/js/axios/axios.js"></script>
+    <script type="text/javascript" src="static/common/echarts/echarts.js"></script>
+    <script type="text/javascript" src="static/common/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="static/common/bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+<body class="antialiased">
+<div class="max-w-7xl mx-auto px-4 py-4 md:py-6 container-custom">
+    <!-- 头部区域 -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-2 header-flex">
+        <div>
+            <h1 class="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                🧾 记账助手 · 交易查询分页
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 text-xs md:text-sm mt-0.5 flex items-center gap-1"><i class="fas fa-chart-line text-indigo-400"></i> ECharts · 周期账单 · 条件筛选 ✨</p>
+        </div>
+        <div class="flex gap-2 items-center">
+            <div class="bg-white/70 dark:bg-gray-800/70 backdrop-blur-sm rounded-full px-3 py-1.5 shadow-sm text-xs font-medium text-indigo-700 dark:text-indigo-300">
+                <i class="far fa-calendar-alt mr-1"></i> <span id="currentDate"></span>
+            </div>
+            <button id="themeToggleBtn" class="theme-toggle-btn rounded-full p-1.5 px-3 shadow-md transition flex items-center gap-1 text-indigo-700 dark:text-amber-300 bg-white/60 dark:bg-gray-700/60 hover:scale-105 text-xs">
+                <i id="themeIcon" class="fas fa-moon text-sm"></i>
+                <span id="themeText" class="text-xs font-medium hidden sm:inline">深色</span>
+            </button>
+            <button id="quickAddBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1.5 rounded-full shadow-md transition flex items-center gap-1 text-xs font-semibold">
+                <i class="fas fa-plus-circle text-sm"></i> 记一笔
+            </button>
+        </div>
+    </div>
+
+    <!-- 仪表盘卡片 -->
+    <div class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5 mb-5 dashboard-grid">
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-2.5 md:p-4 shadow-sm card-modern border border-gray-100 dark:border-gray-700 flex items-center justify-between stat-card">
+            <div><p class="text-gray-400 dark:text-gray-500 text-xs">本月收入</p><p class="text-lg md:text-2xl font-bold text-gray-800 dark:text-white" id="monthIncome">¥0</p></div><div class="text-2xl md:text-3xl">📈</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-2.5 md:p-4 shadow-sm card-modern border border-gray-100 dark:border-gray-700 flex items-center justify-between stat-card">
+            <div><p class="text-gray-400 dark:text-gray-500 text-xs">本月支出</p><p class="text-lg md:text-2xl font-bold text-gray-800 dark:text-white" id="monthExpense">¥0</p></div><div class="text-2xl md:text-3xl">📉</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-2.5 md:p-4 shadow-sm card-modern border border-gray-100 dark:border-gray-700 flex items-center justify-between stat-card">
+            <div><p class="text-gray-400 dark:text-gray-500 text-xs">结余</p><p class="text-lg md:text-2xl font-bold text-indigo-600 dark:text-indigo-400" id="balanceTotal">¥0</p></div><div class="text-2xl md:text-3xl">💵</div>
+        </div>
+        <div class="bg-white dark:bg-gray-800 rounded-xl p-2.5 md:p-4 shadow-sm card-modern border border-gray-100 dark:border-gray-700 flex items-center justify-between stat-card">
+            <div><p class="text-gray-400 dark:text-gray-500 text-xs">预算剩余</p><p class="text-lg md:text-2xl font-bold text-teal-600 dark:text-teal-400" id="budgetRemainStr">¥0</p></div><div class="text-2xl md:text-3xl">🎯</div>
+        </div>
+    </div>
+
+    <!-- 主体网格 -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-7 mb-6">
+        <div class="lg:col-span-2 space-y-4 md:space-y-7">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-3 md:p-5 shadow-md card-modern compact-card">
+                <div class="flex justify-between items-center mb-3 flex-wrap gap-1">
+                    <h3 class="font-bold text-base md:text-xl dark:text-white"><i class="fas fa-chart-pie text-purple-500"></i> 支出报表 · ECharts</h3>
+                    <button id="refreshChartsBtn" class="text-indigo-500 text-xs bg-indigo-50 dark:bg-indigo-950/40 px-2 py-1 rounded-full"><i class="fas fa-sync-alt"></i> 刷新</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="bg-gray-50 dark:bg-gray-900/40 rounded-lg p-1"><div id="pieChartContainer" class="chart-box" style="height: 210px;"></div><p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-0">🥧 支出分类占比</p></div>
+                    <div class="bg-gray-50 dark:bg-gray-900/40 rounded-lg p-1"><div id="barChartContainer" class="chart-box" style="height: 210px;"></div><p class="text-center text-xs text-gray-500 dark:text-gray-400 mt-0">📊 近6月收支趋势</p></div>
+                </div>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-3 md:p-5 shadow-md card-modern compact-card">
+                <div class="flex flex-wrap justify-between items-center border-b pb-2 mb-2 dark:border-gray-700">
+                    <h3 class="font-bold text-base md:text-xl dark:text-white"><i class="fas fa-calendar-repeat text-emerald-500"></i> 周期账单 & 预算</h3>
+                    <button id="addRecurringBtn" class="text-indigo-500 text-xs bg-indigo-50 dark:bg-indigo-950/40 px-2 py-1 rounded-full"><i class="fas fa-plus-circle"></i> 添加周期账单</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div><p class="font-medium text-gray-700 dark:text-gray-300 text-sm mb-1"><i class="fas fa-list-ul"></i> 每月固定账单</p><div id="recurringList" class="max-h-40 overflow-y-auto space-y-1.5 pr-1"></div></div>
+                    <div><div class="flex justify-between items-center gap-1"><label class="font-medium text-gray-700 dark:text-gray-300 text-sm"><i class="fas fa-chart-simple"></i> 月预算</label><input type="number" id="budgetInput" placeholder="金额" class="w-24 text-xs border rounded-lg px-2 py-1 dark:bg-gray-700"><button id="setBudgetBtn" class="bg-indigo-100 dark:bg-indigo-900/40 text-indigo-700 dark:text-indigo-300 px-2 py-1 rounded-lg text-xs">设置</button></div><div class="mt-2"><div class="flex justify-between text-xs"><span>本月支出: <strong id="curExpenseBudget">¥0</strong></span><span>预算: <strong id="budgetAmountShow">¥0</strong></span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1 overflow-hidden"><div id="budgetProgressFill" class="bg-gradient-to-r from-red-400 to-orange-500 h-2 rounded-full" style="width: 0%"></div></div><p id="warningMsg" class="text-xs mt-1 text-red-500 font-medium"></p></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="space-y-4 md:space-y-7">
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-3 md:p-5 shadow-md card-modern compact-card">
+                <h3 class="font-bold text-base md:text-xl mb-2 dark:text-white"><i class="fas fa-credit-card text-blue-500"></i> 账户管理 👛</h3>
+                <div id="accountList" class="space-y-1.5 mb-2 max-h-48 overflow-y-auto"></div>
+                <button id="addAccountBtn" class="w-full mt-1 border border-dashed border-indigo-300 dark:border-indigo-700 rounded-lg py-1.5 text-indigo-500 dark:text-indigo-400 text-xs hover:bg-indigo-50 transition"><i class="fas fa-plus-circle"></i> 添加账户</button>
+            </div>
+            <div class="bg-white dark:bg-gray-800 rounded-xl p-3 md:p-5 shadow-md card-modern compact-card">
+                <div class="flex justify-between items-center flex-wrap"><h3 class="font-bold text-base md:text-xl dark:text-white"><i class="fas fa-bullseye text-amber-500"></i> 储蓄目标</h3><button id="setSavingGoalBtn" class="text-xs bg-amber-50 dark:bg-amber-950/40 px-2 py-1 rounded-full text-amber-600">设定</button></div>
+                <div class="mt-2"><div class="flex justify-between text-xs text-gray-600 dark:text-gray-400"><span>目标: <strong id="targetAmountSpan">¥0</strong></span><span>已存: <span id="savedAmountSpan">¥0</span></span></div><div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 mt-1"><div id="savingProgressFill" class="bg-amber-500 h-2 rounded-full" style="width: 0%"></div></div><p id="savingMessage" class="text-xs text-gray-500 dark:text-gray-400 mt-1.5"><i class="fa-regular fa-clock"></i> 基于总余额自动计算</p></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交易记录区域：带查询条件和分页 -->
+    <div class="bg-white dark:bg-gray-800 rounded-xl p-3 md:p-5 shadow-sm">
+        <div class="flex flex-wrap justify-between items-center mb-3 gap-2">
+            <h3 class="font-bold text-sm md:text-lg dark:text-white"><i class="fas fa-history"></i> 交易记录 · 账单查询</h3>
+            <button id="resetFilterBtn" class="text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full"><i class="fas fa-undo-alt"></i> 重置筛选</button>
+        </div>
+        <!-- 筛选条件栏 -->
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-2 mb-4 filter-row">
+            <select id="filterType" class="form-select text-xs py-1 rounded-lg"><option value="">全部类型</option><option value="income">收入</option><option value="expense">支出</option></select>
+            <select id="filterCategory" class="form-select text-xs py-1 rounded-lg"><option value="">全部分类</option><option value="餐饮">🍜 餐饮</option><option value="购物">🛍️ 购物</option><option value="交通">🚗 交通</option><option value="工资">💼 工资</option><option value="娱乐">🎬 娱乐</option><option value="住房">🏠 住房</option><option value="固定支出">📆 固定支出</option><option value="其他">📦 其他</option></select>
+            <select id="filterAccount" class="form-select text-xs py-1 rounded-lg"><option value="">全部账户</option></select>
+            <input type="date" id="startDate" class="form-control text-xs py-1 rounded-lg" placeholder="开始日期">
+            <input type="date" id="endDate" class="form-control text-xs py-1 rounded-lg" placeholder="结束日期">
+        </div>
+        <div class="flex justify-between items-center mb-2"><span id="recordCount" class="text-xs text-gray-500">共0条记录</span><button id="applyFilterBtn" class="bg-indigo-500 text-white text-xs px-3 py-1 rounded-full"><i class="fas fa-search"></i> 查询</button></div>
+        <!-- 交易列表容器 + 分页 -->
+        <div id="transactionsFilteredList" class="space-y-1.5 max-h-64 overflow-y-auto mb-3"></div>
+        <div id="paginationControls" class="flex justify-center flex-wrap gap-1 mt-2"></div>
+    </div>
+</div>
+
+<!-- 以下各个模态框与之前保持一致，省略部分重复但保留完整功能 -->
+<div class="modal fade" id="transactionModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-2xl dark:bg-gray-800"><div class="modal-header border-0 pb-0 pt-4 px-4"><h5 class="modal-title text-xl font-bold dark:text-white"><i class="fas fa-pen-alt text-indigo-500"></i> 快速记一笔</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body py-3 px-4"><div class="flex gap-3 mb-4"><div id="incomeTypeBtn" class="type-toggle-btn flex items-center justify-center gap-2 py-2.5 rounded-full"><i class="fas fa-arrow-up"></i> 收入</div><div id="expenseTypeBtn" class="type-toggle-btn flex items-center justify-center gap-2 py-2.5 rounded-full"><i class="fas fa-arrow-down"></i> 支出</div></div><div class="mb-3"><label class="form-label text-sm">金额 (¥)</label><input type="number" id="transAmount" class="form-control text-lg py-2"></div><div class="mb-3"><label class="form-label text-sm">分类</label><select id="transCategory" class="form-select"><option value="餐饮">🍜 餐饮</option><option value="购物">🛍️ 购物</option><option value="交通">🚗 交通</option><option value="工资">💼 工资</option><option value="娱乐">🎬 娱乐</option><option value="其他">📦 其他</option></select></div><div class="mb-3"><label class="form-label text-sm">账户</label><select id="transAccount" class="form-select"></select></div><div class="mb-2"><label class="form-label text-sm">备注</label><input type="text" id="transDesc" class="form-control" placeholder="可选"></div></div><div class="modal-footer border-0 pb-4 pt-1 px-4 flex justify-center"><button id="dynamicConfirmBtn" class="modal-confirm-btn bg-indigo-600 text-white">确认收入 ✅</button></div></div></div></div>
+<div class="modal fade" id="recurringModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-2xl dark:bg-gray-800"><div class="modal-header border-0 pb-0 pt-3"><h5 class="modal-title text-lg font-bold"><i class="fas fa-sync-alt text-emerald-500"></i> 添加周期账单</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body py-2"><input type="text" id="recurringName" class="form-control mb-2 text-sm" placeholder="账单名称"><input type="number" id="recurringAmount" class="form-control mb-2 text-sm" placeholder="每月金额"><select id="recurringCategory" class="form-select mb-2 text-sm"><option value="住房">🏠 住房</option><option value="餐饮">🍜 餐饮</option><option value="娱乐">🎬 娱乐</option><option value="交通">🚗 交通</option><option value="固定支出">📆 固定支出</option></select><select id="recurringAccount" class="form-select mb-1 text-sm"></select><p class="text-xs text-gray-400 mt-1"><i class="fas fa-info-circle"></i> 每月自动记录</p></div><div class="modal-footer border-0 pt-0 pb-3"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button><button id="saveRecurringBtn" class="btn bg-emerald-600 text-white btn-sm">创建账单</button></div></div></div></div>
+<div class="modal fade" id="addAccountModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-2xl dark:bg-gray-800"><div class="modal-header border-0 pb-0 pt-3"><h5 class="modal-title text-lg font-bold"><i class="fas fa-wallet text-blue-500"></i> 新增账户</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body py-2"><input type="text" id="newAccountName" class="form-control mb-3 text-sm" placeholder="账户名称 (支持emoji)"><input type="number" id="newAccountBalance" class="form-control mb-1 text-sm" placeholder="初始余额 (¥)" step="0.01" value="0"><p class="text-xs text-gray-400 mt-2"><i class="fas fa-lightbulb"></i> 可输入负数表示欠款</p></div><div class="modal-footer border-0 pt-0 pb-3"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button><button id="confirmAddAccountBtn" class="btn bg-indigo-600 text-white btn-sm">确认添加</button></div></div></div></div>
+<div class="modal fade" id="savingGoalModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content rounded-2xl dark:bg-gray-800"><div class="modal-header border-0 pb-0 pt-3"><h5 class="modal-title text-lg font-bold"><i class="fas fa-bullseye text-amber-500"></i> 设定储蓄目标</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body py-2"><label class="form-label text-sm">目标金额 (¥)</label><input type="number" id="savingGoalAmount" class="form-control text-base py-2" step="0.01"><p class="text-xs text-gray-400 mt-2"><i class="fas fa-chart-line"></i> 达成目标后会有祝贺提示</p></div><div class="modal-footer border-0 pt-0 pb-3"><button class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button><button id="confirmSetSavingBtn" class="btn bg-amber-600 text-white btn-sm">确认目标</button></div></div></div></div>
+
+<!-- My JS-->
+<script type="text/javascript" src="static/js/common.js"></script>
+<script type="text/javascript" src="static/js/tallyBook/tallyBook.js"></script>
+</body>
+</html>

@@ -70,6 +70,8 @@ public class WebConfig implements WebMvcConfigurer {
         patterns.add("/novelAudioPlay");
         patterns.add("/myTab");
         patterns.add("/myTab/**");
+        patterns.add("/tally");
+        patterns.add("/tally/**");
 
         // 通过注册工具添加拦截器
         registry.addInterceptor(tokenInterceptor)
